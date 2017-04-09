@@ -1,0 +1,74 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"modbus.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.comm	ModbusFunction_List,32,4
+  19              		.comm	ModbusRTU_InitStructure,12,4
+  20              		.section	.text.Modbus_Parsing,"ax",%progbits
+  21              		.align	2
+  22              		.global	Modbus_Parsing
+  23              		.thumb
+  24              		.thumb_func
+  26              	Modbus_Parsing:
+  27              	.LFB0:
+  28              		.file 1 "../modbus.c"
+   1:../modbus.c   **** #include "modbus.h"
+   2:../modbus.c   **** 
+   3:../modbus.c   **** ModbusFunction ModbusFunction_List[4];
+   4:../modbus.c   **** 
+   5:../modbus.c   **** void Modbus_Parsing(ModbusADU* adu)
+   6:../modbus.c   **** {
+  29              		.loc 1 6 0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 1, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34 0000 80B4     		push	{r7}
+  35              		.cfi_def_cfa_offset 4
+  36              		.cfi_offset 7, -4
+  37 0002 83B0     		sub	sp, sp, #12
+  38              		.cfi_def_cfa_offset 16
+  39 0004 00AF     		add	r7, sp, #0
+  40              		.cfi_def_cfa_register 7
+  41 0006 7860     		str	r0, [r7, #4]
+   7:../modbus.c   **** 
+   8:../modbus.c   **** }
+  42              		.loc 1 8 0
+  43 0008 0C37     		adds	r7, r7, #12
+  44              		.cfi_def_cfa_offset 4
+  45 000a BD46     		mov	sp, r7
+  46              		.cfi_def_cfa_register 13
+  47              		@ sp needed
+  48 000c 5DF8047B 		ldr	r7, [sp], #4
+  49              		.cfi_restore 7
+  50              		.cfi_def_cfa_offset 0
+  51 0010 7047     		bx	lr
+  52              		.cfi_endproc
+  53              	.LFE0:
+  55 0012 00BF     		.text
+  56              	.Letext0:
+  57              		.file 2 "../modbus_types.h"
+  58              		.file 3 "../modbus.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 modbus.c
+                            *COM*:00000020 ModbusFunction_List
+                            *COM*:0000000c ModbusRTU_InitStructure
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccwzX9cw.s:21     .text.Modbus_Parsing:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccwzX9cw.s:26     .text.Modbus_Parsing:00000000 Modbus_Parsing
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.2d80f1b5ce3c69d13e258577ddf29668
+
+NO UNDEFINED SYMBOLS

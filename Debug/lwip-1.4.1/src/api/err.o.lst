@@ -1,0 +1,302 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"err.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.rodata
+  19              		.align	2
+  20              	.LC0:
+  21 0000 4F6B2E00 		.ascii	"Ok.\000"
+  22              		.align	2
+  23              	.LC1:
+  24 0004 4F757420 		.ascii	"Out of memory error.\000"
+  24      6F66206D 
+  24      656D6F72 
+  24      79206572 
+  24      726F722E 
+  25 0019 000000   		.align	2
+  26              	.LC2:
+  27 001c 42756666 		.ascii	"Buffer error.\000"
+  27      65722065 
+  27      72726F72 
+  27      2E00
+  28 002a 0000     		.align	2
+  29              	.LC3:
+  30 002c 54696D65 		.ascii	"Timeout.\000"
+  30      6F75742E 
+  30      00
+  31 0035 000000   		.align	2
+  32              	.LC4:
+  33 0038 526F7574 		.ascii	"Routing problem.\000"
+  33      696E6720 
+  33      70726F62 
+  33      6C656D2E 
+  33      00
+  34 0049 000000   		.align	2
+  35              	.LC5:
+  36 004c 4F706572 		.ascii	"Operation in progress.\000"
+  36      6174696F 
+  36      6E20696E 
+  36      2070726F 
+  36      67726573 
+  37 0063 00       		.align	2
+  38              	.LC6:
+  39 0064 496C6C65 		.ascii	"Illegal value.\000"
+  39      67616C20 
+  39      76616C75 
+  39      652E00
+  40 0073 00       		.align	2
+  41              	.LC7:
+  42 0074 4F706572 		.ascii	"Operation would block.\000"
+  42      6174696F 
+  42      6E20776F 
+  42      756C6420 
+  42      626C6F63 
+  43 008b 00       		.align	2
+  44              	.LC8:
+  45 008c 41646472 		.ascii	"Address in use.\000"
+  45      65737320 
+  45      696E2075 
+  45      73652E00 
+  46              		.align	2
+  47              	.LC9:
+  48 009c 416C7265 		.ascii	"Already connected.\000"
+  48      61647920 
+  48      636F6E6E 
+  48      65637465 
+  48      642E00
+  49 00af 00       		.align	2
+  50              	.LC10:
+  51 00b0 436F6E6E 		.ascii	"Connection aborted.\000"
+  51      65637469 
+  51      6F6E2061 
+  51      626F7274 
+  51      65642E00 
+  52              		.align	2
+  53              	.LC11:
+  54 00c4 436F6E6E 		.ascii	"Connection reset.\000"
+  54      65637469 
+  54      6F6E2072 
+  54      65736574 
+  54      2E00
+  55 00d6 0000     		.align	2
+  56              	.LC12:
+  57 00d8 436F6E6E 		.ascii	"Connection closed.\000"
+  57      65637469 
+  57      6F6E2063 
+  57      6C6F7365 
+  57      642E00
+  58 00eb 00       		.align	2
+  59              	.LC13:
+  60 00ec 4E6F7420 		.ascii	"Not connected.\000"
+  60      636F6E6E 
+  60      65637465 
+  60      642E00
+  61 00fb 00       		.align	2
+  62              	.LC14:
+  63 00fc 496C6C65 		.ascii	"Illegal argument.\000"
+  63      67616C20 
+  63      61726775 
+  63      6D656E74 
+  63      2E00
+  64 010e 0000     		.align	2
+  65              	.LC15:
+  66 0110 4C6F772D 		.ascii	"Low-level netif error.\000"
+  66      6C657665 
+  66      6C206E65 
+  66      74696620 
+  66      6572726F 
+  67              		.data
+  68              		.align	2
+  71              	err_strerr:
+  72 0000 00000000 		.word	.LC0
+  73 0004 04000000 		.word	.LC1
+  74 0008 1C000000 		.word	.LC2
+  75 000c 2C000000 		.word	.LC3
+  76 0010 38000000 		.word	.LC4
+  77 0014 4C000000 		.word	.LC5
+  78 0018 64000000 		.word	.LC6
+  79 001c 74000000 		.word	.LC7
+  80 0020 8C000000 		.word	.LC8
+  81 0024 9C000000 		.word	.LC9
+  82 0028 B0000000 		.word	.LC10
+  83 002c C4000000 		.word	.LC11
+  84 0030 D8000000 		.word	.LC12
+  85 0034 EC000000 		.word	.LC13
+  86 0038 FC000000 		.word	.LC14
+  87 003c 10010000 		.word	.LC15
+  88              		.section	.text.lwip_strerr,"ax",%progbits
+  89              		.align	2
+  90              		.global	lwip_strerr
+  91              		.thumb
+  92              		.thumb_func
+  94              	lwip_strerr:
+  95              	.LFB0:
+  96              		.file 1 "../lwip-1.4.1/src/api/err.c"
+   1:../lwip-1.4.1/src/api/err.c **** /**
+   2:../lwip-1.4.1/src/api/err.c ****  * @file
+   3:../lwip-1.4.1/src/api/err.c ****  * Error Management module
+   4:../lwip-1.4.1/src/api/err.c ****  *
+   5:../lwip-1.4.1/src/api/err.c ****  */
+   6:../lwip-1.4.1/src/api/err.c **** 
+   7:../lwip-1.4.1/src/api/err.c **** /*
+   8:../lwip-1.4.1/src/api/err.c ****  * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
+   9:../lwip-1.4.1/src/api/err.c ****  * All rights reserved. 
+  10:../lwip-1.4.1/src/api/err.c ****  * 
+  11:../lwip-1.4.1/src/api/err.c ****  * Redistribution and use in source and binary forms, with or without modification, 
+  12:../lwip-1.4.1/src/api/err.c ****  * are permitted provided that the following conditions are met:
+  13:../lwip-1.4.1/src/api/err.c ****  *
+  14:../lwip-1.4.1/src/api/err.c ****  * 1. Redistributions of source code must retain the above copyright notice,
+  15:../lwip-1.4.1/src/api/err.c ****  *    this list of conditions and the following disclaimer.
+  16:../lwip-1.4.1/src/api/err.c ****  * 2. Redistributions in binary form must reproduce the above copyright notice,
+  17:../lwip-1.4.1/src/api/err.c ****  *    this list of conditions and the following disclaimer in the documentation
+  18:../lwip-1.4.1/src/api/err.c ****  *    and/or other materials provided with the distribution.
+  19:../lwip-1.4.1/src/api/err.c ****  * 3. The name of the author may not be used to endorse or promote products
+  20:../lwip-1.4.1/src/api/err.c ****  *    derived from this software without specific prior written permission. 
+  21:../lwip-1.4.1/src/api/err.c ****  *
+  22:../lwip-1.4.1/src/api/err.c ****  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+  23:../lwip-1.4.1/src/api/err.c ****  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+  24:../lwip-1.4.1/src/api/err.c ****  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+  25:../lwip-1.4.1/src/api/err.c ****  * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+  26:../lwip-1.4.1/src/api/err.c ****  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+  27:../lwip-1.4.1/src/api/err.c ****  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+  28:../lwip-1.4.1/src/api/err.c ****  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+  29:../lwip-1.4.1/src/api/err.c ****  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+  30:../lwip-1.4.1/src/api/err.c ****  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+  31:../lwip-1.4.1/src/api/err.c ****  * OF SUCH DAMAGE.
+  32:../lwip-1.4.1/src/api/err.c ****  *
+  33:../lwip-1.4.1/src/api/err.c ****  * This file is part of the lwIP TCP/IP stack.
+  34:../lwip-1.4.1/src/api/err.c ****  * 
+  35:../lwip-1.4.1/src/api/err.c ****  * Author: Adam Dunkels <adam@sics.se>
+  36:../lwip-1.4.1/src/api/err.c ****  *
+  37:../lwip-1.4.1/src/api/err.c ****  */
+  38:../lwip-1.4.1/src/api/err.c **** 
+  39:../lwip-1.4.1/src/api/err.c **** #include "lwip/err.h"
+  40:../lwip-1.4.1/src/api/err.c **** 
+  41:../lwip-1.4.1/src/api/err.c **** #ifdef LWIP_DEBUG
+  42:../lwip-1.4.1/src/api/err.c **** 
+  43:../lwip-1.4.1/src/api/err.c **** static const char *err_strerr[] = {
+  44:../lwip-1.4.1/src/api/err.c ****            "Ok.",                    /* ERR_OK          0  */
+  45:../lwip-1.4.1/src/api/err.c ****            "Out of memory error.",   /* ERR_MEM        -1  */
+  46:../lwip-1.4.1/src/api/err.c ****            "Buffer error.",          /* ERR_BUF        -2  */
+  47:../lwip-1.4.1/src/api/err.c ****            "Timeout.",               /* ERR_TIMEOUT    -3  */
+  48:../lwip-1.4.1/src/api/err.c ****            "Routing problem.",       /* ERR_RTE        -4  */
+  49:../lwip-1.4.1/src/api/err.c ****            "Operation in progress.", /* ERR_INPROGRESS -5  */
+  50:../lwip-1.4.1/src/api/err.c ****            "Illegal value.",         /* ERR_VAL        -6  */
+  51:../lwip-1.4.1/src/api/err.c ****            "Operation would block.", /* ERR_WOULDBLOCK -7  */
+  52:../lwip-1.4.1/src/api/err.c ****            "Address in use.",        /* ERR_USE        -8  */
+  53:../lwip-1.4.1/src/api/err.c ****            "Already connected.",     /* ERR_ISCONN     -9  */
+  54:../lwip-1.4.1/src/api/err.c ****            "Connection aborted.",    /* ERR_ABRT       -10 */
+  55:../lwip-1.4.1/src/api/err.c ****            "Connection reset.",      /* ERR_RST        -11 */
+  56:../lwip-1.4.1/src/api/err.c ****            "Connection closed.",     /* ERR_CLSD       -12 */
+  57:../lwip-1.4.1/src/api/err.c ****            "Not connected.",         /* ERR_CONN       -13 */
+  58:../lwip-1.4.1/src/api/err.c ****            "Illegal argument.",      /* ERR_ARG        -14 */
+  59:../lwip-1.4.1/src/api/err.c ****            "Low-level netif error.", /* ERR_IF         -15 */
+  60:../lwip-1.4.1/src/api/err.c **** };
+  61:../lwip-1.4.1/src/api/err.c **** 
+  62:../lwip-1.4.1/src/api/err.c **** /**
+  63:../lwip-1.4.1/src/api/err.c ****  * Convert an lwip internal error to a string representation.
+  64:../lwip-1.4.1/src/api/err.c ****  *
+  65:../lwip-1.4.1/src/api/err.c ****  * @param err an lwip internal err_t
+  66:../lwip-1.4.1/src/api/err.c ****  * @return a string representation for err
+  67:../lwip-1.4.1/src/api/err.c ****  */
+  68:../lwip-1.4.1/src/api/err.c **** const char *
+  69:../lwip-1.4.1/src/api/err.c **** lwip_strerr(err_t err)
+  70:../lwip-1.4.1/src/api/err.c **** {
+  97              		.loc 1 70 0
+  98              		.cfi_startproc
+  99              		@ args = 0, pretend = 0, frame = 8
+ 100              		@ frame_needed = 1, uses_anonymous_args = 0
+ 101              		@ link register save eliminated.
+ 102 0000 80B4     		push	{r7}
+ 103              		.cfi_def_cfa_offset 4
+ 104              		.cfi_offset 7, -4
+ 105 0002 83B0     		sub	sp, sp, #12
+ 106              		.cfi_def_cfa_offset 16
+ 107 0004 00AF     		add	r7, sp, #0
+ 108              		.cfi_def_cfa_register 7
+ 109 0006 0346     		mov	r3, r0
+ 110 0008 FB71     		strb	r3, [r7, #7]
+  71:../lwip-1.4.1/src/api/err.c ****   return err_strerr[-err];
+ 111              		.loc 1 71 0
+ 112 000a 97F90730 		ldrsb	r3, [r7, #7]
+ 113 000e 5B42     		negs	r3, r3
+ 114 0010 044A     		ldr	r2, .L3
+ 115 0012 52F82330 		ldr	r3, [r2, r3, lsl #2]
+  72:../lwip-1.4.1/src/api/err.c **** 
+  73:../lwip-1.4.1/src/api/err.c **** }
+ 116              		.loc 1 73 0
+ 117 0016 1846     		mov	r0, r3
+ 118 0018 0C37     		adds	r7, r7, #12
+ 119              		.cfi_def_cfa_offset 4
+ 120 001a BD46     		mov	sp, r7
+ 121              		.cfi_def_cfa_register 13
+ 122              		@ sp needed
+ 123 001c 5DF8047B 		ldr	r7, [sp], #4
+ 124              		.cfi_restore 7
+ 125              		.cfi_def_cfa_offset 0
+ 126 0020 7047     		bx	lr
+ 127              	.L4:
+ 128 0022 00BF     		.align	2
+ 129              	.L3:
+ 130 0024 00000000 		.word	err_strerr
+ 131              		.cfi_endproc
+ 132              	.LFE0:
+ 134              		.text
+ 135              	.Letext0:
+ 136              		.file 2 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\port/arch/cc.h"
+ 137              		.file 3 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/err.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 err.c
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccHBoB9k.s:19     .rodata:00000000 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccHBoB9k.s:68     .data:00000000 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccHBoB9k.s:71     .data:00000000 err_strerr
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccHBoB9k.s:89     .text.lwip_strerr:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccHBoB9k.s:94     .text.lwip_strerr:00000000 lwip_strerr
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccHBoB9k.s:130    .text.lwip_strerr:00000024 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.2d80f1b5ce3c69d13e258577ddf29668
+                           .group:00000000 wm4.lwipopts.h.25.76e03deb318fbe54d896a83c1b611e55
+                           .group:00000000 wm4.arch.h.33.6fa4aa86d33d1490ae882caef7316405
+                           .group:00000000 wm4.cpu.h.33.0ec64ad8cd52614da6479c7936fa3efa
+                           .group:00000000 wm4.cc.h.49.217a0c46a6dd8448cb36cccbf00f897f
+                           .group:00000000 wm4.arch.h.52.2e97dbd839a1aa815d8c47878a7f8e2b
+                           .group:00000000 wm4.newlib.h.8.2702bca278809460f0af6fba1d84eb68
+                           .group:00000000 wm4.features.h.22.2e382148a0560adabf236cddd4e880f4
+                           .group:00000000 wm4.config.h.220.a09b0b0de3c25be3f39d71990e617bff
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.35ee9e747940367bf2a634907d1c2382
+                           .group:00000000 wm4.stddef.h.184.159df79b4ca79c76561572a55985524c
+                           .group:00000000 wm4.cdefs.h.47.3052445825803de6c3a3b68ec8193866
+                           .group:00000000 wm4.stddef.h.39.7e3d906ac58942e0b374c527445f5de5
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.types.h.24.b2be5f53932a9c9d07787288b29b6d75
+                           .group:00000000 wm4._stdint.h.10.f76354baea1c7088202064e6f3d4f5e3
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.82.82b71f3f44c70e3a459d0f66642b05eb
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.68.ff6d7571d3ad75c55f15e26dbaa81e35
+                           .group:00000000 wm4.debug.h.45.223028a5c052c9f879ffd43dd519f3f1
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.opt.h.76.0e16bb9c23144e1f631b5b5afa9a69f6
+                           .group:00000000 wm4.err.h.52.b0d18540b08b3be1a52928d6544d6556
+
+NO UNDEFINED SYMBOLS

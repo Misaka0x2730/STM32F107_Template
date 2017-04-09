@@ -1,0 +1,735 @@
+Archive member included because of file (symbol)
+
+f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcmp.o)
+                              C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o (memcmp)
+f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
+                              C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o (memcpy)
+f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
+                              C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o (memset)
+
+Allocating common symbols
+Common symbol       size              file
+
+current_iphdr_src   0x4               ./lwip-1.4.1/src/core/ipv4/ip.o (symbol from plugin)
+DMAPTPRxDescToGet   0x4               ./STM32_ETH_Driver/src/stm32_eth.o (symbol from plugin)
+tcp_end_time        0x4               ./lwip-1.4.1/port/ethernetif.o (symbol from plugin)
+udp_pcbs            0x4               ./lwip-1.4.1/src/core/udp.o (symbol from plugin)
+current_netif       0x4               ./lwip-1.4.1/src/core/ipv4/ip.o (symbol from plugin)
+DMARxDescToGet      0x4               ./STM32_ETH_Driver/src/stm32_eth.o (symbol from plugin)
+current_iphdr_dest  0x4               ./lwip-1.4.1/src/core/ipv4/ip.o (symbol from plugin)
+ModbusRTU_InitStructure
+                    0xc               ./main.o (symbol from plugin)
+arp_end_time        0x4               ./lwip-1.4.1/port/ethernetif.o (symbol from plugin)
+DMATxDscrTab        0x20              ./lwip-1.4.1/port/ethernetif.o (symbol from plugin)
+current_header      0x4               ./lwip-1.4.1/src/core/ipv4/ip.o (symbol from plugin)
+Rx_Buff             0x17d0            ./lwip-1.4.1/port/ethernetif.o (symbol from plugin)
+ModbusFunction_List
+                    0x20              ./main.o (symbol from plugin)
+tcp_bound_pcbs      0x4               ./lwip-1.4.1/src/core/tcp.o (symbol from plugin)
+MACaddr             0x6               ./lwip-1.4.1/port/ethernetif.o (symbol from plugin)
+pbuf_free_ooseq_pending
+                    0x1               ./lwip-1.4.1/src/core/pbuf.o (symbol from plugin)
+DMARxDscrTab        0x40              ./lwip-1.4.1/port/ethernetif.o (symbol from plugin)
+xnetif              0x30              ./ETH_Options/src/netconf.o (symbol from plugin)
+ram_heap            0x2014            ./lwip-1.4.1/src/core/mem.o (symbol from plugin)
+Tx_Buff             0xbe8             ./lwip-1.4.1/port/ethernetif.o (symbol from plugin)
+DMAPTPTxDescToSet   0x4               ./STM32_ETH_Driver/src/stm32_eth.o (symbol from plugin)
+
+Discarded input sections
+
+ .text          0x00000000        0x0 ./startup/startup_stm32f10x_cl.o (symbol from plugin)
+ .text          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+ .text          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .text          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+ .data          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+ .text          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+ .data          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+ .text          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+ .data          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+ .text          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+ .data          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+ .text          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+ .data          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+ .text          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+ .data          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+ .bss           0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+ .text          0x00000000        0x0 f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcmp.o)
+ .data          0x00000000        0x0 f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcmp.o)
+ .bss           0x00000000        0x0 f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcmp.o)
+ .data          0x00000000        0x0 f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
+ .bss           0x00000000        0x0 f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
+ .text          0x00000000        0x0 f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
+ .data          0x00000000        0x0 f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
+ .bss           0x00000000        0x0 f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
+ .text          0x00000000        0x0 ./src/misc.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f107.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_adc.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_bkp.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_can.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_cec.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_crc.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_dac.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_dbgmcu.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_dma.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_exti.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_flash.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_fsmc.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_gpio.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_i2c.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_iwdg.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_pwr.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_rcc.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_rtc.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_sdio.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_spi.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_tim.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_usart.o (symbol from plugin)
+ .text          0x00000000        0x0 ./src/stm32f10x_wwdg.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/ppp/auth.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/ppp/chap.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/ppp/chpms.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/ppp/fsm.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/ppp/ipcp.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/ppp/lcp.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/ppp/magic.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/ppp/md5.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/ppp/pap.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/ppp/ppp.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/ppp/ppp_oe.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/ppp/randm.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/ppp/vj.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/etharp.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/netif/slipif.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/snmp/asn1_dec.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/snmp/asn1_enc.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/snmp/mib2.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/snmp/mib_structs.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/snmp/msg_in.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/snmp/msg_out.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/ipv4/autoip.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/ipv4/icmp.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/ipv4/igmp.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/ipv4/inet.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/ipv4/inet_chksum.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/ipv4/ip.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/ipv4/ip_addr.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/ipv4/ip_frag.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/def.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/dhcp.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/dns.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/init.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/mem.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/memp.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/netif.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/pbuf.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/raw.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/stats.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/sys.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/tcp.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/tcp_in.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/tcp_out.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/timers.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/core/udp.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/api/api_lib.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/api/api_msg.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/api/err.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/api/netbuf.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/api/netdb.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/api/netifapi.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/api/sockets.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/src/api/tcpip.o (symbol from plugin)
+ .text          0x00000000        0x0 ./lwip-1.4.1/port/ethernetif.o (symbol from plugin)
+ .text          0x00000000        0x0 ./cmsis/core_cm3.o (symbol from plugin)
+ .text          0x00000000        0x0 ./cmsis/system_stm32f10x.o (symbol from plugin)
+ .text          0x00000000        0x0 ./STM32_ETH_Driver/src/stm32_eth.o (symbol from plugin)
+ .text          0x00000000        0x0 ./STM32F107_BSP_Driver/src/stm32f107_eth_bsp.o (symbol from plugin)
+ .text          0x00000000        0x0 ./ETH_Options/src/netconf.o (symbol from plugin)
+ .text          0x00000000        0x0 ./main.o (symbol from plugin)
+ .text          0x00000000        0x0 ./modbus.o (symbol from plugin)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+RAM              0x20000000         0x00010000         xrw
+FLASH            0x08000000         0x00040000         xr
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD ./startup/startup_stm32f10x_cl.o
+LOAD C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+LOAD C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+LOAD C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+LOAD C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+LOAD C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+LOAD C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+LOAD C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+LOAD C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+LOAD f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/armv7-m\libgcc.a
+LOAD f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a
+LOAD f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libc.a
+LOAD ./src/misc.o
+LOAD ./src/stm32f107.o
+LOAD ./src/stm32f10x_adc.o
+LOAD ./src/stm32f10x_bkp.o
+LOAD ./src/stm32f10x_can.o
+LOAD ./src/stm32f10x_cec.o
+LOAD ./src/stm32f10x_crc.o
+LOAD ./src/stm32f10x_dac.o
+LOAD ./src/stm32f10x_dbgmcu.o
+LOAD ./src/stm32f10x_dma.o
+LOAD ./src/stm32f10x_exti.o
+LOAD ./src/stm32f10x_flash.o
+LOAD ./src/stm32f10x_fsmc.o
+LOAD ./src/stm32f10x_gpio.o
+LOAD ./src/stm32f10x_i2c.o
+LOAD ./src/stm32f10x_iwdg.o
+LOAD ./src/stm32f10x_pwr.o
+LOAD ./src/stm32f10x_rcc.o
+LOAD ./src/stm32f10x_rtc.o
+LOAD ./src/stm32f10x_sdio.o
+LOAD ./src/stm32f10x_spi.o
+LOAD ./src/stm32f10x_tim.o
+LOAD ./src/stm32f10x_usart.o
+LOAD ./src/stm32f10x_wwdg.o
+LOAD ./lwip-1.4.1/src/netif/ppp/auth.o
+LOAD ./lwip-1.4.1/src/netif/ppp/chap.o
+LOAD ./lwip-1.4.1/src/netif/ppp/chpms.o
+LOAD ./lwip-1.4.1/src/netif/ppp/fsm.o
+LOAD ./lwip-1.4.1/src/netif/ppp/ipcp.o
+LOAD ./lwip-1.4.1/src/netif/ppp/lcp.o
+LOAD ./lwip-1.4.1/src/netif/ppp/magic.o
+LOAD ./lwip-1.4.1/src/netif/ppp/md5.o
+LOAD ./lwip-1.4.1/src/netif/ppp/pap.o
+LOAD ./lwip-1.4.1/src/netif/ppp/ppp.o
+LOAD ./lwip-1.4.1/src/netif/ppp/ppp_oe.o
+LOAD ./lwip-1.4.1/src/netif/ppp/randm.o
+LOAD ./lwip-1.4.1/src/netif/ppp/vj.o
+LOAD ./lwip-1.4.1/src/netif/etharp.o
+LOAD ./lwip-1.4.1/src/netif/slipif.o
+LOAD ./lwip-1.4.1/src/core/snmp/asn1_dec.o
+LOAD ./lwip-1.4.1/src/core/snmp/asn1_enc.o
+LOAD ./lwip-1.4.1/src/core/snmp/mib2.o
+LOAD ./lwip-1.4.1/src/core/snmp/mib_structs.o
+LOAD ./lwip-1.4.1/src/core/snmp/msg_in.o
+LOAD ./lwip-1.4.1/src/core/snmp/msg_out.o
+LOAD ./lwip-1.4.1/src/core/ipv4/autoip.o
+LOAD ./lwip-1.4.1/src/core/ipv4/icmp.o
+LOAD ./lwip-1.4.1/src/core/ipv4/igmp.o
+LOAD ./lwip-1.4.1/src/core/ipv4/inet.o
+LOAD ./lwip-1.4.1/src/core/ipv4/inet_chksum.o
+LOAD ./lwip-1.4.1/src/core/ipv4/ip.o
+LOAD ./lwip-1.4.1/src/core/ipv4/ip_addr.o
+LOAD ./lwip-1.4.1/src/core/ipv4/ip_frag.o
+LOAD ./lwip-1.4.1/src/core/def.o
+LOAD ./lwip-1.4.1/src/core/dhcp.o
+LOAD ./lwip-1.4.1/src/core/dns.o
+LOAD ./lwip-1.4.1/src/core/init.o
+LOAD ./lwip-1.4.1/src/core/mem.o
+LOAD ./lwip-1.4.1/src/core/memp.o
+LOAD ./lwip-1.4.1/src/core/netif.o
+LOAD ./lwip-1.4.1/src/core/pbuf.o
+LOAD ./lwip-1.4.1/src/core/raw.o
+LOAD ./lwip-1.4.1/src/core/stats.o
+LOAD ./lwip-1.4.1/src/core/sys.o
+LOAD ./lwip-1.4.1/src/core/tcp.o
+LOAD ./lwip-1.4.1/src/core/tcp_in.o
+LOAD ./lwip-1.4.1/src/core/tcp_out.o
+LOAD ./lwip-1.4.1/src/core/timers.o
+LOAD ./lwip-1.4.1/src/core/udp.o
+LOAD ./lwip-1.4.1/src/api/api_lib.o
+LOAD ./lwip-1.4.1/src/api/api_msg.o
+LOAD ./lwip-1.4.1/src/api/err.o
+LOAD ./lwip-1.4.1/src/api/netbuf.o
+LOAD ./lwip-1.4.1/src/api/netdb.o
+LOAD ./lwip-1.4.1/src/api/netifapi.o
+LOAD ./lwip-1.4.1/src/api/sockets.o
+LOAD ./lwip-1.4.1/src/api/tcpip.o
+LOAD ./lwip-1.4.1/port/ethernetif.o
+LOAD ./cmsis/core_cm3.o
+LOAD ./cmsis/system_stm32f10x.o
+LOAD ./STM32_ETH_Driver/src/stm32_eth.o
+LOAD ./STM32F107_BSP_Driver/src/stm32f107_eth_bsp.o
+LOAD ./ETH_Options/src/netconf.o
+LOAD ./main.o
+LOAD ./modbus.o
+START GROUP
+LOAD f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/armv7-m\libgcc.a
+LOAD f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a
+LOAD f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libc.a
+END GROUP
+
+.text           0x08000000     0x4580
+ *(.isr_vectors)
+ .isr_vectors   0x08000000      0x154 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+                0x08000000                g_pfnVectors
+ *(.text)
+ .text          0x08000154       0xec f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
+                0x08000154                memcpy
+ *(.text.*)
+ .text.ethernet_input
+                0x08000240     0x1318 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+                0x08000240                ethernet_input
+ .text.GPIO_Init
+                0x08001558       0x9c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .text.delay_ms
+                0x080015f4       0x24 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .text.etharp_free_entry
+                0x08001618       0x48 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .text.etharp_find_entry
+                0x08001660       0xe0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .text.etharp_send_ip
+                0x08001740       0x26 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ *fill*         0x08001766        0x2 
+ .text.etharp_output_to_arp_index
+                0x08001768       0x5c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .text.etharp_output
+                0x080017c4      0x218 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+                0x080017c4                etharp_output
+ .text.etharp_update_arp_entry.lto_priv.60
+                0x080019dc       0x8c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+                0x080019dc                etharp_update_arp_entry.lto_priv.60
+ .text.Default_Handler
+                0x08001a68        0x2 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+                0x08001a68                EXTI2_IRQHandler
+                0x08001a68                DebugMon_Handler
+                0x08001a68                TIM1_CC_IRQHandler
+                0x08001a68                TIM6_IRQHandler
+                0x08001a68                SysTick_Handler
+                0x08001a68                PVD_IRQHandler
+                0x08001a68                PendSV_Handler
+                0x08001a68                NMI_Handler
+                0x08001a68                CAN2_RX1_IRQHandler
+                0x08001a68                EXTI3_IRQHandler
+                0x08001a68                EXTI0_IRQHandler
+                0x08001a68                I2C2_EV_IRQHandler
+                0x08001a68                CAN1_RX0_IRQHandler
+                0x08001a68                UsageFault_Handler
+                0x08001a68                CAN2_SCE_IRQHandler
+                0x08001a68                ADC1_2_IRQHandler
+                0x08001a68                SPI1_IRQHandler
+                0x08001a68                TAMPER_IRQHandler
+                0x08001a68                CAN2_RX0_IRQHandler
+                0x08001a68                DMA2_Channel2_IRQHandler
+                0x08001a68                DMA1_Channel4_IRQHandler
+                0x08001a68                USART3_IRQHandler
+                0x08001a68                RTC_IRQHandler
+                0x08001a68                DMA1_Channel7_IRQHandler
+                0x08001a68                CAN1_RX1_IRQHandler
+                0x08001a68                UART5_IRQHandler
+                0x08001a68                TIM4_IRQHandler
+                0x08001a68                DMA2_Channel1_IRQHandler
+                0x08001a68                I2C1_EV_IRQHandler
+                0x08001a68                DMA1_Channel6_IRQHandler
+                0x08001a68                UART4_IRQHandler
+                0x08001a68                DMA2_Channel4_IRQHandler
+                0x08001a68                TIM3_IRQHandler
+                0x08001a68                RCC_IRQHandler
+                0x08001a68                TIM1_TRG_COM_IRQHandler
+                0x08001a68                DMA1_Channel1_IRQHandler
+                0x08001a68                EXTI15_10_IRQHandler
+                0x08001a68                TIM7_IRQHandler
+                0x08001a68                CAN2_TX_IRQHandler
+                0x08001a68                TIM5_IRQHandler
+                0x08001a68                EXTI9_5_IRQHandler
+                0x08001a68                ETH_WKUP_IRQHandler
+                0x08001a68                SPI2_IRQHandler
+                0x08001a68                MemManage_Handler
+                0x08001a68                CAN1_TX_IRQHandler
+                0x08001a68                SVC_Handler
+                0x08001a68                DMA2_Channel5_IRQHandler
+                0x08001a68                DMA1_Channel5_IRQHandler
+                0x08001a68                EXTI4_IRQHandler
+                0x08001a68                DMA1_Channel3_IRQHandler
+                0x08001a68                ETH_IRQHandler
+                0x08001a68                TIM1_UP_IRQHandler
+                0x08001a68                WWDG_IRQHandler
+                0x08001a68                TIM2_IRQHandler
+                0x08001a68                OTG_FS_WKUP_IRQHandler
+                0x08001a68                TIM1_BRK_IRQHandler
+                0x08001a68                EXTI1_IRQHandler
+                0x08001a68                RTCAlarm_IRQHandler
+                0x08001a68                USART2_IRQHandler
+                0x08001a68                I2C2_ER_IRQHandler
+                0x08001a68                DMA1_Channel2_IRQHandler
+                0x08001a68                CAN1_SCE_IRQHandler
+                0x08001a68                FLASH_IRQHandler
+                0x08001a68                BusFault_Handler
+                0x08001a68                USART1_IRQHandler
+                0x08001a68                OTG_FS_IRQHandler
+                0x08001a68                SPI3_IRQHandler
+                0x08001a68                I2C1_ER_IRQHandler
+                0x08001a68                DMA2_Channel3_IRQHandler
+ *fill*         0x08001a6a        0x2 
+ .text.Default_Reset_Handler
+                0x08001a6c      0x52c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+                0x08001a6c                Reset_Handler
+ .text.unlikely.tcp_oos_insert_segment
+                0x08001f98       0x74 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+ .text.tcp_send_fin
+                0x0800200c       0x32 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+                0x0800200c                tcp_send_fin
+ *fill*         0x0800203e        0x2 
+ .text.unlikely.tcp_parseopt.isra.0.lto_priv.62
+                0x08002040       0x74 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+                0x08002040                tcp_parseopt.isra.0.lto_priv.62
+ .text.unlikely.tcp_receive.lto_priv.61
+                0x080020b4      0x6f4 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+                0x080020b4                tcp_receive.lto_priv.61
+ .text.tcp_eff_send_mss
+                0x080027a8       0x1e C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+                0x080027a8                tcp_eff_send_mss
+ .text.tcp_update_rcv_ann_wnd
+                0x080027c6       0x36 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x080027c6                tcp_update_rcv_ann_wnd
+ .text.pbuf_copy
+                0x080027fc       0x8e C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x080027fc                pbuf_copy
+ .text.pbuf_cat
+                0x0800288a       0x22 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x0800288a                pbuf_cat
+ .text.pbuf_clen
+                0x080028ac       0x10 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x080028ac                pbuf_clen
+ .text.pbuf_free
+                0x080028bc      0x10c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x080028bc                pbuf_free
+ .text.tcp_seg_free
+                0x080029c8       0x1c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x080029c8                tcp_seg_free
+ .text.tcp_segs_free
+                0x080029e4       0x10 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x080029e4                tcp_segs_free
+ .text.tcp_pcb_purge
+                0x080029f4       0x6c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x080029f4                tcp_pcb_purge
+ .text.tcp_pcb_remove
+                0x08002a60       0x5c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x08002a60                tcp_pcb_remove
+ .text.tcp_recv_null
+                0x08002abc      0x168 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x08002abc                tcp_recv_null
+ .text.tcp_process_refused_data
+                0x08002c24       0x62 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x08002c24                tcp_process_refused_data
+ *fill*         0x08002c86        0x2 
+ .text.tcp_abandon
+                0x08002c88       0x9c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x08002c88                tcp_abandon
+ .text.tcp_tmr  0x08002d24      0x44c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x08002d24                tcp_tmr
+ .text.pbuf_header
+                0x08003170       0x58 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x08003170                pbuf_header
+ .text.HardFault_Handler
+                0x080031c8       0x10 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+ .text.pbuf_alloc.constprop.38
+                0x080031d8       0x56 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+                0x080031d8                pbuf_alloc.constprop.38
+ .text.tcp_output_alloc_header.constprop.37
+                0x0800322e       0x4e C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+                0x0800322e                tcp_output_alloc_header.constprop.37
+ .text.sys_timeout.constprop.34
+                0x0800327c       0x5c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+                0x0800327c                sys_timeout.constprop.34
+ .text.ETH_ReadPHYRegister.constprop.27
+                0x080032d8       0x54 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+                0x080032d8                ETH_ReadPHYRegister.constprop.27
+ .text.ETH_WritePHYRegister.constprop.26
+                0x0800332c       0x48 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+                0x0800332c                ETH_WritePHYRegister.constprop.26
+ .text.etharp_raw.constprop.10
+                0x08003374       0xa8 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+                0x08003374                etharp_raw.constprop.10
+ .text.tcp_seg_copy.constprop.9
+                0x0800341c       0x3c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+                0x0800341c                tcp_seg_copy.constprop.9
+ .text.LwIP_Init
+                0x08003458      0x2ec C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+                0x08003458                LwIP_Init
+ .text.pbuf_realloc
+                0x08003744      0x13c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+                0x08003744                pbuf_realloc
+ .text.memp_free
+                0x08003880       0x2c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+                0x08003880                memp_free
+ .text.ipfrag_free_pbuf_custom
+                0x080038ac       0x18 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+ .text.memp_malloc
+                0x080038c4       0x58 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+                0x080038c4                memp_malloc
+ .text.mem_malloc
+                0x0800391c      0x10c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+                0x0800391c                mem_malloc
+ .text.lwip_htonl
+                0x08003a28        0x4 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+                0x08003a28                lwip_htonl
+ .text.unlikely.ip_reass_remove_oldest_datagram.lto_priv.63
+                0x08003a2c      0x104 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+                0x08003a2c                ip_reass_remove_oldest_datagram.lto_priv.63
+ .text.ip4_addr_isbroadcast
+                0x08003b30       0x3a C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+                0x08003b30                ip4_addr_isbroadcast
+ *fill*         0x08003b6a        0x2 
+ .text.ip_route
+                0x08003b6c       0x4c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+                0x08003b6c                ip_route
+ .text.lwip_standard_chksum.lto_priv.48
+                0x08003bb8       0x5a C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+                0x08003bb8                lwip_standard_chksum.lto_priv.48
+ *fill*         0x08003c12        0x2 
+ .text.ip_frag  0x08003c14      0x170 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+                0x08003c14                ip_frag
+ .text.ip_output
+                0x08003d84       0xcc C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+                0x08003d84                ip_output
+ .text.low_level_output.lto_priv.41
+                0x08003e50       0x5c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+                0x08003e50                low_level_output.lto_priv.41
+ .text.tcpip_tcp_timer.lto_priv.40
+                0x08003eac       0x28 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+                0x08003eac                tcpip_tcp_timer.lto_priv.40
+ .text.tcp_timer_needed
+                0x08003ed4       0x24 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+                0x08003ed4                tcp_timer_needed
+ .text.unlikely.tcp_rexmit
+                0x08003ef8       0x54 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+                0x08003ef8                tcp_rexmit
+ .text.tcp_rst  0x08003f4c       0x8c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+                0x08003f4c                tcp_rst
+ .text.tcp_send_empty_ack
+                0x08003fd8       0x44 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+                0x08003fd8                tcp_send_empty_ack
+ .text.tcp_output
+                0x0800401c      0x250 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+                0x0800401c                tcp_output
+ .text.tcp_enqueue_flags
+                0x0800426c      0x13c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+                0x0800426c                tcp_enqueue_flags
+ .text.icmp_send_response.isra.0.lto_priv.47
+                0x080043a8       0x8c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+                0x080043a8                icmp_send_response.isra.0.lto_priv.47
+ .text.memcmp   0x08004434       0x64 f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcmp.o)
+                0x08004434                memcmp
+ .text.memset   0x08004498       0x9c f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
+                0x08004498                memset
+ *(.rodata)
+ .rodata        0x08004534       0x14 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+ .rodata        0x08004548       0x38 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+                0x08004548                ethzero
+                0x0800454e                ethbroadcast
+ *(.rodata.*)
+ *(.glue_7)
+ .glue_7        0x00000000        0x0 linker stubs
+ *(.glue_7t)
+ .glue_7t       0x00000000        0x0 linker stubs
+                0x08004580                _etext = .
+
+.vfp11_veneer   0x08004580        0x0
+ .vfp11_veneer  0x00000000        0x0 linker stubs
+
+.v4_bx          0x08004580        0x0
+ .v4_bx         0x00000000        0x0 linker stubs
+
+.iplt           0x08004580        0x0
+ .iplt          0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+
+.rel.dyn        0x08004580        0x0
+ .rel.iplt      0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+
+.stack          0x20000000     0x4000
+ *(.stack)
+ .stack         0x20000000     0x4000 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+ *(.stack.*)
+
+.data           0x20004000       0x28 load address 0x08004580
+                0x20004000                _sdata = .
+                0x08004580                _sidata = _etext
+ *(.data)
+ .data          0x20004000        0x4 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+ .data          0x20004004       0x24 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ *(.data.*)
+                0x20004028                _edata = .
+
+.igot.plt       0x20004028        0x0 load address 0x080045a8
+ .igot.plt      0x00000000        0x0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+
+.bss            0x20004028     0x7b78 load address 0x080045a8
+                0x20004028                _sbss = .
+ *(.bss)
+ .bss           0x20004028       0x1c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+ .bss           0x20004044       0xd8 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .bss           0x2000411c       0x19 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+                0x2000411c                seqno.lto_priv.51
+                0x20004120                tcphdr.lto_priv.50
+                0x20004124                flags.lto_priv.53
+                0x20004128                ackno.lto_priv.52
+                0x2000412c                tcplen.lto_priv.54
+                0x20004130                recv_data.lto_priv.55
+                0x20004134                recv_flags.lto_priv.56
+ *fill*         0x20004135        0x3 
+ .bss           0x20004138        0xe C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                0x20004138                tcp_tmp_pcb
+                0x2000413c                tcp_active_pcbs_changed
+                0x20004144                tcp_timer_ctr.lto_priv.57
+ *fill*         0x20004146        0x2 
+ .bss           0x20004148     0x7a3d C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+                0x2000414c                lwip_stats
+                0x2000438c                inseg.lto_priv.42
+                0x200063b4                ram.lto_priv.43
+                0x200063b8                ram_end.lto_priv.44
+                0x200063bc                lfree.lto_priv.45
+                0x200096ec                memp_tab.lto_priv.46
+                0x20009754                tcp_active_pcbs
+                0x20009758                tcp_listen_pcbs
+                0x2000975c                DMATxDescToSet
+                0x2000bb7c                netif_list
+                0x2000bb80                netif_default
+ *fill*         0x2000bb85        0x3 
+ .bss           0x2000bb88        0x8 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+                0x2000bb88                reassdatagrams.lto_priv.59
+                0x2000bb8c                ip_reass_pbufcount.lto_priv.58
+                0x2000bb8e                ip_id.lto_priv.49
+ .bss           0x2000bb90       0x10 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+                0x2000bb90                tcp_tw_pcbs
+                0x2000bb98                tcp_input_pcb
+                0x2000bb9c                tcp_ticks
+ *(.bss.*)
+ *(COMMON)
+                0x2000bba0                _ebss = .
+                0x00000001                ASSERT (! ((SIZEOF (.stack) >= (ORIGIN (RAM) + 0x10000))), region ram  overflowed with stack)
+OUTPUT(STM32F107_Template.elf elf32-littlearm)
+
+.debug_info     0x00000000     0xb954
+ .debug_info    0x00000000     0x283c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+ .debug_info    0x0000283c     0x1ec0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .debug_info    0x000046fc      0xe1a C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+ .debug_info    0x00005516     0x1b11 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+ .debug_info    0x00007027     0x1f0b C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+ .debug_info    0x00008f32     0x13de C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+ .debug_info    0x0000a310     0x1241 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+ .debug_info    0x0000b551      0x403 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+
+.debug_abbrev   0x00000000     0x2052
+ .debug_abbrev  0x00000000      0x41b C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+ .debug_abbrev  0x0000041b      0x52b C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .debug_abbrev  0x00000946      0x327 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+ .debug_abbrev  0x00000c6d      0x500 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+ .debug_abbrev  0x0000116d      0x45a C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+ .debug_abbrev  0x000015c7      0x47b C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+ .debug_abbrev  0x00001a42      0x472 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+ .debug_abbrev  0x00001eb4      0x19e C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+
+.debug_loc      0x00000000     0x5e64
+ .debug_loc     0x00000000     0x16c3 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+ .debug_loc     0x000016c3     0x1473 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .debug_loc     0x00002b36      0x61a C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+ .debug_loc     0x00003150     0x1001 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+ .debug_loc     0x00004151      0x74b C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+ .debug_loc     0x0000489c      0xd61 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+ .debug_loc     0x000055fd      0x7ba C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+ .debug_loc     0x00005db7       0xad C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+
+.debug_aranges  0x00000000      0x2a0
+ .debug_aranges
+                0x00000000       0x20 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+ .debug_aranges
+                0x00000020       0x68 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .debug_aranges
+                0x00000088       0x40 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+ .debug_aranges
+                0x000000c8       0x88 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+ .debug_aranges
+                0x00000150       0x60 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+ .debug_aranges
+                0x000001b0       0x78 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+ .debug_aranges
+                0x00000228       0x58 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+ .debug_aranges
+                0x00000280       0x20 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+
+.debug_ranges   0x00000000      0xd50
+ .debug_ranges  0x00000000      0x390 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+ .debug_ranges  0x00000390      0x368 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .debug_ranges  0x000006f8       0x48 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+ .debug_ranges  0x00000740      0x1d8 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+ .debug_ranges  0x00000918      0x1d8 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+ .debug_ranges  0x00000af0      0x148 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+ .debug_ranges  0x00000c38       0xf0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+ .debug_ranges  0x00000d28       0x28 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+
+.debug_line     0x00000000     0x2f02
+ .debug_line    0x00000000      0x8ae C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+ .debug_line    0x000008ae      0x90e C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .debug_line    0x000011bc      0x3fd C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+ .debug_line    0x000015b9      0x560 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+ .debug_line    0x00001b19      0x7aa C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+ .debug_line    0x000022c3      0x50a C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+ .debug_line    0x000027cd      0x54c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+ .debug_line    0x00002d19      0x1e9 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+
+.debug_str      0x00000000     0x28a4
+ .debug_str     0x00000000      0xcce C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+                                0xdec (size before relaxing)
+ .debug_str     0x00000cce      0xcaa C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+                               0x10d5 (size before relaxing)
+ .debug_str     0x00001978      0x1da C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+                                0x7b5 (size before relaxing)
+ .debug_str     0x00001b52      0x357 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+                                0xa18 (size before relaxing)
+ .debug_str     0x00001ea9      0x66f C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+                                0xf2d (size before relaxing)
+ .debug_str     0x00002518      0x247 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+                                0x8b8 (size before relaxing)
+ .debug_str     0x0000275f      0x13d C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+                                0x8cb (size before relaxing)
+ .debug_str     0x0000289c        0x8 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+                                0x32d (size before relaxing)
+
+.comment        0x00000000       0x70
+ .comment       0x00000000       0x70 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+                                 0x71 (size before relaxing)
+ .comment       0x00000000       0x71 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .comment       0x00000000       0x71 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+ .comment       0x00000000       0x71 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+ .comment       0x00000000       0x71 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+ .comment       0x00000000       0x71 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+ .comment       0x00000000       0x71 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+ .comment       0x00000000       0x71 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+
+.ARM.attributes
+                0x00000000       0x31
+ .ARM.attributes
+                0x00000000       0x31 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+ .ARM.attributes
+                0x00000031       0x31 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .ARM.attributes
+                0x00000062       0x31 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+ .ARM.attributes
+                0x00000093       0x31 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+ .ARM.attributes
+                0x000000c4       0x31 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+ .ARM.attributes
+                0x000000f5       0x31 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+ .ARM.attributes
+                0x00000126       0x31 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+ .ARM.attributes
+                0x00000157       0x31 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+ .ARM.attributes
+                0x00000188       0x2d f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcmp.o)
+ .ARM.attributes
+                0x000001b5       0x1b f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
+ .ARM.attributes
+                0x000001d0       0x2d f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
+
+.debug_frame    0x00000000      0x868
+ .debug_frame   0x00000000       0x40 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans0.ltrans.o
+ .debug_frame   0x00000040      0x158 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans1.ltrans.o
+ .debug_frame   0x00000198       0xb4 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans2.ltrans.o
+ .debug_frame   0x0000024c      0x1d0 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans3.ltrans.o
+ .debug_frame   0x0000041c      0x104 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans4.ltrans.o
+ .debug_frame   0x00000520      0x16c C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans5.ltrans.o
+ .debug_frame   0x0000068c      0x138 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans6.ltrans.o
+ .debug_frame   0x000007c4       0x38 C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc1ejnqP.ltrans7.ltrans.o
+ .debug_frame   0x000007fc       0x38 f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcmp.o)
+ .debug_frame   0x00000834       0x34 f:/eclipse/gcc/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)

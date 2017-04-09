@@ -1,0 +1,1482 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"ethernetif.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.comm	tcp_end_time,4,4
+  19              		.comm	arp_end_time,4,4
+  20              		.comm	MACaddr,6,4
+  21              		.comm	DMARxDscrTab,64,4
+  22              		.comm	DMATxDscrTab,32,4
+  23              		.comm	Rx_Buff,6096,4
+  24              		.comm	Tx_Buff,3048,4
+  25              		.global	DMATxDesc
+  26              		.data
+  27              		.align	2
+  30              	DMATxDesc:
+  31 0000 00000000 		.word	DMATxDscrTab
+  32              		.section	.text.Set_MAC_Address,"ax",%progbits
+  33              		.align	2
+  34              		.global	Set_MAC_Address
+  35              		.thumb
+  36              		.thumb_func
+  38              	Set_MAC_Address:
+  39              	.LFB29:
+  40              		.file 1 "../lwip-1.4.1/port/ethernetif.c"
+   1:../lwip-1.4.1/port/ethernetif.c **** /**
+   2:../lwip-1.4.1/port/ethernetif.c ****  * @file
+   3:../lwip-1.4.1/port/ethernetif.c ****  * Ethernet Interface Skeleton
+   4:../lwip-1.4.1/port/ethernetif.c ****  *
+   5:../lwip-1.4.1/port/ethernetif.c ****  */
+   6:../lwip-1.4.1/port/ethernetif.c **** 
+   7:../lwip-1.4.1/port/ethernetif.c **** /*
+   8:../lwip-1.4.1/port/ethernetif.c ****  * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
+   9:../lwip-1.4.1/port/ethernetif.c ****  * All rights reserved.
+  10:../lwip-1.4.1/port/ethernetif.c ****  *
+  11:../lwip-1.4.1/port/ethernetif.c ****  * Redistribution and use in source and binary forms, with or without modification,
+  12:../lwip-1.4.1/port/ethernetif.c ****  * are permitted provided that the following conditions are met:
+  13:../lwip-1.4.1/port/ethernetif.c ****  *
+  14:../lwip-1.4.1/port/ethernetif.c ****  * 1. Redistributions of source code must retain the above copyright notice,
+  15:../lwip-1.4.1/port/ethernetif.c ****  *    this list of conditions and the following disclaimer.
+  16:../lwip-1.4.1/port/ethernetif.c ****  * 2. Redistributions in binary form must reproduce the above copyright notice,
+  17:../lwip-1.4.1/port/ethernetif.c ****  *    this list of conditions and the following disclaimer in the documentation
+  18:../lwip-1.4.1/port/ethernetif.c ****  *    and/or other materials provided with the distribution.
+  19:../lwip-1.4.1/port/ethernetif.c ****  * 3. The name of the author may not be used to endorse or promote products
+  20:../lwip-1.4.1/port/ethernetif.c ****  *    derived from this software without specific prior written permission.
+  21:../lwip-1.4.1/port/ethernetif.c ****  *
+  22:../lwip-1.4.1/port/ethernetif.c ****  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+  23:../lwip-1.4.1/port/ethernetif.c ****  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+  24:../lwip-1.4.1/port/ethernetif.c ****  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+  25:../lwip-1.4.1/port/ethernetif.c ****  * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+  26:../lwip-1.4.1/port/ethernetif.c ****  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+  27:../lwip-1.4.1/port/ethernetif.c ****  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  28:../lwip-1.4.1/port/ethernetif.c ****  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  29:../lwip-1.4.1/port/ethernetif.c ****  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+  30:../lwip-1.4.1/port/ethernetif.c ****  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+  31:../lwip-1.4.1/port/ethernetif.c ****  * OF SUCH DAMAGE.
+  32:../lwip-1.4.1/port/ethernetif.c ****  *
+  33:../lwip-1.4.1/port/ethernetif.c ****  * This file is part of the lwIP TCP/IP stack.
+  34:../lwip-1.4.1/port/ethernetif.c ****  *
+  35:../lwip-1.4.1/port/ethernetif.c ****  * Author: Adam Dunkels <adam@sics.se>
+  36:../lwip-1.4.1/port/ethernetif.c ****  *
+  37:../lwip-1.4.1/port/ethernetif.c ****  */
+  38:../lwip-1.4.1/port/ethernetif.c **** 
+  39:../lwip-1.4.1/port/ethernetif.c **** /*
+  40:../lwip-1.4.1/port/ethernetif.c ****  * This file is a skeleton for developing Ethernet network interface
+  41:../lwip-1.4.1/port/ethernetif.c ****  * drivers for lwIP. Add code to the low_level functions and do a
+  42:../lwip-1.4.1/port/ethernetif.c ****  * search-and-replace for the word "ethernetif" to replace it with
+  43:../lwip-1.4.1/port/ethernetif.c ****  * something that better describes your network interface.
+  44:../lwip-1.4.1/port/ethernetif.c ****  */
+  45:../lwip-1.4.1/port/ethernetif.c **** 
+  46:../lwip-1.4.1/port/ethernetif.c **** #include "lwip/opt.h"
+  47:../lwip-1.4.1/port/ethernetif.c **** #include "lwip/def.h"
+  48:../lwip-1.4.1/port/ethernetif.c **** #include "lwip/mem.h"
+  49:../lwip-1.4.1/port/ethernetif.c **** #include "lwip/pbuf.h"
+  50:../lwip-1.4.1/port/ethernetif.c **** #include "lwip/sys.h"
+  51:../lwip-1.4.1/port/ethernetif.c **** #include <lwip/stats.h>
+  52:../lwip-1.4.1/port/ethernetif.c **** #include <lwip/snmp.h>
+  53:../lwip-1.4.1/port/ethernetif.c **** #include "netif/etharp.h"
+  54:../lwip-1.4.1/port/ethernetif.c **** #include "netif/ppp_oe.h"
+  55:../lwip-1.4.1/port/ethernetif.c **** #include "lwip/err.h"
+  56:../lwip-1.4.1/port/ethernetif.c **** #include "ethernetif.h"
+  57:../lwip-1.4.1/port/ethernetif.c **** 
+  58:../lwip-1.4.1/port/ethernetif.c **** #include "stm32_eth.h"
+  59:../lwip-1.4.1/port/ethernetif.c **** #include <string.h>
+  60:../lwip-1.4.1/port/ethernetif.c **** 
+  61:../lwip-1.4.1/port/ethernetif.c **** /* TCP and ARP timeouts */
+  62:../lwip-1.4.1/port/ethernetif.c **** volatile int tcp_end_time, arp_end_time;
+  63:../lwip-1.4.1/port/ethernetif.c **** 
+  64:../lwip-1.4.1/port/ethernetif.c **** /* Define those to better describe your network interface. */
+  65:../lwip-1.4.1/port/ethernetif.c **** #define IFNAME0 's'
+  66:../lwip-1.4.1/port/ethernetif.c **** #define IFNAME1 't'
+  67:../lwip-1.4.1/port/ethernetif.c **** 
+  68:../lwip-1.4.1/port/ethernetif.c **** #define  ETH_DMARxDesc_FrameLengthShift           16
+  69:../lwip-1.4.1/port/ethernetif.c **** 
+  70:../lwip-1.4.1/port/ethernetif.c **** /**
+  71:../lwip-1.4.1/port/ethernetif.c ****  * Helper struct to hold private data used to operate your ethernet interface.
+  72:../lwip-1.4.1/port/ethernetif.c ****  * Keeping the ethernet address of the MAC in this struct is not necessary
+  73:../lwip-1.4.1/port/ethernetif.c ****  * as it is already kept in the struct netif.
+  74:../lwip-1.4.1/port/ethernetif.c ****  * But this is only an example, anyway...
+  75:../lwip-1.4.1/port/ethernetif.c ****  */
+  76:../lwip-1.4.1/port/ethernetif.c **** struct ethernetif
+  77:../lwip-1.4.1/port/ethernetif.c **** {
+  78:../lwip-1.4.1/port/ethernetif.c ****   struct eth_addr *ethaddr;
+  79:../lwip-1.4.1/port/ethernetif.c ****   /* Add whatever per-interface state that is needed here. */
+  80:../lwip-1.4.1/port/ethernetif.c ****   int unused;
+  81:../lwip-1.4.1/port/ethernetif.c **** };
+  82:../lwip-1.4.1/port/ethernetif.c **** 
+  83:../lwip-1.4.1/port/ethernetif.c **** /* Forward declarations. */
+  84:../lwip-1.4.1/port/ethernetif.c **** err_t  ethernetif_input(struct netif *netif);
+  85:../lwip-1.4.1/port/ethernetif.c **** 
+  86:../lwip-1.4.1/port/ethernetif.c **** #define ETH_RXBUFNB        4
+  87:../lwip-1.4.1/port/ethernetif.c **** #define ETH_TXBUFNB        2
+  88:../lwip-1.4.1/port/ethernetif.c **** 
+  89:../lwip-1.4.1/port/ethernetif.c **** uint8_t MACaddr[6];
+  90:../lwip-1.4.1/port/ethernetif.c **** ETH_DMADESCTypeDef  DMARxDscrTab[ETH_RXBUFNB], DMATxDscrTab[ETH_TXBUFNB];/* Ethernet Rx & Tx DMA De
+  91:../lwip-1.4.1/port/ethernetif.c **** uint8_t Rx_Buff[ETH_RXBUFNB][ETH_MAX_PACKET_SIZE], Tx_Buff[ETH_TXBUFNB][ETH_MAX_PACKET_SIZE];/* Eth
+  92:../lwip-1.4.1/port/ethernetif.c **** 
+  93:../lwip-1.4.1/port/ethernetif.c **** ETH_DMADESCTypeDef  *DMATxDesc = DMATxDscrTab;
+  94:../lwip-1.4.1/port/ethernetif.c **** extern ETH_DMADESCTypeDef  *DMATxDescToSet;
+  95:../lwip-1.4.1/port/ethernetif.c **** extern ETH_DMADESCTypeDef  *DMARxDescToGet;
+  96:../lwip-1.4.1/port/ethernetif.c **** 
+  97:../lwip-1.4.1/port/ethernetif.c **** typedef struct{
+  98:../lwip-1.4.1/port/ethernetif.c **** u32 length;
+  99:../lwip-1.4.1/port/ethernetif.c **** u32 buffer;
+ 100:../lwip-1.4.1/port/ethernetif.c **** ETH_DMADESCTypeDef *descriptor;
+ 101:../lwip-1.4.1/port/ethernetif.c **** }FrameTypeDef;
+ 102:../lwip-1.4.1/port/ethernetif.c **** 
+ 103:../lwip-1.4.1/port/ethernetif.c **** FrameTypeDef ETH_RxPkt_ChainMode(void);
+ 104:../lwip-1.4.1/port/ethernetif.c **** u32 ETH_GetCurrentTxBuffer(void);
+ 105:../lwip-1.4.1/port/ethernetif.c **** u32 ETH_TxPkt_ChainMode(u16 FrameLength);
+ 106:../lwip-1.4.1/port/ethernetif.c **** 
+ 107:../lwip-1.4.1/port/ethernetif.c **** 
+ 108:../lwip-1.4.1/port/ethernetif.c **** /**
+ 109:../lwip-1.4.1/port/ethernetif.c ****  * Setting the MAC address.
+ 110:../lwip-1.4.1/port/ethernetif.c ****  *
+ 111:../lwip-1.4.1/port/ethernetif.c ****  * @param netif the already initialized lwip network interface structure
+ 112:../lwip-1.4.1/port/ethernetif.c ****  *        for this ethernetif
+ 113:../lwip-1.4.1/port/ethernetif.c ****  */
+ 114:../lwip-1.4.1/port/ethernetif.c **** void Set_MAC_Address(uint8_t* macadd)
+ 115:../lwip-1.4.1/port/ethernetif.c **** {
+  41              		.loc 1 115 0
+  42              		.cfi_startproc
+  43              		@ args = 0, pretend = 0, frame = 8
+  44              		@ frame_needed = 1, uses_anonymous_args = 0
+  45 0000 80B5     		push	{r7, lr}
+  46              		.cfi_def_cfa_offset 8
+  47              		.cfi_offset 7, -8
+  48              		.cfi_offset 14, -4
+  49 0002 82B0     		sub	sp, sp, #8
+  50              		.cfi_def_cfa_offset 16
+  51 0004 00AF     		add	r7, sp, #0
+  52              		.cfi_def_cfa_register 7
+  53 0006 7860     		str	r0, [r7, #4]
+ 116:../lwip-1.4.1/port/ethernetif.c ****   MACaddr[0] = macadd[0];
+  54              		.loc 1 116 0
+  55 0008 7B68     		ldr	r3, [r7, #4]
+  56 000a 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+  57 000c 0E4B     		ldr	r3, .L2
+  58 000e 1A70     		strb	r2, [r3]
+ 117:../lwip-1.4.1/port/ethernetif.c ****   MACaddr[1] = macadd[1];
+  59              		.loc 1 117 0
+  60 0010 7B68     		ldr	r3, [r7, #4]
+  61 0012 5A78     		ldrb	r2, [r3, #1]	@ zero_extendqisi2
+  62 0014 0C4B     		ldr	r3, .L2
+  63 0016 5A70     		strb	r2, [r3, #1]
+ 118:../lwip-1.4.1/port/ethernetif.c ****   MACaddr[2] = macadd[2];
+  64              		.loc 1 118 0
+  65 0018 7B68     		ldr	r3, [r7, #4]
+  66 001a 9A78     		ldrb	r2, [r3, #2]	@ zero_extendqisi2
+  67 001c 0A4B     		ldr	r3, .L2
+  68 001e 9A70     		strb	r2, [r3, #2]
+ 119:../lwip-1.4.1/port/ethernetif.c ****   MACaddr[3] = macadd[3];
+  69              		.loc 1 119 0
+  70 0020 7B68     		ldr	r3, [r7, #4]
+  71 0022 DA78     		ldrb	r2, [r3, #3]	@ zero_extendqisi2
+  72 0024 084B     		ldr	r3, .L2
+  73 0026 DA70     		strb	r2, [r3, #3]
+ 120:../lwip-1.4.1/port/ethernetif.c ****   MACaddr[4] = macadd[4];
+  74              		.loc 1 120 0
+  75 0028 7B68     		ldr	r3, [r7, #4]
+  76 002a 1A79     		ldrb	r2, [r3, #4]	@ zero_extendqisi2
+  77 002c 064B     		ldr	r3, .L2
+  78 002e 1A71     		strb	r2, [r3, #4]
+ 121:../lwip-1.4.1/port/ethernetif.c ****   MACaddr[5] = macadd[5];
+  79              		.loc 1 121 0
+  80 0030 7B68     		ldr	r3, [r7, #4]
+  81 0032 5A79     		ldrb	r2, [r3, #5]	@ zero_extendqisi2
+  82 0034 044B     		ldr	r3, .L2
+  83 0036 5A71     		strb	r2, [r3, #5]
+ 122:../lwip-1.4.1/port/ethernetif.c ****   
+ 123:../lwip-1.4.1/port/ethernetif.c ****   ETH_MACAddressConfig(ETH_MAC_Address0, macadd);  
+  84              		.loc 1 123 0
+  85 0038 0020     		movs	r0, #0
+  86 003a 7968     		ldr	r1, [r7, #4]
+  87 003c FFF7FEFF 		bl	ETH_MACAddressConfig
+ 124:../lwip-1.4.1/port/ethernetif.c **** }
+  88              		.loc 1 124 0
+  89 0040 0837     		adds	r7, r7, #8
+  90              		.cfi_def_cfa_offset 8
+  91 0042 BD46     		mov	sp, r7
+  92              		.cfi_def_cfa_register 13
+  93              		@ sp needed
+  94 0044 80BD     		pop	{r7, pc}
+  95              	.L3:
+  96 0046 00BF     		.align	2
+  97              	.L2:
+  98 0048 00000000 		.word	MACaddr
+  99              		.cfi_endproc
+ 100              	.LFE29:
+ 102              		.section	.text.low_level_init,"ax",%progbits
+ 103              		.align	2
+ 104              		.thumb
+ 105              		.thumb_func
+ 107              	low_level_init:
+ 108              	.LFB30:
+ 125:../lwip-1.4.1/port/ethernetif.c **** 
+ 126:../lwip-1.4.1/port/ethernetif.c **** 
+ 127:../lwip-1.4.1/port/ethernetif.c **** /**
+ 128:../lwip-1.4.1/port/ethernetif.c ****  * In this function, the hardware should be initialized.
+ 129:../lwip-1.4.1/port/ethernetif.c ****  * Called from ethernetif_init().
+ 130:../lwip-1.4.1/port/ethernetif.c ****  *
+ 131:../lwip-1.4.1/port/ethernetif.c ****  * @param netif the already initialized lwip network interface structure
+ 132:../lwip-1.4.1/port/ethernetif.c ****  *        for this ethernetif
+ 133:../lwip-1.4.1/port/ethernetif.c ****  */
+ 134:../lwip-1.4.1/port/ethernetif.c **** static void
+ 135:../lwip-1.4.1/port/ethernetif.c **** low_level_init(struct netif *netif)
+ 136:../lwip-1.4.1/port/ethernetif.c **** {
+ 109              		.loc 1 136 0
+ 110              		.cfi_startproc
+ 111              		@ args = 0, pretend = 0, frame = 16
+ 112              		@ frame_needed = 1, uses_anonymous_args = 0
+ 113 0000 80B5     		push	{r7, lr}
+ 114              		.cfi_def_cfa_offset 8
+ 115              		.cfi_offset 7, -8
+ 116              		.cfi_offset 14, -4
+ 117 0002 84B0     		sub	sp, sp, #16
+ 118              		.cfi_def_cfa_offset 24
+ 119 0004 00AF     		add	r7, sp, #0
+ 120              		.cfi_def_cfa_register 7
+ 121 0006 7860     		str	r0, [r7, #4]
+ 137:../lwip-1.4.1/port/ethernetif.c ****   /* set MAC hardware address length */
+ 138:../lwip-1.4.1/port/ethernetif.c ****   netif->hwaddr_len = ETHARP_HWADDR_LEN;
+ 122              		.loc 1 138 0
+ 123 0008 7B68     		ldr	r3, [r7, #4]
+ 124 000a 0622     		movs	r2, #6
+ 125 000c 83F82220 		strb	r2, [r3, #34]
+ 139:../lwip-1.4.1/port/ethernetif.c **** 
+ 140:../lwip-1.4.1/port/ethernetif.c ****   /* set MAC hardware address */
+ 141:../lwip-1.4.1/port/ethernetif.c ****   netif->hwaddr[0] =  MACaddr[0];
+ 126              		.loc 1 141 0
+ 127 0010 2B4B     		ldr	r3, .L9
+ 128 0012 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 129 0014 7B68     		ldr	r3, [r7, #4]
+ 130 0016 83F82320 		strb	r2, [r3, #35]
+ 142:../lwip-1.4.1/port/ethernetif.c ****   netif->hwaddr[1] =  MACaddr[1];
+ 131              		.loc 1 142 0
+ 132 001a 294B     		ldr	r3, .L9
+ 133 001c 5A78     		ldrb	r2, [r3, #1]	@ zero_extendqisi2
+ 134 001e 7B68     		ldr	r3, [r7, #4]
+ 135 0020 83F82420 		strb	r2, [r3, #36]
+ 143:../lwip-1.4.1/port/ethernetif.c ****   netif->hwaddr[2] =  MACaddr[2];
+ 136              		.loc 1 143 0
+ 137 0024 264B     		ldr	r3, .L9
+ 138 0026 9A78     		ldrb	r2, [r3, #2]	@ zero_extendqisi2
+ 139 0028 7B68     		ldr	r3, [r7, #4]
+ 140 002a 83F82520 		strb	r2, [r3, #37]
+ 144:../lwip-1.4.1/port/ethernetif.c ****   netif->hwaddr[3] =  MACaddr[3];
+ 141              		.loc 1 144 0
+ 142 002e 244B     		ldr	r3, .L9
+ 143 0030 DA78     		ldrb	r2, [r3, #3]	@ zero_extendqisi2
+ 144 0032 7B68     		ldr	r3, [r7, #4]
+ 145 0034 83F82620 		strb	r2, [r3, #38]
+ 145:../lwip-1.4.1/port/ethernetif.c ****   netif->hwaddr[4] =  MACaddr[4];
+ 146              		.loc 1 145 0
+ 147 0038 214B     		ldr	r3, .L9
+ 148 003a 1A79     		ldrb	r2, [r3, #4]	@ zero_extendqisi2
+ 149 003c 7B68     		ldr	r3, [r7, #4]
+ 150 003e 83F82720 		strb	r2, [r3, #39]
+ 146:../lwip-1.4.1/port/ethernetif.c ****   netif->hwaddr[5] =  MACaddr[5];
+ 151              		.loc 1 146 0
+ 152 0042 1F4B     		ldr	r3, .L9
+ 153 0044 5A79     		ldrb	r2, [r3, #5]	@ zero_extendqisi2
+ 154 0046 7B68     		ldr	r3, [r7, #4]
+ 155 0048 83F82820 		strb	r2, [r3, #40]
+ 147:../lwip-1.4.1/port/ethernetif.c **** 
+ 148:../lwip-1.4.1/port/ethernetif.c ****   /* maximum transfer unit */
+ 149:../lwip-1.4.1/port/ethernetif.c ****   netif->mtu = 1500;
+ 156              		.loc 1 149 0
+ 157 004c 7B68     		ldr	r3, [r7, #4]
+ 158 004e 40F2DC52 		movw	r2, #1500
+ 159 0052 1A84     		strh	r2, [r3, #32]	@ movhi
+ 150:../lwip-1.4.1/port/ethernetif.c **** 
+ 151:../lwip-1.4.1/port/ethernetif.c ****   /* device capabilities */
+ 152:../lwip-1.4.1/port/ethernetif.c ****   /* don't set NETIF_FLAG_ETHARP if this device is not an ethernet one */
+ 153:../lwip-1.4.1/port/ethernetif.c ****   netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
+ 160              		.loc 1 153 0
+ 161 0054 7B68     		ldr	r3, [r7, #4]
+ 162 0056 3222     		movs	r2, #50
+ 163 0058 83F82920 		strb	r2, [r3, #41]
+ 154:../lwip-1.4.1/port/ethernetif.c **** 
+ 155:../lwip-1.4.1/port/ethernetif.c ****   /* Initialize Tx Descriptors list: Chain Mode */
+ 156:../lwip-1.4.1/port/ethernetif.c ****   ETH_DMATxDescChainInit(DMATxDscrTab, &Tx_Buff[0][0], ETH_TXBUFNB);
+ 164              		.loc 1 156 0
+ 165 005c 1948     		ldr	r0, .L9+4
+ 166 005e 1A49     		ldr	r1, .L9+8
+ 167 0060 0222     		movs	r2, #2
+ 168 0062 FFF7FEFF 		bl	ETH_DMATxDescChainInit
+ 157:../lwip-1.4.1/port/ethernetif.c ****   /* Initialize Rx Descriptors list: Chain Mode  */
+ 158:../lwip-1.4.1/port/ethernetif.c ****   ETH_DMARxDescChainInit(DMARxDscrTab, &Rx_Buff[0][0], ETH_RXBUFNB);
+ 169              		.loc 1 158 0
+ 170 0066 1948     		ldr	r0, .L9+12
+ 171 0068 1949     		ldr	r1, .L9+16
+ 172 006a 0422     		movs	r2, #4
+ 173 006c FFF7FEFF 		bl	ETH_DMARxDescChainInit
+ 174              	.LBB2:
+ 159:../lwip-1.4.1/port/ethernetif.c **** 
+ 160:../lwip-1.4.1/port/ethernetif.c ****   /* Enable Ethernet Rx interrrupt */
+ 161:../lwip-1.4.1/port/ethernetif.c ****   { int i;
+ 162:../lwip-1.4.1/port/ethernetif.c ****     for(i=0; i<ETH_RXBUFNB; i++)
+ 175              		.loc 1 162 0
+ 176 0070 0023     		movs	r3, #0
+ 177 0072 FB60     		str	r3, [r7, #12]
+ 178 0074 0AE0     		b	.L5
+ 179              	.L6:
+ 163:../lwip-1.4.1/port/ethernetif.c ****     {
+ 164:../lwip-1.4.1/port/ethernetif.c ****       ETH_DMARxDescReceiveITConfig(&DMARxDscrTab[i], ENABLE);
+ 180              		.loc 1 164 0 discriminator 3
+ 181 0076 FB68     		ldr	r3, [r7, #12]
+ 182 0078 1B01     		lsls	r3, r3, #4
+ 183 007a 144A     		ldr	r2, .L9+12
+ 184 007c 1344     		add	r3, r3, r2
+ 185 007e 1846     		mov	r0, r3
+ 186 0080 0121     		movs	r1, #1
+ 187 0082 FFF7FEFF 		bl	ETH_DMARxDescReceiveITConfig
+ 162:../lwip-1.4.1/port/ethernetif.c ****     {
+ 188              		.loc 1 162 0 discriminator 3
+ 189 0086 FB68     		ldr	r3, [r7, #12]
+ 190 0088 0133     		adds	r3, r3, #1
+ 191 008a FB60     		str	r3, [r7, #12]
+ 192              	.L5:
+ 162:../lwip-1.4.1/port/ethernetif.c ****     {
+ 193              		.loc 1 162 0 is_stmt 0 discriminator 1
+ 194 008c FB68     		ldr	r3, [r7, #12]
+ 195 008e 032B     		cmp	r3, #3
+ 196 0090 F1DD     		ble	.L6
+ 197              	.LBE2:
+ 198              	.LBB3:
+ 165:../lwip-1.4.1/port/ethernetif.c ****     }
+ 166:../lwip-1.4.1/port/ethernetif.c ****   }
+ 167:../lwip-1.4.1/port/ethernetif.c **** 
+ 168:../lwip-1.4.1/port/ethernetif.c **** #ifdef CHECKSUM_BY_HARDWARE
+ 169:../lwip-1.4.1/port/ethernetif.c ****   /* Enable the checksum insertion for the Tx frames */
+ 170:../lwip-1.4.1/port/ethernetif.c ****   { int i;
+ 171:../lwip-1.4.1/port/ethernetif.c ****     for(i=0; i<ETH_TXBUFNB; i++)
+ 199              		.loc 1 171 0 is_stmt 1
+ 200 0092 0023     		movs	r3, #0
+ 201 0094 BB60     		str	r3, [r7, #8]
+ 202 0096 0BE0     		b	.L7
+ 203              	.L8:
+ 172:../lwip-1.4.1/port/ethernetif.c ****     {
+ 173:../lwip-1.4.1/port/ethernetif.c ****       ETH_DMATxDescChecksumInsertionConfig(&DMATxDscrTab[i], ETH_DMATxDesc_ChecksumTCPUDPICMPFull);
+ 204              		.loc 1 173 0 discriminator 3
+ 205 0098 BB68     		ldr	r3, [r7, #8]
+ 206 009a 1B01     		lsls	r3, r3, #4
+ 207 009c 094A     		ldr	r2, .L9+4
+ 208 009e 1344     		add	r3, r3, r2
+ 209 00a0 1846     		mov	r0, r3
+ 210 00a2 4FF44001 		mov	r1, #12582912
+ 211 00a6 FFF7FEFF 		bl	ETH_DMATxDescChecksumInsertionConfig
+ 171:../lwip-1.4.1/port/ethernetif.c ****     {
+ 212              		.loc 1 171 0 discriminator 3
+ 213 00aa BB68     		ldr	r3, [r7, #8]
+ 214 00ac 0133     		adds	r3, r3, #1
+ 215 00ae BB60     		str	r3, [r7, #8]
+ 216              	.L7:
+ 171:../lwip-1.4.1/port/ethernetif.c ****     {
+ 217              		.loc 1 171 0 is_stmt 0 discriminator 1
+ 218 00b0 BB68     		ldr	r3, [r7, #8]
+ 219 00b2 012B     		cmp	r3, #1
+ 220 00b4 F0DD     		ble	.L8
+ 221              	.LBE3:
+ 174:../lwip-1.4.1/port/ethernetif.c ****     }
+ 175:../lwip-1.4.1/port/ethernetif.c ****   }
+ 176:../lwip-1.4.1/port/ethernetif.c **** #endif
+ 177:../lwip-1.4.1/port/ethernetif.c **** 
+ 178:../lwip-1.4.1/port/ethernetif.c ****   /* Enable MAC and DMA transmission and reception */
+ 179:../lwip-1.4.1/port/ethernetif.c ****   ETH_Start();
+ 222              		.loc 1 179 0 is_stmt 1
+ 223 00b6 FFF7FEFF 		bl	ETH_Start
+ 180:../lwip-1.4.1/port/ethernetif.c **** 
+ 181:../lwip-1.4.1/port/ethernetif.c **** }
+ 224              		.loc 1 181 0
+ 225 00ba 1037     		adds	r7, r7, #16
+ 226              		.cfi_def_cfa_offset 8
+ 227 00bc BD46     		mov	sp, r7
+ 228              		.cfi_def_cfa_register 13
+ 229              		@ sp needed
+ 230 00be 80BD     		pop	{r7, pc}
+ 231              	.L10:
+ 232              		.align	2
+ 233              	.L9:
+ 234 00c0 00000000 		.word	MACaddr
+ 235 00c4 00000000 		.word	DMATxDscrTab
+ 236 00c8 00000000 		.word	Tx_Buff
+ 237 00cc 00000000 		.word	DMARxDscrTab
+ 238 00d0 00000000 		.word	Rx_Buff
+ 239              		.cfi_endproc
+ 240              	.LFE30:
+ 242              		.section	.text.low_level_output,"ax",%progbits
+ 243              		.align	2
+ 244              		.thumb
+ 245              		.thumb_func
+ 247              	low_level_output:
+ 248              	.LFB31:
+ 182:../lwip-1.4.1/port/ethernetif.c **** 
+ 183:../lwip-1.4.1/port/ethernetif.c **** /**
+ 184:../lwip-1.4.1/port/ethernetif.c ****  * This function should do the actual transmission of the packet. The packet is
+ 185:../lwip-1.4.1/port/ethernetif.c ****  * contained in the pbuf that is passed to the function. This pbuf
+ 186:../lwip-1.4.1/port/ethernetif.c ****  * might be chained.
+ 187:../lwip-1.4.1/port/ethernetif.c ****  *
+ 188:../lwip-1.4.1/port/ethernetif.c ****  * @param netif the lwip network interface structure for this ethernetif
+ 189:../lwip-1.4.1/port/ethernetif.c ****  * @param p the MAC packet to send (e.g. IP packet including MAC addresses and type)
+ 190:../lwip-1.4.1/port/ethernetif.c ****  * @return ERR_OK if the packet could be sent
+ 191:../lwip-1.4.1/port/ethernetif.c ****  *         an err_t value if the packet couldn't be sent
+ 192:../lwip-1.4.1/port/ethernetif.c ****  *
+ 193:../lwip-1.4.1/port/ethernetif.c ****  * @note Returning ERR_MEM here if a DMA queue of your MAC is full can lead to
+ 194:../lwip-1.4.1/port/ethernetif.c ****  *       strange results. You might consider waiting for space in the DMA queue
+ 195:../lwip-1.4.1/port/ethernetif.c ****  *       to become availale since the stack doesn't retry to send a packet
+ 196:../lwip-1.4.1/port/ethernetif.c ****  *       dropped because of memory failure (except for the TCP timers).
+ 197:../lwip-1.4.1/port/ethernetif.c ****  */
+ 198:../lwip-1.4.1/port/ethernetif.c **** 
+ 199:../lwip-1.4.1/port/ethernetif.c **** static err_t
+ 200:../lwip-1.4.1/port/ethernetif.c **** low_level_output(struct netif *netif, struct pbuf *p)
+ 201:../lwip-1.4.1/port/ethernetif.c **** {
+ 249              		.loc 1 201 0
+ 250              		.cfi_startproc
+ 251              		@ args = 0, pretend = 0, frame = 24
+ 252              		@ frame_needed = 1, uses_anonymous_args = 0
+ 253 0000 80B5     		push	{r7, lr}
+ 254              		.cfi_def_cfa_offset 8
+ 255              		.cfi_offset 7, -8
+ 256              		.cfi_offset 14, -4
+ 257 0002 86B0     		sub	sp, sp, #24
+ 258              		.cfi_def_cfa_offset 32
+ 259 0004 00AF     		add	r7, sp, #0
+ 260              		.cfi_def_cfa_register 7
+ 261 0006 7860     		str	r0, [r7, #4]
+ 262 0008 3960     		str	r1, [r7]
+ 202:../lwip-1.4.1/port/ethernetif.c ****   struct pbuf *q;
+ 203:../lwip-1.4.1/port/ethernetif.c ****   int l = 0;
+ 263              		.loc 1 203 0
+ 264 000a 0023     		movs	r3, #0
+ 265 000c 3B61     		str	r3, [r7, #16]
+ 204:../lwip-1.4.1/port/ethernetif.c ****   u8 *buffer =  (u8 *)ETH_GetCurrentTxBuffer();
+ 266              		.loc 1 204 0
+ 267 000e FFF7FEFF 		bl	ETH_GetCurrentTxBuffer
+ 268 0012 0346     		mov	r3, r0
+ 269 0014 FB60     		str	r3, [r7, #12]
+ 205:../lwip-1.4.1/port/ethernetif.c ****   
+ 206:../lwip-1.4.1/port/ethernetif.c ****   for(q = p; q != NULL; q = q->next) 
+ 270              		.loc 1 206 0
+ 271 0016 3B68     		ldr	r3, [r7]
+ 272 0018 7B61     		str	r3, [r7, #20]
+ 273 001a 14E0     		b	.L12
+ 274              	.L13:
+ 207:../lwip-1.4.1/port/ethernetif.c ****   {
+ 208:../lwip-1.4.1/port/ethernetif.c ****     memcpy((u8_t*)&buffer[l], q->payload, q->len);
+ 275              		.loc 1 208 0 discriminator 3
+ 276 001c 3B69     		ldr	r3, [r7, #16]
+ 277 001e FA68     		ldr	r2, [r7, #12]
+ 278 0020 D118     		adds	r1, r2, r3
+ 279 0022 7B69     		ldr	r3, [r7, #20]
+ 280 0024 5A68     		ldr	r2, [r3, #4]
+ 281 0026 7B69     		ldr	r3, [r7, #20]
+ 282 0028 5B89     		ldrh	r3, [r3, #10]
+ 283 002a 0846     		mov	r0, r1
+ 284 002c 1146     		mov	r1, r2
+ 285 002e 1A46     		mov	r2, r3
+ 286 0030 FFF7FEFF 		bl	memcpy
+ 209:../lwip-1.4.1/port/ethernetif.c **** 	l = l + q->len;
+ 287              		.loc 1 209 0 discriminator 3
+ 288 0034 7B69     		ldr	r3, [r7, #20]
+ 289 0036 5B89     		ldrh	r3, [r3, #10]
+ 290 0038 1A46     		mov	r2, r3
+ 291 003a 3B69     		ldr	r3, [r7, #16]
+ 292 003c 1344     		add	r3, r3, r2
+ 293 003e 3B61     		str	r3, [r7, #16]
+ 206:../lwip-1.4.1/port/ethernetif.c ****   {
+ 294              		.loc 1 206 0 discriminator 3
+ 295 0040 7B69     		ldr	r3, [r7, #20]
+ 296 0042 1B68     		ldr	r3, [r3]
+ 297 0044 7B61     		str	r3, [r7, #20]
+ 298              	.L12:
+ 206:../lwip-1.4.1/port/ethernetif.c ****   {
+ 299              		.loc 1 206 0 is_stmt 0 discriminator 1
+ 300 0046 7B69     		ldr	r3, [r7, #20]
+ 301 0048 002B     		cmp	r3, #0
+ 302 004a E7D1     		bne	.L13
+ 210:../lwip-1.4.1/port/ethernetif.c ****   }
+ 211:../lwip-1.4.1/port/ethernetif.c **** 
+ 212:../lwip-1.4.1/port/ethernetif.c ****   ETH_TxPkt_ChainMode(l);
+ 303              		.loc 1 212 0 is_stmt 1
+ 304 004c 3B69     		ldr	r3, [r7, #16]
+ 305 004e 9BB2     		uxth	r3, r3
+ 306 0050 1846     		mov	r0, r3
+ 307 0052 FFF7FEFF 		bl	ETH_TxPkt_ChainMode
+ 213:../lwip-1.4.1/port/ethernetif.c **** 
+ 214:../lwip-1.4.1/port/ethernetif.c ****   return ERR_OK;
+ 308              		.loc 1 214 0
+ 309 0056 0023     		movs	r3, #0
+ 310 0058 5BB2     		sxtb	r3, r3
+ 215:../lwip-1.4.1/port/ethernetif.c **** }
+ 311              		.loc 1 215 0
+ 312 005a 1846     		mov	r0, r3
+ 313 005c 1837     		adds	r7, r7, #24
+ 314              		.cfi_def_cfa_offset 8
+ 315 005e BD46     		mov	sp, r7
+ 316              		.cfi_def_cfa_register 13
+ 317              		@ sp needed
+ 318 0060 80BD     		pop	{r7, pc}
+ 319              		.cfi_endproc
+ 320              	.LFE31:
+ 322 0062 00BF     		.section	.text.low_level_input,"ax",%progbits
+ 323              		.align	2
+ 324              		.thumb
+ 325              		.thumb_func
+ 327              	low_level_input:
+ 328              	.LFB32:
+ 216:../lwip-1.4.1/port/ethernetif.c **** 
+ 217:../lwip-1.4.1/port/ethernetif.c **** /**
+ 218:../lwip-1.4.1/port/ethernetif.c ****  * Should allocate a pbuf and transfer the bytes of the incoming
+ 219:../lwip-1.4.1/port/ethernetif.c ****  * packet from the interface into the pbuf.
+ 220:../lwip-1.4.1/port/ethernetif.c ****  *
+ 221:../lwip-1.4.1/port/ethernetif.c ****  * @param netif the lwip network interface structure for this ethernetif
+ 222:../lwip-1.4.1/port/ethernetif.c ****  * @return a pbuf filled with the received packet (including MAC header)
+ 223:../lwip-1.4.1/port/ethernetif.c ****  *         NULL on memory error
+ 224:../lwip-1.4.1/port/ethernetif.c ****  */
+ 225:../lwip-1.4.1/port/ethernetif.c **** static struct pbuf *
+ 226:../lwip-1.4.1/port/ethernetif.c **** low_level_input(struct netif *netif)
+ 227:../lwip-1.4.1/port/ethernetif.c **** {
+ 329              		.loc 1 227 0
+ 330              		.cfi_startproc
+ 331              		@ args = 0, pretend = 0, frame = 40
+ 332              		@ frame_needed = 1, uses_anonymous_args = 0
+ 333 0000 80B5     		push	{r7, lr}
+ 334              		.cfi_def_cfa_offset 8
+ 335              		.cfi_offset 7, -8
+ 336              		.cfi_offset 14, -4
+ 337 0002 8AB0     		sub	sp, sp, #40
+ 338              		.cfi_def_cfa_offset 48
+ 339 0004 00AF     		add	r7, sp, #0
+ 340              		.cfi_def_cfa_register 7
+ 341 0006 7860     		str	r0, [r7, #4]
+ 228:../lwip-1.4.1/port/ethernetif.c ****   struct pbuf *p, *q;
+ 229:../lwip-1.4.1/port/ethernetif.c ****   u16_t len;
+ 230:../lwip-1.4.1/port/ethernetif.c ****   int l =0;
+ 342              		.loc 1 230 0
+ 343 0008 0023     		movs	r3, #0
+ 344 000a 3B62     		str	r3, [r7, #32]
+ 231:../lwip-1.4.1/port/ethernetif.c ****   FrameTypeDef frame;
+ 232:../lwip-1.4.1/port/ethernetif.c ****   u8 *buffer;
+ 233:../lwip-1.4.1/port/ethernetif.c ****   
+ 234:../lwip-1.4.1/port/ethernetif.c ****   p = NULL;
+ 345              		.loc 1 234 0
+ 346 000c 0023     		movs	r3, #0
+ 347 000e FB61     		str	r3, [r7, #28]
+ 235:../lwip-1.4.1/port/ethernetif.c ****   frame = ETH_RxPkt_ChainMode();
+ 348              		.loc 1 235 0
+ 349 0010 07F10803 		add	r3, r7, #8
+ 350 0014 1846     		mov	r0, r3
+ 351 0016 FFF7FEFF 		bl	ETH_RxPkt_ChainMode
+ 236:../lwip-1.4.1/port/ethernetif.c ****   /* Obtain the size of the packet and put it into the "len"
+ 237:../lwip-1.4.1/port/ethernetif.c ****      variable. */
+ 238:../lwip-1.4.1/port/ethernetif.c ****   len = frame.length;
+ 352              		.loc 1 238 0
+ 353 001a BB68     		ldr	r3, [r7, #8]
+ 354 001c 7B83     		strh	r3, [r7, #26]	@ movhi
+ 239:../lwip-1.4.1/port/ethernetif.c ****   
+ 240:../lwip-1.4.1/port/ethernetif.c ****   buffer = (u8 *)frame.buffer;
+ 355              		.loc 1 240 0
+ 356 001e FB68     		ldr	r3, [r7, #12]
+ 357 0020 7B61     		str	r3, [r7, #20]
+ 241:../lwip-1.4.1/port/ethernetif.c **** 
+ 242:../lwip-1.4.1/port/ethernetif.c ****   /* We allocate a pbuf chain of pbufs from the pool. */
+ 243:../lwip-1.4.1/port/ethernetif.c ****   p = pbuf_alloc(PBUF_RAW, len, PBUF_POOL);
+ 358              		.loc 1 243 0
+ 359 0022 7B8B     		ldrh	r3, [r7, #26]
+ 360 0024 0320     		movs	r0, #3
+ 361 0026 1946     		mov	r1, r3
+ 362 0028 0322     		movs	r2, #3
+ 363 002a FFF7FEFF 		bl	pbuf_alloc
+ 364 002e F861     		str	r0, [r7, #28]
+ 244:../lwip-1.4.1/port/ethernetif.c **** 
+ 245:../lwip-1.4.1/port/ethernetif.c ****   if (p != NULL)
+ 365              		.loc 1 245 0
+ 366 0030 FB69     		ldr	r3, [r7, #28]
+ 367 0032 002B     		cmp	r3, #0
+ 368 0034 1AD0     		beq	.L16
+ 246:../lwip-1.4.1/port/ethernetif.c ****   {
+ 247:../lwip-1.4.1/port/ethernetif.c ****     for (q = p; q != NULL; q = q->next)
+ 369              		.loc 1 247 0
+ 370 0036 FB69     		ldr	r3, [r7, #28]
+ 371 0038 7B62     		str	r3, [r7, #36]
+ 372 003a 14E0     		b	.L17
+ 373              	.L18:
+ 248:../lwip-1.4.1/port/ethernetif.c ****     {
+ 249:../lwip-1.4.1/port/ethernetif.c **** 	  memcpy((u8_t*)q->payload, (u8_t*)&buffer[l], q->len);
+ 374              		.loc 1 249 0 discriminator 3
+ 375 003c 7B6A     		ldr	r3, [r7, #36]
+ 376 003e 5968     		ldr	r1, [r3, #4]
+ 377 0040 3B6A     		ldr	r3, [r7, #32]
+ 378 0042 7A69     		ldr	r2, [r7, #20]
+ 379 0044 1A44     		add	r2, r2, r3
+ 380 0046 7B6A     		ldr	r3, [r7, #36]
+ 381 0048 5B89     		ldrh	r3, [r3, #10]
+ 382 004a 0846     		mov	r0, r1
+ 383 004c 1146     		mov	r1, r2
+ 384 004e 1A46     		mov	r2, r3
+ 385 0050 FFF7FEFF 		bl	memcpy
+ 250:../lwip-1.4.1/port/ethernetif.c ****       l = l + q->len;
+ 386              		.loc 1 250 0 discriminator 3
+ 387 0054 7B6A     		ldr	r3, [r7, #36]
+ 388 0056 5B89     		ldrh	r3, [r3, #10]
+ 389 0058 1A46     		mov	r2, r3
+ 390 005a 3B6A     		ldr	r3, [r7, #32]
+ 391 005c 1344     		add	r3, r3, r2
+ 392 005e 3B62     		str	r3, [r7, #32]
+ 247:../lwip-1.4.1/port/ethernetif.c ****     {
+ 393              		.loc 1 247 0 discriminator 3
+ 394 0060 7B6A     		ldr	r3, [r7, #36]
+ 395 0062 1B68     		ldr	r3, [r3]
+ 396 0064 7B62     		str	r3, [r7, #36]
+ 397              	.L17:
+ 247:../lwip-1.4.1/port/ethernetif.c ****     {
+ 398              		.loc 1 247 0 is_stmt 0 discriminator 1
+ 399 0066 7B6A     		ldr	r3, [r7, #36]
+ 400 0068 002B     		cmp	r3, #0
+ 401 006a E7D1     		bne	.L18
+ 402              	.L16:
+ 251:../lwip-1.4.1/port/ethernetif.c ****     }    
+ 252:../lwip-1.4.1/port/ethernetif.c ****   }
+ 253:../lwip-1.4.1/port/ethernetif.c **** 
+ 254:../lwip-1.4.1/port/ethernetif.c **** 
+ 255:../lwip-1.4.1/port/ethernetif.c ****   /* Set Own bit of the Rx descriptor Status: gives the buffer back to ETHERNET DMA */
+ 256:../lwip-1.4.1/port/ethernetif.c ****   frame.descriptor->Status = ETH_DMARxDesc_OWN; 
+ 403              		.loc 1 256 0 is_stmt 1
+ 404 006c 3B69     		ldr	r3, [r7, #16]
+ 405 006e 4FF00042 		mov	r2, #-2147483648
+ 406 0072 1A60     		str	r2, [r3]
+ 257:../lwip-1.4.1/port/ethernetif.c ****  
+ 258:../lwip-1.4.1/port/ethernetif.c ****   /* When Rx Buffer unavailable flag is set: clear it and resume reception */
+ 259:../lwip-1.4.1/port/ethernetif.c ****   if ((ETH->DMASR & ETH_DMASR_RBUS) != (u32)RESET)  
+ 407              		.loc 1 259 0
+ 408 0074 0C4B     		ldr	r3, .L21
+ 409 0076 03F58053 		add	r3, r3, #4096
+ 410 007a 1433     		adds	r3, r3, #20
+ 411 007c 1B68     		ldr	r3, [r3]
+ 412 007e 03F08003 		and	r3, r3, #128
+ 413 0082 002B     		cmp	r3, #0
+ 414 0084 0BD0     		beq	.L19
+ 260:../lwip-1.4.1/port/ethernetif.c ****   {
+ 261:../lwip-1.4.1/port/ethernetif.c ****     /* Clear RBUS ETHERNET DMA flag */
+ 262:../lwip-1.4.1/port/ethernetif.c ****     ETH->DMASR = ETH_DMASR_RBUS;
+ 415              		.loc 1 262 0
+ 416 0086 084B     		ldr	r3, .L21
+ 417 0088 03F58053 		add	r3, r3, #4096
+ 418 008c 1433     		adds	r3, r3, #20
+ 419 008e 8022     		movs	r2, #128
+ 420 0090 1A60     		str	r2, [r3]
+ 263:../lwip-1.4.1/port/ethernetif.c ****     /* Resume DMA reception */
+ 264:../lwip-1.4.1/port/ethernetif.c ****     ETH->DMARPDR = 0;
+ 421              		.loc 1 264 0
+ 422 0092 054B     		ldr	r3, .L21
+ 423 0094 03F58053 		add	r3, r3, #4096
+ 424 0098 0833     		adds	r3, r3, #8
+ 425 009a 0022     		movs	r2, #0
+ 426 009c 1A60     		str	r2, [r3]
+ 427              	.L19:
+ 265:../lwip-1.4.1/port/ethernetif.c ****   }
+ 266:../lwip-1.4.1/port/ethernetif.c **** 
+ 267:../lwip-1.4.1/port/ethernetif.c **** 
+ 268:../lwip-1.4.1/port/ethernetif.c ****   return p;
+ 428              		.loc 1 268 0
+ 429 009e FB69     		ldr	r3, [r7, #28]
+ 269:../lwip-1.4.1/port/ethernetif.c **** }
+ 430              		.loc 1 269 0
+ 431 00a0 1846     		mov	r0, r3
+ 432 00a2 2837     		adds	r7, r7, #40
+ 433              		.cfi_def_cfa_offset 8
+ 434 00a4 BD46     		mov	sp, r7
+ 435              		.cfi_def_cfa_register 13
+ 436              		@ sp needed
+ 437 00a6 80BD     		pop	{r7, pc}
+ 438              	.L22:
+ 439              		.align	2
+ 440              	.L21:
+ 441 00a8 00800240 		.word	1073905664
+ 442              		.cfi_endproc
+ 443              	.LFE32:
+ 445              		.section	.text.ethernetif_input,"ax",%progbits
+ 446              		.align	2
+ 447              		.global	ethernetif_input
+ 448              		.thumb
+ 449              		.thumb_func
+ 451              	ethernetif_input:
+ 452              	.LFB33:
+ 270:../lwip-1.4.1/port/ethernetif.c **** 
+ 271:../lwip-1.4.1/port/ethernetif.c **** /**
+ 272:../lwip-1.4.1/port/ethernetif.c ****  * This function should be called when a packet is ready to be read
+ 273:../lwip-1.4.1/port/ethernetif.c ****  * from the interface. It uses the function low_level_input() that
+ 274:../lwip-1.4.1/port/ethernetif.c ****  * should handle the actual reception of bytes from the network
+ 275:../lwip-1.4.1/port/ethernetif.c ****  * interface. Then the type of the received packet is determined and
+ 276:../lwip-1.4.1/port/ethernetif.c ****  * the appropriate input function is called.
+ 277:../lwip-1.4.1/port/ethernetif.c ****  *
+ 278:../lwip-1.4.1/port/ethernetif.c ****  * @param netif the lwip network interface structure for this ethernetif
+ 279:../lwip-1.4.1/port/ethernetif.c ****  */
+ 280:../lwip-1.4.1/port/ethernetif.c **** err_t
+ 281:../lwip-1.4.1/port/ethernetif.c **** ethernetif_input(struct netif *netif)
+ 282:../lwip-1.4.1/port/ethernetif.c **** {
+ 453              		.loc 1 282 0
+ 454              		.cfi_startproc
+ 455              		@ args = 0, pretend = 0, frame = 16
+ 456              		@ frame_needed = 1, uses_anonymous_args = 0
+ 457 0000 80B5     		push	{r7, lr}
+ 458              		.cfi_def_cfa_offset 8
+ 459              		.cfi_offset 7, -8
+ 460              		.cfi_offset 14, -4
+ 461 0002 84B0     		sub	sp, sp, #16
+ 462              		.cfi_def_cfa_offset 24
+ 463 0004 00AF     		add	r7, sp, #0
+ 464              		.cfi_def_cfa_register 7
+ 465 0006 7860     		str	r0, [r7, #4]
+ 283:../lwip-1.4.1/port/ethernetif.c ****   err_t err;
+ 284:../lwip-1.4.1/port/ethernetif.c ****   struct pbuf *p;
+ 285:../lwip-1.4.1/port/ethernetif.c **** 
+ 286:../lwip-1.4.1/port/ethernetif.c ****   /* move received packet into a new pbuf */
+ 287:../lwip-1.4.1/port/ethernetif.c ****   p = low_level_input(netif);
+ 466              		.loc 1 287 0
+ 467 0008 7868     		ldr	r0, [r7, #4]
+ 468 000a FFF7FEFF 		bl	low_level_input
+ 469 000e F860     		str	r0, [r7, #12]
+ 288:../lwip-1.4.1/port/ethernetif.c **** 
+ 289:../lwip-1.4.1/port/ethernetif.c ****   /* no packet could be read, silently ignore this */
+ 290:../lwip-1.4.1/port/ethernetif.c ****   if (p == NULL) return ERR_MEM;
+ 470              		.loc 1 290 0
+ 471 0010 FB68     		ldr	r3, [r7, #12]
+ 472 0012 002B     		cmp	r3, #0
+ 473 0014 01D1     		bne	.L24
+ 474              		.loc 1 290 0 is_stmt 0 discriminator 1
+ 475 0016 FF23     		movs	r3, #255
+ 476 0018 10E0     		b	.L25
+ 477              	.L24:
+ 291:../lwip-1.4.1/port/ethernetif.c **** 
+ 292:../lwip-1.4.1/port/ethernetif.c ****   err = netif->input(p, netif);
+ 478              		.loc 1 292 0 is_stmt 1
+ 479 001a 7B68     		ldr	r3, [r7, #4]
+ 480 001c 1B69     		ldr	r3, [r3, #16]
+ 481 001e F868     		ldr	r0, [r7, #12]
+ 482 0020 7968     		ldr	r1, [r7, #4]
+ 483 0022 9847     		blx	r3
+ 484 0024 0346     		mov	r3, r0
+ 485 0026 FB72     		strb	r3, [r7, #11]
+ 293:../lwip-1.4.1/port/ethernetif.c ****   if (err != ERR_OK)
+ 486              		.loc 1 293 0
+ 487 0028 97F90B30 		ldrsb	r3, [r7, #11]
+ 488 002c 002B     		cmp	r3, #0
+ 489 002e 04D0     		beq	.L26
+ 294:../lwip-1.4.1/port/ethernetif.c ****   {
+ 295:../lwip-1.4.1/port/ethernetif.c ****     LWIP_DEBUGF(NETIF_DEBUG, ("ethernetif_input: IP input error\n"));
+ 296:../lwip-1.4.1/port/ethernetif.c ****     pbuf_free(p);
+ 490              		.loc 1 296 0
+ 491 0030 F868     		ldr	r0, [r7, #12]
+ 492 0032 FFF7FEFF 		bl	pbuf_free
+ 297:../lwip-1.4.1/port/ethernetif.c ****     p = NULL;
+ 493              		.loc 1 297 0
+ 494 0036 0023     		movs	r3, #0
+ 495 0038 FB60     		str	r3, [r7, #12]
+ 496              	.L26:
+ 298:../lwip-1.4.1/port/ethernetif.c ****   }
+ 299:../lwip-1.4.1/port/ethernetif.c **** 
+ 300:../lwip-1.4.1/port/ethernetif.c ****   return err;
+ 497              		.loc 1 300 0
+ 498 003a FB7A     		ldrb	r3, [r7, #11]	@ zero_extendqisi2
+ 499              	.L25:
+ 500 003c 5BB2     		sxtb	r3, r3
+ 301:../lwip-1.4.1/port/ethernetif.c **** }
+ 501              		.loc 1 301 0
+ 502 003e 1846     		mov	r0, r3
+ 503 0040 1037     		adds	r7, r7, #16
+ 504              		.cfi_def_cfa_offset 8
+ 505 0042 BD46     		mov	sp, r7
+ 506              		.cfi_def_cfa_register 13
+ 507              		@ sp needed
+ 508 0044 80BD     		pop	{r7, pc}
+ 509              		.cfi_endproc
+ 510              	.LFE33:
+ 512 0046 00BF     		.section	.text.ethernetif_init,"ax",%progbits
+ 513              		.align	2
+ 514              		.global	ethernetif_init
+ 515              		.thumb
+ 516              		.thumb_func
+ 518              	ethernetif_init:
+ 519              	.LFB34:
+ 302:../lwip-1.4.1/port/ethernetif.c **** 
+ 303:../lwip-1.4.1/port/ethernetif.c **** /**
+ 304:../lwip-1.4.1/port/ethernetif.c ****  * Should be called at the beginning of the program to set up the
+ 305:../lwip-1.4.1/port/ethernetif.c ****  * network interface. It calls the function low_level_init() to do the
+ 306:../lwip-1.4.1/port/ethernetif.c ****  * actual setup of the hardware.
+ 307:../lwip-1.4.1/port/ethernetif.c ****  *
+ 308:../lwip-1.4.1/port/ethernetif.c ****  * This function should be passed as a parameter to netif_add().
+ 309:../lwip-1.4.1/port/ethernetif.c ****  *
+ 310:../lwip-1.4.1/port/ethernetif.c ****  * @param netif the lwip network interface structure for this ethernetif
+ 311:../lwip-1.4.1/port/ethernetif.c ****  * @return ERR_OK if the loopif is initialized
+ 312:../lwip-1.4.1/port/ethernetif.c ****  *         ERR_MEM if private data couldn't be allocated
+ 313:../lwip-1.4.1/port/ethernetif.c ****  *         any other err_t on error
+ 314:../lwip-1.4.1/port/ethernetif.c ****  */
+ 315:../lwip-1.4.1/port/ethernetif.c **** err_t
+ 316:../lwip-1.4.1/port/ethernetif.c **** ethernetif_init(struct netif *netif)
+ 317:../lwip-1.4.1/port/ethernetif.c **** {
+ 520              		.loc 1 317 0
+ 521              		.cfi_startproc
+ 522              		@ args = 0, pretend = 0, frame = 16
+ 523              		@ frame_needed = 1, uses_anonymous_args = 0
+ 524 0000 80B5     		push	{r7, lr}
+ 525              		.cfi_def_cfa_offset 8
+ 526              		.cfi_offset 7, -8
+ 527              		.cfi_offset 14, -4
+ 528 0002 84B0     		sub	sp, sp, #16
+ 529              		.cfi_def_cfa_offset 24
+ 530 0004 00AF     		add	r7, sp, #0
+ 531              		.cfi_def_cfa_register 7
+ 532 0006 7860     		str	r0, [r7, #4]
+ 318:../lwip-1.4.1/port/ethernetif.c ****   struct ethernetif *ethernetif;
+ 319:../lwip-1.4.1/port/ethernetif.c **** 
+ 320:../lwip-1.4.1/port/ethernetif.c ****   LWIP_ASSERT("netif != NULL", (netif != NULL));
+ 321:../lwip-1.4.1/port/ethernetif.c **** 
+ 322:../lwip-1.4.1/port/ethernetif.c ****   ethernetif = mem_malloc(sizeof(struct ethernetif));
+ 533              		.loc 1 322 0
+ 534 0008 0820     		movs	r0, #8
+ 535 000a FFF7FEFF 		bl	mem_malloc
+ 536 000e F860     		str	r0, [r7, #12]
+ 323:../lwip-1.4.1/port/ethernetif.c ****   if (ethernetif == NULL)
+ 537              		.loc 1 323 0
+ 538 0010 FB68     		ldr	r3, [r7, #12]
+ 539 0012 002B     		cmp	r3, #0
+ 540 0014 01D1     		bne	.L28
+ 324:../lwip-1.4.1/port/ethernetif.c ****   {
+ 325:../lwip-1.4.1/port/ethernetif.c ****     LWIP_DEBUGF(NETIF_DEBUG, ("ethernetif_init: out of memory\n"));
+ 326:../lwip-1.4.1/port/ethernetif.c ****     return ERR_MEM;
+ 541              		.loc 1 326 0
+ 542 0016 FF23     		movs	r3, #255
+ 543 0018 19E0     		b	.L29
+ 544              	.L28:
+ 327:../lwip-1.4.1/port/ethernetif.c ****   }
+ 328:../lwip-1.4.1/port/ethernetif.c **** 
+ 329:../lwip-1.4.1/port/ethernetif.c **** #if LWIP_NETIF_HOSTNAME
+ 330:../lwip-1.4.1/port/ethernetif.c ****   /* Initialize interface hostname */
+ 331:../lwip-1.4.1/port/ethernetif.c ****   netif->hostname = "lwip";
+ 332:../lwip-1.4.1/port/ethernetif.c **** #endif /* LWIP_NETIF_HOSTNAME */
+ 333:../lwip-1.4.1/port/ethernetif.c **** 
+ 334:../lwip-1.4.1/port/ethernetif.c ****   /*
+ 335:../lwip-1.4.1/port/ethernetif.c ****    * Initialize the snmp variables and counters inside the struct netif.
+ 336:../lwip-1.4.1/port/ethernetif.c ****    * The last argument should be replaced with your link speed, in units
+ 337:../lwip-1.4.1/port/ethernetif.c ****    * of bits per second.
+ 338:../lwip-1.4.1/port/ethernetif.c ****    */
+ 339:../lwip-1.4.1/port/ethernetif.c ****   NETIF_INIT_SNMP(netif, snmp_ifType_ethernet_csmacd, 100000000);
+ 340:../lwip-1.4.1/port/ethernetif.c **** 
+ 341:../lwip-1.4.1/port/ethernetif.c ****   netif->state = ethernetif;
+ 545              		.loc 1 341 0
+ 546 001a 7B68     		ldr	r3, [r7, #4]
+ 547 001c FA68     		ldr	r2, [r7, #12]
+ 548 001e DA61     		str	r2, [r3, #28]
+ 342:../lwip-1.4.1/port/ethernetif.c ****   netif->name[0] = IFNAME0;
+ 549              		.loc 1 342 0
+ 550 0020 7B68     		ldr	r3, [r7, #4]
+ 551 0022 7322     		movs	r2, #115
+ 552 0024 83F82A20 		strb	r2, [r3, #42]
+ 343:../lwip-1.4.1/port/ethernetif.c ****   netif->name[1] = IFNAME1;
+ 553              		.loc 1 343 0
+ 554 0028 7B68     		ldr	r3, [r7, #4]
+ 555 002a 7422     		movs	r2, #116
+ 556 002c 83F82B20 		strb	r2, [r3, #43]
+ 344:../lwip-1.4.1/port/ethernetif.c ****   /* We directly use etharp_output() here to save a function call.
+ 345:../lwip-1.4.1/port/ethernetif.c ****    * You can instead declare your own function an call etharp_output()
+ 346:../lwip-1.4.1/port/ethernetif.c ****    * from it if you have to do some checks before sending (e.g. if link
+ 347:../lwip-1.4.1/port/ethernetif.c ****    * is available...) */
+ 348:../lwip-1.4.1/port/ethernetif.c ****   netif->output = etharp_output;
+ 557              		.loc 1 348 0
+ 558 0030 7B68     		ldr	r3, [r7, #4]
+ 559 0032 094A     		ldr	r2, .L30
+ 560 0034 5A61     		str	r2, [r3, #20]
+ 349:../lwip-1.4.1/port/ethernetif.c ****   netif->linkoutput = low_level_output;
+ 561              		.loc 1 349 0
+ 562 0036 7B68     		ldr	r3, [r7, #4]
+ 563 0038 084A     		ldr	r2, .L30+4
+ 564 003a 9A61     		str	r2, [r3, #24]
+ 350:../lwip-1.4.1/port/ethernetif.c **** 
+ 351:../lwip-1.4.1/port/ethernetif.c ****   ethernetif->ethaddr = (struct eth_addr *)&(netif->hwaddr[0]);
+ 565              		.loc 1 351 0
+ 566 003c 7B68     		ldr	r3, [r7, #4]
+ 567 003e 03F12302 		add	r2, r3, #35
+ 568 0042 FB68     		ldr	r3, [r7, #12]
+ 569 0044 1A60     		str	r2, [r3]
+ 352:../lwip-1.4.1/port/ethernetif.c **** 
+ 353:../lwip-1.4.1/port/ethernetif.c ****   /* initialize the hardware */
+ 354:../lwip-1.4.1/port/ethernetif.c ****   low_level_init(netif);
+ 570              		.loc 1 354 0
+ 571 0046 7868     		ldr	r0, [r7, #4]
+ 572 0048 FFF7FEFF 		bl	low_level_init
+ 355:../lwip-1.4.1/port/ethernetif.c **** 
+ 356:../lwip-1.4.1/port/ethernetif.c ****   return ERR_OK;
+ 573              		.loc 1 356 0
+ 574 004c 0023     		movs	r3, #0
+ 575              	.L29:
+ 576 004e 5BB2     		sxtb	r3, r3
+ 357:../lwip-1.4.1/port/ethernetif.c **** }
+ 577              		.loc 1 357 0
+ 578 0050 1846     		mov	r0, r3
+ 579 0052 1037     		adds	r7, r7, #16
+ 580              		.cfi_def_cfa_offset 8
+ 581 0054 BD46     		mov	sp, r7
+ 582              		.cfi_def_cfa_register 13
+ 583              		@ sp needed
+ 584 0056 80BD     		pop	{r7, pc}
+ 585              	.L31:
+ 586              		.align	2
+ 587              	.L30:
+ 588 0058 00000000 		.word	etharp_output
+ 589 005c 00000000 		.word	low_level_output
+ 590              		.cfi_endproc
+ 591              	.LFE34:
+ 593              		.section	.text.ETH_RxPkt_ChainMode,"ax",%progbits
+ 594              		.align	2
+ 595              		.global	ETH_RxPkt_ChainMode
+ 596              		.thumb
+ 597              		.thumb_func
+ 599              	ETH_RxPkt_ChainMode:
+ 600              	.LFB35:
+ 358:../lwip-1.4.1/port/ethernetif.c **** 
+ 359:../lwip-1.4.1/port/ethernetif.c **** /*******************************************************************************
+ 360:../lwip-1.4.1/port/ethernetif.c **** * Function Name  : ETH_RxPkt_ChainMode
+ 361:../lwip-1.4.1/port/ethernetif.c **** * Description    : Receives a packet.
+ 362:../lwip-1.4.1/port/ethernetif.c **** * Input          : None
+ 363:../lwip-1.4.1/port/ethernetif.c **** * Output         : None
+ 364:../lwip-1.4.1/port/ethernetif.c **** * Return         : frame: farme size and location
+ 365:../lwip-1.4.1/port/ethernetif.c **** *******************************************************************************/
+ 366:../lwip-1.4.1/port/ethernetif.c **** FrameTypeDef ETH_RxPkt_ChainMode(void)
+ 367:../lwip-1.4.1/port/ethernetif.c **** { 
+ 601              		.loc 1 367 0
+ 602              		.cfi_startproc
+ 603              		@ args = 0, pretend = 0, frame = 24
+ 604              		@ frame_needed = 1, uses_anonymous_args = 0
+ 605              		@ link register save eliminated.
+ 606 0000 90B4     		push	{r4, r7}
+ 607              		.cfi_def_cfa_offset 8
+ 608              		.cfi_offset 4, -8
+ 609              		.cfi_offset 7, -4
+ 610 0002 86B0     		sub	sp, sp, #24
+ 611              		.cfi_def_cfa_offset 32
+ 612 0004 00AF     		add	r7, sp, #0
+ 613              		.cfi_def_cfa_register 7
+ 614 0006 7860     		str	r0, [r7, #4]
+ 368:../lwip-1.4.1/port/ethernetif.c ****   u32 framelength = 0;
+ 615              		.loc 1 368 0
+ 616 0008 0023     		movs	r3, #0
+ 617 000a 7B61     		str	r3, [r7, #20]
+ 369:../lwip-1.4.1/port/ethernetif.c ****   FrameTypeDef frame = {0,0}; 
+ 618              		.loc 1 369 0
+ 619 000c 07F10803 		add	r3, r7, #8
+ 620 0010 0022     		movs	r2, #0
+ 621 0012 1A60     		str	r2, [r3]
+ 622 0014 0433     		adds	r3, r3, #4
+ 623 0016 0022     		movs	r2, #0
+ 624 0018 1A60     		str	r2, [r3]
+ 625 001a 0433     		adds	r3, r3, #4
+ 626 001c 0022     		movs	r2, #0
+ 627 001e 1A60     		str	r2, [r3]
+ 628 0020 0433     		adds	r3, r3, #4
+ 370:../lwip-1.4.1/port/ethernetif.c **** 
+ 371:../lwip-1.4.1/port/ethernetif.c ****   /* Check if the descriptor is owned by the ETHERNET DMA (when set) or CPU (when reset) */
+ 372:../lwip-1.4.1/port/ethernetif.c ****   if((DMARxDescToGet->Status & ETH_DMARxDesc_OWN) != (u32)RESET)
+ 629              		.loc 1 372 0
+ 630 0022 304B     		ldr	r3, .L39
+ 631 0024 1B68     		ldr	r3, [r3]
+ 632 0026 1B68     		ldr	r3, [r3]
+ 633 0028 002B     		cmp	r3, #0
+ 634 002a 1FDA     		bge	.L33
+ 373:../lwip-1.4.1/port/ethernetif.c ****   {	
+ 374:../lwip-1.4.1/port/ethernetif.c **** 	frame.length = ETH_ERROR;
+ 635              		.loc 1 374 0
+ 636 002c 0023     		movs	r3, #0
+ 637 002e BB60     		str	r3, [r7, #8]
+ 375:../lwip-1.4.1/port/ethernetif.c **** 
+ 376:../lwip-1.4.1/port/ethernetif.c ****     if ((ETH->DMASR & ETH_DMASR_RBUS) != (u32)RESET)  
+ 638              		.loc 1 376 0
+ 639 0030 2D4B     		ldr	r3, .L39+4
+ 640 0032 03F58053 		add	r3, r3, #4096
+ 641 0036 1433     		adds	r3, r3, #20
+ 642 0038 1B68     		ldr	r3, [r3]
+ 643 003a 03F08003 		and	r3, r3, #128
+ 644 003e 002B     		cmp	r3, #0
+ 645 0040 0BD0     		beq	.L34
+ 377:../lwip-1.4.1/port/ethernetif.c ****     {
+ 378:../lwip-1.4.1/port/ethernetif.c ****       /* Clear RBUS ETHERNET DMA flag */
+ 379:../lwip-1.4.1/port/ethernetif.c ****       ETH->DMASR = ETH_DMASR_RBUS;
+ 646              		.loc 1 379 0
+ 647 0042 294B     		ldr	r3, .L39+4
+ 648 0044 03F58053 		add	r3, r3, #4096
+ 649 0048 1433     		adds	r3, r3, #20
+ 650 004a 8022     		movs	r2, #128
+ 651 004c 1A60     		str	r2, [r3]
+ 380:../lwip-1.4.1/port/ethernetif.c ****       /* Resume DMA reception */
+ 381:../lwip-1.4.1/port/ethernetif.c ****       ETH->DMARPDR = 0;
+ 652              		.loc 1 381 0
+ 653 004e 264B     		ldr	r3, .L39+4
+ 654 0050 03F58053 		add	r3, r3, #4096
+ 655 0054 0833     		adds	r3, r3, #8
+ 656 0056 0022     		movs	r2, #0
+ 657 0058 1A60     		str	r2, [r3]
+ 658              	.L34:
+ 382:../lwip-1.4.1/port/ethernetif.c ****     }
+ 383:../lwip-1.4.1/port/ethernetif.c **** 
+ 384:../lwip-1.4.1/port/ethernetif.c **** 	/* Return error: OWN bit set */
+ 385:../lwip-1.4.1/port/ethernetif.c ****     return frame; 
+ 659              		.loc 1 385 0
+ 660 005a 7B68     		ldr	r3, [r7, #4]
+ 661 005c 1C46     		mov	r4, r3
+ 662 005e 07F10803 		add	r3, r7, #8
+ 663 0062 93E80700 		ldmia	r3, {r0, r1, r2}
+ 664 0066 84E80700 		stmia	r4, {r0, r1, r2}
+ 665 006a 36E0     		b	.L32
+ 666              	.L33:
+ 386:../lwip-1.4.1/port/ethernetif.c ****   }
+ 387:../lwip-1.4.1/port/ethernetif.c ****   
+ 388:../lwip-1.4.1/port/ethernetif.c ****   if(((DMARxDescToGet->Status & ETH_DMARxDesc_ES) == (u32)RESET) && 
+ 667              		.loc 1 388 0
+ 668 006c 1D4B     		ldr	r3, .L39
+ 669 006e 1B68     		ldr	r3, [r3]
+ 670 0070 1B68     		ldr	r3, [r3]
+ 671 0072 03F40043 		and	r3, r3, #32768
+ 672 0076 002B     		cmp	r3, #0
+ 673 0078 1AD1     		bne	.L36
+ 389:../lwip-1.4.1/port/ethernetif.c ****      ((DMARxDescToGet->Status & ETH_DMARxDesc_LS) != (u32)RESET) &&  
+ 674              		.loc 1 389 0 discriminator 1
+ 675 007a 1A4B     		ldr	r3, .L39
+ 676 007c 1B68     		ldr	r3, [r3]
+ 677 007e 1B68     		ldr	r3, [r3]
+ 678 0080 03F48073 		and	r3, r3, #256
+ 388:../lwip-1.4.1/port/ethernetif.c ****      ((DMARxDescToGet->Status & ETH_DMARxDesc_LS) != (u32)RESET) &&  
+ 679              		.loc 1 388 0 discriminator 1
+ 680 0084 002B     		cmp	r3, #0
+ 681 0086 13D0     		beq	.L36
+ 390:../lwip-1.4.1/port/ethernetif.c ****      ((DMARxDescToGet->Status & ETH_DMARxDesc_FS) != (u32)RESET))  
+ 682              		.loc 1 390 0
+ 683 0088 164B     		ldr	r3, .L39
+ 684 008a 1B68     		ldr	r3, [r3]
+ 685 008c 1B68     		ldr	r3, [r3]
+ 686 008e 03F40073 		and	r3, r3, #512
+ 389:../lwip-1.4.1/port/ethernetif.c ****      ((DMARxDescToGet->Status & ETH_DMARxDesc_LS) != (u32)RESET) &&  
+ 687              		.loc 1 389 0
+ 688 0092 002B     		cmp	r3, #0
+ 689 0094 0CD0     		beq	.L36
+ 391:../lwip-1.4.1/port/ethernetif.c ****   {      
+ 392:../lwip-1.4.1/port/ethernetif.c ****     /* Get the Frame Length of the received packet: substruct 4 bytes of the CRC */
+ 393:../lwip-1.4.1/port/ethernetif.c ****     framelength = ((DMARxDescToGet->Status & ETH_DMARxDesc_FL) >> ETH_DMARxDesc_FrameLengthShift) -
+ 690              		.loc 1 393 0
+ 691 0096 134B     		ldr	r3, .L39
+ 692 0098 1B68     		ldr	r3, [r3]
+ 693 009a 1A68     		ldr	r2, [r3]
+ 694 009c 134B     		ldr	r3, .L39+8
+ 695 009e 1340     		ands	r3, r3, r2
+ 696 00a0 1B0C     		lsrs	r3, r3, #16
+ 697 00a2 043B     		subs	r3, r3, #4
+ 698 00a4 7B61     		str	r3, [r7, #20]
+ 394:../lwip-1.4.1/port/ethernetif.c **** 	
+ 395:../lwip-1.4.1/port/ethernetif.c **** 	/* Get the addrees of the actual buffer */
+ 396:../lwip-1.4.1/port/ethernetif.c **** 	frame.buffer = DMARxDescToGet->Buffer1Addr;	
+ 699              		.loc 1 396 0
+ 700 00a6 0F4B     		ldr	r3, .L39
+ 701 00a8 1B68     		ldr	r3, [r3]
+ 702 00aa 9B68     		ldr	r3, [r3, #8]
+ 703 00ac FB60     		str	r3, [r7, #12]
+ 704 00ae 01E0     		b	.L37
+ 705              	.L36:
+ 397:../lwip-1.4.1/port/ethernetif.c ****   }
+ 398:../lwip-1.4.1/port/ethernetif.c ****   else
+ 399:../lwip-1.4.1/port/ethernetif.c ****   {
+ 400:../lwip-1.4.1/port/ethernetif.c ****     /* Return ERROR */
+ 401:../lwip-1.4.1/port/ethernetif.c ****     framelength = ETH_ERROR;
+ 706              		.loc 1 401 0
+ 707 00b0 0023     		movs	r3, #0
+ 708 00b2 7B61     		str	r3, [r7, #20]
+ 709              	.L37:
+ 402:../lwip-1.4.1/port/ethernetif.c ****   }
+ 403:../lwip-1.4.1/port/ethernetif.c **** 
+ 404:../lwip-1.4.1/port/ethernetif.c ****   frame.length = framelength;
+ 710              		.loc 1 404 0
+ 711 00b4 7B69     		ldr	r3, [r7, #20]
+ 712 00b6 BB60     		str	r3, [r7, #8]
+ 405:../lwip-1.4.1/port/ethernetif.c **** 
+ 406:../lwip-1.4.1/port/ethernetif.c **** 
+ 407:../lwip-1.4.1/port/ethernetif.c ****   frame.descriptor = DMARxDescToGet;
+ 713              		.loc 1 407 0
+ 714 00b8 0A4B     		ldr	r3, .L39
+ 715 00ba 1B68     		ldr	r3, [r3]
+ 716 00bc 3B61     		str	r3, [r7, #16]
+ 408:../lwip-1.4.1/port/ethernetif.c ****   
+ 409:../lwip-1.4.1/port/ethernetif.c ****   /* Update the ETHERNET DMA global Rx descriptor with next Rx decriptor */      
+ 410:../lwip-1.4.1/port/ethernetif.c ****   /* Chained Mode */    
+ 411:../lwip-1.4.1/port/ethernetif.c ****   /* Selects the next DMA Rx descriptor list for next buffer to read */ 
+ 412:../lwip-1.4.1/port/ethernetif.c ****   DMARxDescToGet = (ETH_DMADESCTypeDef*) (DMARxDescToGet->Buffer2NextDescAddr);    
+ 717              		.loc 1 412 0
+ 718 00be 094B     		ldr	r3, .L39
+ 719 00c0 1B68     		ldr	r3, [r3]
+ 720 00c2 DB68     		ldr	r3, [r3, #12]
+ 721 00c4 1A46     		mov	r2, r3
+ 722 00c6 074B     		ldr	r3, .L39
+ 723 00c8 1A60     		str	r2, [r3]
+ 413:../lwip-1.4.1/port/ethernetif.c ****   
+ 414:../lwip-1.4.1/port/ethernetif.c ****   /* Return Frame */
+ 415:../lwip-1.4.1/port/ethernetif.c ****   return (frame);  
+ 724              		.loc 1 415 0
+ 725 00ca 7B68     		ldr	r3, [r7, #4]
+ 726 00cc 1C46     		mov	r4, r3
+ 727 00ce 07F10803 		add	r3, r7, #8
+ 728 00d2 93E80700 		ldmia	r3, {r0, r1, r2}
+ 729 00d6 84E80700 		stmia	r4, {r0, r1, r2}
+ 730              	.L32:
+ 416:../lwip-1.4.1/port/ethernetif.c **** }
+ 731              		.loc 1 416 0
+ 732 00da 7868     		ldr	r0, [r7, #4]
+ 733 00dc 1837     		adds	r7, r7, #24
+ 734              		.cfi_def_cfa_offset 8
+ 735 00de BD46     		mov	sp, r7
+ 736              		.cfi_def_cfa_register 13
+ 737              		@ sp needed
+ 738 00e0 90BC     		pop	{r4, r7}
+ 739              		.cfi_restore 7
+ 740              		.cfi_restore 4
+ 741              		.cfi_def_cfa_offset 0
+ 742 00e2 7047     		bx	lr
+ 743              	.L40:
+ 744              		.align	2
+ 745              	.L39:
+ 746 00e4 00000000 		.word	DMARxDescToGet
+ 747 00e8 00800240 		.word	1073905664
+ 748 00ec 0000FF3F 		.word	1073676288
+ 749              		.cfi_endproc
+ 750              	.LFE35:
+ 752              		.section	.text.ETH_TxPkt_ChainMode,"ax",%progbits
+ 753              		.align	2
+ 754              		.global	ETH_TxPkt_ChainMode
+ 755              		.thumb
+ 756              		.thumb_func
+ 758              	ETH_TxPkt_ChainMode:
+ 759              	.LFB36:
+ 417:../lwip-1.4.1/port/ethernetif.c **** 
+ 418:../lwip-1.4.1/port/ethernetif.c **** /*******************************************************************************
+ 419:../lwip-1.4.1/port/ethernetif.c **** * Function Name  : ETH_TxPkt_ChainMode
+ 420:../lwip-1.4.1/port/ethernetif.c **** * Description    : Transmits a packet, from application buffer, pointed by ppkt.
+ 421:../lwip-1.4.1/port/ethernetif.c **** * Input          : - FrameLength: Tx Packet size.
+ 422:../lwip-1.4.1/port/ethernetif.c **** * Output         : None
+ 423:../lwip-1.4.1/port/ethernetif.c **** * Return         : ETH_ERROR: in case of Tx desc owned by DMA
+ 424:../lwip-1.4.1/port/ethernetif.c **** *                  ETH_SUCCESS: for correct transmission
+ 425:../lwip-1.4.1/port/ethernetif.c **** *******************************************************************************/
+ 426:../lwip-1.4.1/port/ethernetif.c **** u32 ETH_TxPkt_ChainMode(u16 FrameLength)
+ 427:../lwip-1.4.1/port/ethernetif.c **** {   
+ 760              		.loc 1 427 0
+ 761              		.cfi_startproc
+ 762              		@ args = 0, pretend = 0, frame = 8
+ 763              		@ frame_needed = 1, uses_anonymous_args = 0
+ 764              		@ link register save eliminated.
+ 765 0000 80B4     		push	{r7}
+ 766              		.cfi_def_cfa_offset 4
+ 767              		.cfi_offset 7, -4
+ 768 0002 83B0     		sub	sp, sp, #12
+ 769              		.cfi_def_cfa_offset 16
+ 770 0004 00AF     		add	r7, sp, #0
+ 771              		.cfi_def_cfa_register 7
+ 772 0006 0346     		mov	r3, r0
+ 773 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 428:../lwip-1.4.1/port/ethernetif.c ****   /* Check if the descriptor is owned by the ETHERNET DMA (when set) or CPU (when reset) */
+ 429:../lwip-1.4.1/port/ethernetif.c ****   if((DMATxDescToSet->Status & ETH_DMATxDesc_OWN) != (u32)RESET)
+ 774              		.loc 1 429 0
+ 775 000a 1F4B     		ldr	r3, .L45
+ 776 000c 1B68     		ldr	r3, [r3]
+ 777 000e 1B68     		ldr	r3, [r3]
+ 778 0010 002B     		cmp	r3, #0
+ 779 0012 01DA     		bge	.L42
+ 430:../lwip-1.4.1/port/ethernetif.c ****   {  
+ 431:../lwip-1.4.1/port/ethernetif.c **** 	/* Return ERROR: OWN bit set */
+ 432:../lwip-1.4.1/port/ethernetif.c ****     return ETH_ERROR;
+ 780              		.loc 1 432 0
+ 781 0014 0023     		movs	r3, #0
+ 782 0016 31E0     		b	.L43
+ 783              	.L42:
+ 433:../lwip-1.4.1/port/ethernetif.c ****   }
+ 434:../lwip-1.4.1/port/ethernetif.c ****         
+ 435:../lwip-1.4.1/port/ethernetif.c ****   /* Setting the Frame Length: bits[12:0] */
+ 436:../lwip-1.4.1/port/ethernetif.c ****   DMATxDescToSet->ControlBufferSize = (FrameLength & ETH_DMATxDesc_TBS1);
+ 784              		.loc 1 436 0
+ 785 0018 1B4B     		ldr	r3, .L45
+ 786 001a 1B68     		ldr	r3, [r3]
+ 787 001c FA88     		ldrh	r2, [r7, #6]
+ 788 001e C2F30C02 		ubfx	r2, r2, #0, #13
+ 789 0022 5A60     		str	r2, [r3, #4]
+ 437:../lwip-1.4.1/port/ethernetif.c **** 
+ 438:../lwip-1.4.1/port/ethernetif.c ****   /* Setting the last segment and first segment bits (in this case a frame is transmitted in one de
+ 439:../lwip-1.4.1/port/ethernetif.c ****   DMATxDescToSet->Status |= ETH_DMATxDesc_LS | ETH_DMATxDesc_FS;
+ 790              		.loc 1 439 0
+ 791 0024 184B     		ldr	r3, .L45
+ 792 0026 1B68     		ldr	r3, [r3]
+ 793 0028 174A     		ldr	r2, .L45
+ 794 002a 1268     		ldr	r2, [r2]
+ 795 002c 1268     		ldr	r2, [r2]
+ 796 002e 42F04052 		orr	r2, r2, #805306368
+ 797 0032 1A60     		str	r2, [r3]
+ 440:../lwip-1.4.1/port/ethernetif.c **** 
+ 441:../lwip-1.4.1/port/ethernetif.c ****   /* Set Own bit of the Tx descriptor Status: gives the buffer back to ETHERNET DMA */
+ 442:../lwip-1.4.1/port/ethernetif.c ****   DMATxDescToSet->Status |= ETH_DMATxDesc_OWN;
+ 798              		.loc 1 442 0
+ 799 0034 144B     		ldr	r3, .L45
+ 800 0036 1B68     		ldr	r3, [r3]
+ 801 0038 134A     		ldr	r2, .L45
+ 802 003a 1268     		ldr	r2, [r2]
+ 803 003c 1268     		ldr	r2, [r2]
+ 804 003e 42F00042 		orr	r2, r2, #-2147483648
+ 805 0042 1A60     		str	r2, [r3]
+ 443:../lwip-1.4.1/port/ethernetif.c **** 
+ 444:../lwip-1.4.1/port/ethernetif.c ****   /* When Tx Buffer unavailable flag is set: clear it and resume transmission */
+ 445:../lwip-1.4.1/port/ethernetif.c ****   if ((ETH->DMASR & ETH_DMASR_TBUS) != (u32)RESET)
+ 806              		.loc 1 445 0
+ 807 0044 114B     		ldr	r3, .L45+4
+ 808 0046 03F58053 		add	r3, r3, #4096
+ 809 004a 1433     		adds	r3, r3, #20
+ 810 004c 1B68     		ldr	r3, [r3]
+ 811 004e 03F00403 		and	r3, r3, #4
+ 812 0052 002B     		cmp	r3, #0
+ 813 0054 0BD0     		beq	.L44
+ 446:../lwip-1.4.1/port/ethernetif.c ****   {
+ 447:../lwip-1.4.1/port/ethernetif.c ****     /* Clear TBUS ETHERNET DMA flag */
+ 448:../lwip-1.4.1/port/ethernetif.c ****     ETH->DMASR = ETH_DMASR_TBUS;
+ 814              		.loc 1 448 0
+ 815 0056 0D4B     		ldr	r3, .L45+4
+ 816 0058 03F58053 		add	r3, r3, #4096
+ 817 005c 1433     		adds	r3, r3, #20
+ 818 005e 0422     		movs	r2, #4
+ 819 0060 1A60     		str	r2, [r3]
+ 449:../lwip-1.4.1/port/ethernetif.c ****     /* Resume DMA transmission*/
+ 450:../lwip-1.4.1/port/ethernetif.c ****     ETH->DMATPDR = 0;
+ 820              		.loc 1 450 0
+ 821 0062 0A4B     		ldr	r3, .L45+4
+ 822 0064 03F58053 		add	r3, r3, #4096
+ 823 0068 0433     		adds	r3, r3, #4
+ 824 006a 0022     		movs	r2, #0
+ 825 006c 1A60     		str	r2, [r3]
+ 826              	.L44:
+ 451:../lwip-1.4.1/port/ethernetif.c ****   }
+ 452:../lwip-1.4.1/port/ethernetif.c ****   
+ 453:../lwip-1.4.1/port/ethernetif.c ****   /* Update the ETHERNET DMA global Tx descriptor with next Tx decriptor */  
+ 454:../lwip-1.4.1/port/ethernetif.c ****   /* Chained Mode */
+ 455:../lwip-1.4.1/port/ethernetif.c ****   /* Selects the next DMA Tx descriptor list for next buffer to send */ 
+ 456:../lwip-1.4.1/port/ethernetif.c ****   DMATxDescToSet = (ETH_DMADESCTypeDef*) (DMATxDescToSet->Buffer2NextDescAddr);    
+ 827              		.loc 1 456 0
+ 828 006e 064B     		ldr	r3, .L45
+ 829 0070 1B68     		ldr	r3, [r3]
+ 830 0072 DB68     		ldr	r3, [r3, #12]
+ 831 0074 1A46     		mov	r2, r3
+ 832 0076 044B     		ldr	r3, .L45
+ 833 0078 1A60     		str	r2, [r3]
+ 457:../lwip-1.4.1/port/ethernetif.c **** 
+ 458:../lwip-1.4.1/port/ethernetif.c **** 
+ 459:../lwip-1.4.1/port/ethernetif.c ****   /* Return SUCCESS */
+ 460:../lwip-1.4.1/port/ethernetif.c ****   return ETH_SUCCESS;   
+ 834              		.loc 1 460 0
+ 835 007a 0123     		movs	r3, #1
+ 836              	.L43:
+ 461:../lwip-1.4.1/port/ethernetif.c **** }
+ 837              		.loc 1 461 0
+ 838 007c 1846     		mov	r0, r3
+ 839 007e 0C37     		adds	r7, r7, #12
+ 840              		.cfi_def_cfa_offset 4
+ 841 0080 BD46     		mov	sp, r7
+ 842              		.cfi_def_cfa_register 13
+ 843              		@ sp needed
+ 844 0082 5DF8047B 		ldr	r7, [sp], #4
+ 845              		.cfi_restore 7
+ 846              		.cfi_def_cfa_offset 0
+ 847 0086 7047     		bx	lr
+ 848              	.L46:
+ 849              		.align	2
+ 850              	.L45:
+ 851 0088 00000000 		.word	DMATxDescToSet
+ 852 008c 00800240 		.word	1073905664
+ 853              		.cfi_endproc
+ 854              	.LFE36:
+ 856              		.section	.text.ETH_GetCurrentTxBuffer,"ax",%progbits
+ 857              		.align	2
+ 858              		.global	ETH_GetCurrentTxBuffer
+ 859              		.thumb
+ 860              		.thumb_func
+ 862              	ETH_GetCurrentTxBuffer:
+ 863              	.LFB37:
+ 462:../lwip-1.4.1/port/ethernetif.c **** 
+ 463:../lwip-1.4.1/port/ethernetif.c **** 
+ 464:../lwip-1.4.1/port/ethernetif.c **** /*******************************************************************************
+ 465:../lwip-1.4.1/port/ethernetif.c **** * Function Name  : ETH_GetCurrentTxBuffer
+ 466:../lwip-1.4.1/port/ethernetif.c **** * Description    : Return the address of the buffer pointed by the current descritor.
+ 467:../lwip-1.4.1/port/ethernetif.c **** * Input          : None
+ 468:../lwip-1.4.1/port/ethernetif.c **** * Output         : None
+ 469:../lwip-1.4.1/port/ethernetif.c **** * Return         : Buffer address
+ 470:../lwip-1.4.1/port/ethernetif.c **** *******************************************************************************/
+ 471:../lwip-1.4.1/port/ethernetif.c **** u32 ETH_GetCurrentTxBuffer(void)
+ 472:../lwip-1.4.1/port/ethernetif.c **** { 
+ 864              		.loc 1 472 0
+ 865              		.cfi_startproc
+ 866              		@ args = 0, pretend = 0, frame = 0
+ 867              		@ frame_needed = 1, uses_anonymous_args = 0
+ 868              		@ link register save eliminated.
+ 869 0000 80B4     		push	{r7}
+ 870              		.cfi_def_cfa_offset 4
+ 871              		.cfi_offset 7, -4
+ 872 0002 00AF     		add	r7, sp, #0
+ 873              		.cfi_def_cfa_register 7
+ 473:../lwip-1.4.1/port/ethernetif.c ****   /* Return Buffer address */
+ 474:../lwip-1.4.1/port/ethernetif.c ****   return (DMATxDescToSet->Buffer1Addr);   
+ 874              		.loc 1 474 0
+ 875 0004 034B     		ldr	r3, .L49
+ 876 0006 1B68     		ldr	r3, [r3]
+ 877 0008 9B68     		ldr	r3, [r3, #8]
+ 475:../lwip-1.4.1/port/ethernetif.c **** }
+ 878              		.loc 1 475 0
+ 879 000a 1846     		mov	r0, r3
+ 880 000c BD46     		mov	sp, r7
+ 881              		.cfi_def_cfa_register 13
+ 882              		@ sp needed
+ 883 000e 5DF8047B 		ldr	r7, [sp], #4
+ 884              		.cfi_restore 7
+ 885              		.cfi_def_cfa_offset 0
+ 886 0012 7047     		bx	lr
+ 887              	.L50:
+ 888              		.align	2
+ 889              	.L49:
+ 890 0014 00000000 		.word	DMATxDescToSet
+ 891              		.cfi_endproc
+ 892              	.LFE37:
+ 894              		.text
+ 895              	.Letext0:
+ 896              		.file 2 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\port/arch/cc.h"
+ 897              		.file 3 "f:\\eclipse\\gcc\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 898              		.file 4 "f:\\eclipse\\gcc\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 899              		.file 5 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/err.h"
+ 900              		.file 6 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/pbuf.h
+ 901              		.file 7 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/memp.h
+ 902              		.file 8 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include\\ipv4/lwip/
+ 903              		.file 9 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/netif.
+ 904              		.file 10 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/netif/etha
+ 905              		.file 11 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\cmsis/stm32f10x.h"
+ 906              		.file 12 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\STM32_ETH_Driver\\inc/stm32_eth.h"
+ 907              		.file 13 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\cmsis/core_cm3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 ethernetif.c
+                            *COM*:00000004 tcp_end_time
+                            *COM*:00000004 arp_end_time
+                            *COM*:00000006 MACaddr
+                            *COM*:00000040 DMARxDscrTab
+                            *COM*:00000020 DMATxDscrTab
+                            *COM*:000017d0 Rx_Buff
+                            *COM*:00000be8 Tx_Buff
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:30     .data:00000000 DMATxDesc
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:27     .data:00000000 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:33     .text.Set_MAC_Address:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:38     .text.Set_MAC_Address:00000000 Set_MAC_Address
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:98     .text.Set_MAC_Address:00000048 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:103    .text.low_level_init:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:107    .text.low_level_init:00000000 low_level_init
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:234    .text.low_level_init:000000c0 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:243    .text.low_level_output:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:247    .text.low_level_output:00000000 low_level_output
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:862    .text.ETH_GetCurrentTxBuffer:00000000 ETH_GetCurrentTxBuffer
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:758    .text.ETH_TxPkt_ChainMode:00000000 ETH_TxPkt_ChainMode
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:323    .text.low_level_input:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:327    .text.low_level_input:00000000 low_level_input
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:599    .text.ETH_RxPkt_ChainMode:00000000 ETH_RxPkt_ChainMode
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:441    .text.low_level_input:000000a8 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:446    .text.ethernetif_input:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:451    .text.ethernetif_input:00000000 ethernetif_input
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:513    .text.ethernetif_init:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:518    .text.ethernetif_init:00000000 ethernetif_init
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:588    .text.ethernetif_init:00000058 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:594    .text.ETH_RxPkt_ChainMode:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:746    .text.ETH_RxPkt_ChainMode:000000e4 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:753    .text.ETH_TxPkt_ChainMode:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:851    .text.ETH_TxPkt_ChainMode:00000088 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:857    .text.ETH_GetCurrentTxBuffer:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccnbKSqX.s:890    .text.ETH_GetCurrentTxBuffer:00000014 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.2d80f1b5ce3c69d13e258577ddf29668
+                           .group:00000000 wm4.lwipopts.h.25.76e03deb318fbe54d896a83c1b611e55
+                           .group:00000000 wm4.arch.h.33.6fa4aa86d33d1490ae882caef7316405
+                           .group:00000000 wm4.cpu.h.33.0ec64ad8cd52614da6479c7936fa3efa
+                           .group:00000000 wm4.cc.h.49.217a0c46a6dd8448cb36cccbf00f897f
+                           .group:00000000 wm4.arch.h.52.2e97dbd839a1aa815d8c47878a7f8e2b
+                           .group:00000000 wm4.newlib.h.8.2702bca278809460f0af6fba1d84eb68
+                           .group:00000000 wm4.features.h.22.2e382148a0560adabf236cddd4e880f4
+                           .group:00000000 wm4.config.h.220.a09b0b0de3c25be3f39d71990e617bff
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.35ee9e747940367bf2a634907d1c2382
+                           .group:00000000 wm4.stddef.h.184.159df79b4ca79c76561572a55985524c
+                           .group:00000000 wm4.cdefs.h.47.3052445825803de6c3a3b68ec8193866
+                           .group:00000000 wm4.stddef.h.39.7e3d906ac58942e0b374c527445f5de5
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.types.h.24.b2be5f53932a9c9d07787288b29b6d75
+                           .group:00000000 wm4._stdint.h.10.f76354baea1c7088202064e6f3d4f5e3
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.82.82b71f3f44c70e3a459d0f66642b05eb
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.68.ff6d7571d3ad75c55f15e26dbaa81e35
+                           .group:00000000 wm4.debug.h.45.223028a5c052c9f879ffd43dd519f3f1
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.opt.h.76.0e16bb9c23144e1f631b5b5afa9a69f6
+                           .group:00000000 wm4.def.h.33.d4208c3cd3e0fc64e20a8b9f95a681f3
+                           .group:00000000 wm4.mem.h.33.ae21028c0b1f3dc3305003fc71edaf5a
+                           .group:00000000 wm4.err.h.33.909ff4b35439192d64931f0a04fc8fdb
+                           .group:00000000 wm4.pbuf.h.45.444f43edbf93d1b2ead9ba1554355b0e
+                           .group:00000000 wm4.sys.h.33.9424e51cd78278e60066cd7d6333ec27
+                           .group:00000000 wm4.memp.h.34.a409f52ec6d44b5681de26eb10b0c08b
+                           .group:00000000 wm4.memp_std.h.15.637bb4287b70e9d70dbd8dd3c6f62f3b
+                           .group:00000000 wm4.stats.h.51.0db2d210618aedce9edea4fb7e0fbaf1
+                           .group:00000000 wm4.ip_addr.h.33.906726af218ee6749c0aa25e08c3a1fe
+                           .group:00000000 wm4.snmp.h.234.6a4a080df54387bf1e5d35751c02f16a
+                           .group:00000000 wm4.netif.h.33.f0b62f0135b4c001826f0908df525042
+                           .group:00000000 wm4.ip.h.33.cd1106783490741294b06617fff8c08f
+                           .group:00000000 wm4.etharp.h.52.ca46a7aad6f87b149ac8ec7d5225b034
+                           .group:00000000 wm4.stm32f10x.h.51.6e18fa0f6016a7ea66d7cfe7c3be3cd1
+                           .group:00000000 wm4.core_cm3.h.25.d35e9a9b04ec4aaebae9bf79fff061f9
+                           .group:00000000 wm4._intsup.h.10.35a45952db64d30146faa63a55c20c1c
+                           .group:00000000 wm4.stdint.h.23.373a9d32a9e4c2e88fd347156532d281
+                           .group:00000000 wm4.core_cm3.h.113.b286929a54d33b4c8909a7132437b244
+                           .group:00000000 wm4.stm32f10x.h.522.34c9721dbd76a587b38991fd58e2fdab
+                           .group:00000000 wm4.stm32f10x_bkp.h.25.4622919f1e30efdad5eb44e12edd5513
+                           .group:00000000 wm4.stm32f10x_flash.h.25.4be61fcb02863962a1e006449d310650
+                           .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
+                           .group:00000000 wm4.stm32f10x_pwr.h.25.37ef75009f751ef5fe27910e0bf00a62
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.cb32a32bef653f9e9414120b411eb1bf
+                           .group:00000000 wm4.stm32f10x_tim.h.25.21c6ec062f1e74898cb96a57da276fec
+                           .group:00000000 wm4.misc.h.25.068e106f368fa5369a681ef57c106f4b
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.stm32_eth.h.37.832674a43908e6ddab9faceeb2b697fc
+
+UNDEFINED SYMBOLS
+ETH_MACAddressConfig
+ETH_DMATxDescChainInit
+ETH_DMARxDescChainInit
+ETH_DMARxDescReceiveITConfig
+ETH_DMATxDescChecksumInsertionConfig
+ETH_Start
+memcpy
+pbuf_alloc
+pbuf_free
+mem_malloc
+etharp_output
+DMARxDescToGet
+DMATxDescToSet

@@ -1,0 +1,1213 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"timers.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.bss
+  19              		.align	2
+  20              	next_timeout:
+  21 0000 00000000 		.space	4
+  22              		.align	2
+  23              	timeouts_last_time:
+  24 0004 00000000 		.space	4
+  25              		.align	2
+  26              	tcpip_tcp_timer_active:
+  27 0008 00000000 		.space	4
+  28              		.section	.text.tcpip_tcp_timer,"ax",%progbits
+  29              		.align	2
+  30              		.thumb
+  31              		.thumb_func
+  33              	tcpip_tcp_timer:
+  34              	.LFB0:
+  35              		.file 1 "../lwip-1.4.1/src/core/timers.c"
+   1:../lwip-1.4.1/src/core/timers.c **** /**
+   2:../lwip-1.4.1/src/core/timers.c ****  * @file
+   3:../lwip-1.4.1/src/core/timers.c ****  * Stack-internal timers implementation.
+   4:../lwip-1.4.1/src/core/timers.c ****  * This file includes timer callbacks for stack-internal timers as well as
+   5:../lwip-1.4.1/src/core/timers.c ****  * functions to set up or stop timers and check for expired timers.
+   6:../lwip-1.4.1/src/core/timers.c ****  *
+   7:../lwip-1.4.1/src/core/timers.c ****  */
+   8:../lwip-1.4.1/src/core/timers.c **** 
+   9:../lwip-1.4.1/src/core/timers.c **** /*
+  10:../lwip-1.4.1/src/core/timers.c ****  * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
+  11:../lwip-1.4.1/src/core/timers.c ****  * All rights reserved.
+  12:../lwip-1.4.1/src/core/timers.c ****  *
+  13:../lwip-1.4.1/src/core/timers.c ****  * Redistribution and use in source and binary forms, with or without modification,
+  14:../lwip-1.4.1/src/core/timers.c ****  * are permitted provided that the following conditions are met:
+  15:../lwip-1.4.1/src/core/timers.c ****  *
+  16:../lwip-1.4.1/src/core/timers.c ****  * 1. Redistributions of source code must retain the above copyright notice,
+  17:../lwip-1.4.1/src/core/timers.c ****  *    this list of conditions and the following disclaimer.
+  18:../lwip-1.4.1/src/core/timers.c ****  * 2. Redistributions in binary form must reproduce the above copyright notice,
+  19:../lwip-1.4.1/src/core/timers.c ****  *    this list of conditions and the following disclaimer in the documentation
+  20:../lwip-1.4.1/src/core/timers.c ****  *    and/or other materials provided with the distribution.
+  21:../lwip-1.4.1/src/core/timers.c ****  * 3. The name of the author may not be used to endorse or promote products
+  22:../lwip-1.4.1/src/core/timers.c ****  *    derived from this software without specific prior written permission.
+  23:../lwip-1.4.1/src/core/timers.c ****  *
+  24:../lwip-1.4.1/src/core/timers.c ****  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+  25:../lwip-1.4.1/src/core/timers.c ****  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+  26:../lwip-1.4.1/src/core/timers.c ****  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+  27:../lwip-1.4.1/src/core/timers.c ****  * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+  28:../lwip-1.4.1/src/core/timers.c ****  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+  29:../lwip-1.4.1/src/core/timers.c ****  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  30:../lwip-1.4.1/src/core/timers.c ****  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  31:../lwip-1.4.1/src/core/timers.c ****  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+  32:../lwip-1.4.1/src/core/timers.c ****  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+  33:../lwip-1.4.1/src/core/timers.c ****  * OF SUCH DAMAGE.
+  34:../lwip-1.4.1/src/core/timers.c ****  *
+  35:../lwip-1.4.1/src/core/timers.c ****  * This file is part of the lwIP TCP/IP stack.
+  36:../lwip-1.4.1/src/core/timers.c ****  *
+  37:../lwip-1.4.1/src/core/timers.c ****  * Author: Adam Dunkels <adam@sics.se>
+  38:../lwip-1.4.1/src/core/timers.c ****  *         Simon Goldschmidt
+  39:../lwip-1.4.1/src/core/timers.c ****  *
+  40:../lwip-1.4.1/src/core/timers.c ****  */
+  41:../lwip-1.4.1/src/core/timers.c **** 
+  42:../lwip-1.4.1/src/core/timers.c **** #include "lwip/opt.h"
+  43:../lwip-1.4.1/src/core/timers.c **** 
+  44:../lwip-1.4.1/src/core/timers.c **** #include "lwip/timers.h"
+  45:../lwip-1.4.1/src/core/timers.c **** #include "lwip/tcp_impl.h"
+  46:../lwip-1.4.1/src/core/timers.c **** 
+  47:../lwip-1.4.1/src/core/timers.c **** #if LWIP_TIMERS
+  48:../lwip-1.4.1/src/core/timers.c **** 
+  49:../lwip-1.4.1/src/core/timers.c **** #include "lwip/def.h"
+  50:../lwip-1.4.1/src/core/timers.c **** #include "lwip/memp.h"
+  51:../lwip-1.4.1/src/core/timers.c **** #include "lwip/tcpip.h"
+  52:../lwip-1.4.1/src/core/timers.c **** 
+  53:../lwip-1.4.1/src/core/timers.c **** #include "lwip/ip_frag.h"
+  54:../lwip-1.4.1/src/core/timers.c **** #include "netif/etharp.h"
+  55:../lwip-1.4.1/src/core/timers.c **** #include "lwip/dhcp.h"
+  56:../lwip-1.4.1/src/core/timers.c **** #include "lwip/autoip.h"
+  57:../lwip-1.4.1/src/core/timers.c **** #include "lwip/igmp.h"
+  58:../lwip-1.4.1/src/core/timers.c **** #include "lwip/dns.h"
+  59:../lwip-1.4.1/src/core/timers.c **** #include "lwip/sys.h"
+  60:../lwip-1.4.1/src/core/timers.c **** #include "lwip/pbuf.h"
+  61:../lwip-1.4.1/src/core/timers.c **** 
+  62:../lwip-1.4.1/src/core/timers.c **** 
+  63:../lwip-1.4.1/src/core/timers.c **** /** The one and only timeout list */
+  64:../lwip-1.4.1/src/core/timers.c **** static struct sys_timeo *next_timeout;
+  65:../lwip-1.4.1/src/core/timers.c **** #if NO_SYS
+  66:../lwip-1.4.1/src/core/timers.c **** static u32_t timeouts_last_time;
+  67:../lwip-1.4.1/src/core/timers.c **** #endif /* NO_SYS */
+  68:../lwip-1.4.1/src/core/timers.c **** 
+  69:../lwip-1.4.1/src/core/timers.c **** #if LWIP_TCP
+  70:../lwip-1.4.1/src/core/timers.c **** /** global variable that shows if the tcp timer is currently scheduled or not */
+  71:../lwip-1.4.1/src/core/timers.c **** static int tcpip_tcp_timer_active;
+  72:../lwip-1.4.1/src/core/timers.c **** 
+  73:../lwip-1.4.1/src/core/timers.c **** /**
+  74:../lwip-1.4.1/src/core/timers.c ****  * Timer callback function that calls tcp_tmr() and reschedules itself.
+  75:../lwip-1.4.1/src/core/timers.c ****  *
+  76:../lwip-1.4.1/src/core/timers.c ****  * @param arg unused argument
+  77:../lwip-1.4.1/src/core/timers.c ****  */
+  78:../lwip-1.4.1/src/core/timers.c **** static void
+  79:../lwip-1.4.1/src/core/timers.c **** tcpip_tcp_timer(void *arg)
+  80:../lwip-1.4.1/src/core/timers.c **** {
+  36              		.loc 1 80 0
+  37              		.cfi_startproc
+  38              		@ args = 0, pretend = 0, frame = 8
+  39              		@ frame_needed = 1, uses_anonymous_args = 0
+  40 0000 80B5     		push	{r7, lr}
+  41              		.cfi_def_cfa_offset 8
+  42              		.cfi_offset 7, -8
+  43              		.cfi_offset 14, -4
+  44 0002 82B0     		sub	sp, sp, #8
+  45              		.cfi_def_cfa_offset 16
+  46 0004 00AF     		add	r7, sp, #0
+  47              		.cfi_def_cfa_register 7
+  48 0006 7860     		str	r0, [r7, #4]
+  81:../lwip-1.4.1/src/core/timers.c ****   LWIP_UNUSED_ARG(arg);
+  82:../lwip-1.4.1/src/core/timers.c **** 
+  83:../lwip-1.4.1/src/core/timers.c ****   /* call TCP timer handler */
+  84:../lwip-1.4.1/src/core/timers.c ****   tcp_tmr();
+  49              		.loc 1 84 0
+  50 0008 FFF7FEFF 		bl	tcp_tmr
+  85:../lwip-1.4.1/src/core/timers.c ****   /* timer still needed? */
+  86:../lwip-1.4.1/src/core/timers.c ****   if (tcp_active_pcbs || tcp_tw_pcbs) {
+  51              		.loc 1 86 0
+  52 000c 094B     		ldr	r3, .L5
+  53 000e 1B68     		ldr	r3, [r3]
+  54 0010 002B     		cmp	r3, #0
+  55 0012 03D1     		bne	.L2
+  56              		.loc 1 86 0 is_stmt 0 discriminator 1
+  57 0014 084B     		ldr	r3, .L5+4
+  58 0016 1B68     		ldr	r3, [r3]
+  59 0018 002B     		cmp	r3, #0
+  60 001a 05D0     		beq	.L3
+  61              	.L2:
+  87:../lwip-1.4.1/src/core/timers.c ****     /* restart timer */
+  88:../lwip-1.4.1/src/core/timers.c ****     sys_timeout(TCP_TMR_INTERVAL, tcpip_tcp_timer, NULL);
+  62              		.loc 1 88 0 is_stmt 1
+  63 001c FA20     		movs	r0, #250
+  64 001e 0749     		ldr	r1, .L5+8
+  65 0020 0022     		movs	r2, #0
+  66 0022 FFF7FEFF 		bl	sys_timeout
+  67 0026 02E0     		b	.L1
+  68              	.L3:
+  89:../lwip-1.4.1/src/core/timers.c ****   } else {
+  90:../lwip-1.4.1/src/core/timers.c ****     /* disable timer */
+  91:../lwip-1.4.1/src/core/timers.c ****     tcpip_tcp_timer_active = 0;
+  69              		.loc 1 91 0
+  70 0028 054B     		ldr	r3, .L5+12
+  71 002a 0022     		movs	r2, #0
+  72 002c 1A60     		str	r2, [r3]
+  73              	.L1:
+  92:../lwip-1.4.1/src/core/timers.c ****   }
+  93:../lwip-1.4.1/src/core/timers.c **** }
+  74              		.loc 1 93 0
+  75 002e 0837     		adds	r7, r7, #8
+  76              		.cfi_def_cfa_offset 8
+  77 0030 BD46     		mov	sp, r7
+  78              		.cfi_def_cfa_register 13
+  79              		@ sp needed
+  80 0032 80BD     		pop	{r7, pc}
+  81              	.L6:
+  82              		.align	2
+  83              	.L5:
+  84 0034 00000000 		.word	tcp_active_pcbs
+  85 0038 00000000 		.word	tcp_tw_pcbs
+  86 003c 00000000 		.word	tcpip_tcp_timer
+  87 0040 08000000 		.word	tcpip_tcp_timer_active
+  88              		.cfi_endproc
+  89              	.LFE0:
+  91              		.section	.text.tcp_timer_needed,"ax",%progbits
+  92              		.align	2
+  93              		.global	tcp_timer_needed
+  94              		.thumb
+  95              		.thumb_func
+  97              	tcp_timer_needed:
+  98              	.LFB1:
+  94:../lwip-1.4.1/src/core/timers.c **** 
+  95:../lwip-1.4.1/src/core/timers.c **** /**
+  96:../lwip-1.4.1/src/core/timers.c ****  * Called from TCP_REG when registering a new PCB:
+  97:../lwip-1.4.1/src/core/timers.c ****  * the reason is to have the TCP timer only running when
+  98:../lwip-1.4.1/src/core/timers.c ****  * there are active (or time-wait) PCBs.
+  99:../lwip-1.4.1/src/core/timers.c ****  */
+ 100:../lwip-1.4.1/src/core/timers.c **** void
+ 101:../lwip-1.4.1/src/core/timers.c **** tcp_timer_needed(void)
+ 102:../lwip-1.4.1/src/core/timers.c **** {
+  99              		.loc 1 102 0
+ 100              		.cfi_startproc
+ 101              		@ args = 0, pretend = 0, frame = 0
+ 102              		@ frame_needed = 1, uses_anonymous_args = 0
+ 103 0000 80B5     		push	{r7, lr}
+ 104              		.cfi_def_cfa_offset 8
+ 105              		.cfi_offset 7, -8
+ 106              		.cfi_offset 14, -4
+ 107 0002 00AF     		add	r7, sp, #0
+ 108              		.cfi_def_cfa_register 7
+ 103:../lwip-1.4.1/src/core/timers.c ****   /* timer is off but needed again? */
+ 104:../lwip-1.4.1/src/core/timers.c ****   if (!tcpip_tcp_timer_active && (tcp_active_pcbs || tcp_tw_pcbs)) {
+ 109              		.loc 1 104 0
+ 110 0004 0A4B     		ldr	r3, .L10
+ 111 0006 1B68     		ldr	r3, [r3]
+ 112 0008 002B     		cmp	r3, #0
+ 113 000a 0FD1     		bne	.L7
+ 114              		.loc 1 104 0 is_stmt 0 discriminator 1
+ 115 000c 094B     		ldr	r3, .L10+4
+ 116 000e 1B68     		ldr	r3, [r3]
+ 117 0010 002B     		cmp	r3, #0
+ 118 0012 03D1     		bne	.L9
+ 119              		.loc 1 104 0 discriminator 2
+ 120 0014 084B     		ldr	r3, .L10+8
+ 121 0016 1B68     		ldr	r3, [r3]
+ 122 0018 002B     		cmp	r3, #0
+ 123 001a 07D0     		beq	.L7
+ 124              	.L9:
+ 105:../lwip-1.4.1/src/core/timers.c ****     /* enable and start timer */
+ 106:../lwip-1.4.1/src/core/timers.c ****     tcpip_tcp_timer_active = 1;
+ 125              		.loc 1 106 0 is_stmt 1
+ 126 001c 044B     		ldr	r3, .L10
+ 127 001e 0122     		movs	r2, #1
+ 128 0020 1A60     		str	r2, [r3]
+ 107:../lwip-1.4.1/src/core/timers.c ****     sys_timeout(TCP_TMR_INTERVAL, tcpip_tcp_timer, NULL);
+ 129              		.loc 1 107 0
+ 130 0022 FA20     		movs	r0, #250
+ 131 0024 0549     		ldr	r1, .L10+12
+ 132 0026 0022     		movs	r2, #0
+ 133 0028 FFF7FEFF 		bl	sys_timeout
+ 134              	.L7:
+ 108:../lwip-1.4.1/src/core/timers.c ****   }
+ 109:../lwip-1.4.1/src/core/timers.c **** }
+ 135              		.loc 1 109 0
+ 136 002c 80BD     		pop	{r7, pc}
+ 137              	.L11:
+ 138 002e 00BF     		.align	2
+ 139              	.L10:
+ 140 0030 08000000 		.word	tcpip_tcp_timer_active
+ 141 0034 00000000 		.word	tcp_active_pcbs
+ 142 0038 00000000 		.word	tcp_tw_pcbs
+ 143 003c 00000000 		.word	tcpip_tcp_timer
+ 144              		.cfi_endproc
+ 145              	.LFE1:
+ 147              		.section	.text.ip_reass_timer,"ax",%progbits
+ 148              		.align	2
+ 149              		.thumb
+ 150              		.thumb_func
+ 152              	ip_reass_timer:
+ 153              	.LFB2:
+ 110:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_TCP */
+ 111:../lwip-1.4.1/src/core/timers.c **** 
+ 112:../lwip-1.4.1/src/core/timers.c **** #if IP_REASSEMBLY
+ 113:../lwip-1.4.1/src/core/timers.c **** /**
+ 114:../lwip-1.4.1/src/core/timers.c ****  * Timer callback function that calls ip_reass_tmr() and reschedules itself.
+ 115:../lwip-1.4.1/src/core/timers.c ****  *
+ 116:../lwip-1.4.1/src/core/timers.c ****  * @param arg unused argument
+ 117:../lwip-1.4.1/src/core/timers.c ****  */
+ 118:../lwip-1.4.1/src/core/timers.c **** static void
+ 119:../lwip-1.4.1/src/core/timers.c **** ip_reass_timer(void *arg)
+ 120:../lwip-1.4.1/src/core/timers.c **** {
+ 154              		.loc 1 120 0
+ 155              		.cfi_startproc
+ 156              		@ args = 0, pretend = 0, frame = 8
+ 157              		@ frame_needed = 1, uses_anonymous_args = 0
+ 158 0000 80B5     		push	{r7, lr}
+ 159              		.cfi_def_cfa_offset 8
+ 160              		.cfi_offset 7, -8
+ 161              		.cfi_offset 14, -4
+ 162 0002 82B0     		sub	sp, sp, #8
+ 163              		.cfi_def_cfa_offset 16
+ 164 0004 00AF     		add	r7, sp, #0
+ 165              		.cfi_def_cfa_register 7
+ 166 0006 7860     		str	r0, [r7, #4]
+ 121:../lwip-1.4.1/src/core/timers.c ****   LWIP_UNUSED_ARG(arg);
+ 122:../lwip-1.4.1/src/core/timers.c ****   LWIP_DEBUGF(TIMERS_DEBUG, ("tcpip: ip_reass_tmr()\n"));
+ 123:../lwip-1.4.1/src/core/timers.c ****   ip_reass_tmr();
+ 167              		.loc 1 123 0
+ 168 0008 FFF7FEFF 		bl	ip_reass_tmr
+ 124:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(IP_TMR_INTERVAL, ip_reass_timer, NULL);
+ 169              		.loc 1 124 0
+ 170 000c 4FF47A70 		mov	r0, #1000
+ 171 0010 0349     		ldr	r1, .L13
+ 172 0012 0022     		movs	r2, #0
+ 173 0014 FFF7FEFF 		bl	sys_timeout
+ 125:../lwip-1.4.1/src/core/timers.c **** }
+ 174              		.loc 1 125 0
+ 175 0018 0837     		adds	r7, r7, #8
+ 176              		.cfi_def_cfa_offset 8
+ 177 001a BD46     		mov	sp, r7
+ 178              		.cfi_def_cfa_register 13
+ 179              		@ sp needed
+ 180 001c 80BD     		pop	{r7, pc}
+ 181              	.L14:
+ 182 001e 00BF     		.align	2
+ 183              	.L13:
+ 184 0020 00000000 		.word	ip_reass_timer
+ 185              		.cfi_endproc
+ 186              	.LFE2:
+ 188              		.section	.text.arp_timer,"ax",%progbits
+ 189              		.align	2
+ 190              		.thumb
+ 191              		.thumb_func
+ 193              	arp_timer:
+ 194              	.LFB3:
+ 126:../lwip-1.4.1/src/core/timers.c **** #endif /* IP_REASSEMBLY */
+ 127:../lwip-1.4.1/src/core/timers.c **** 
+ 128:../lwip-1.4.1/src/core/timers.c **** #if LWIP_ARP
+ 129:../lwip-1.4.1/src/core/timers.c **** /**
+ 130:../lwip-1.4.1/src/core/timers.c ****  * Timer callback function that calls etharp_tmr() and reschedules itself.
+ 131:../lwip-1.4.1/src/core/timers.c ****  *
+ 132:../lwip-1.4.1/src/core/timers.c ****  * @param arg unused argument
+ 133:../lwip-1.4.1/src/core/timers.c ****  */
+ 134:../lwip-1.4.1/src/core/timers.c **** static void
+ 135:../lwip-1.4.1/src/core/timers.c **** arp_timer(void *arg)
+ 136:../lwip-1.4.1/src/core/timers.c **** {
+ 195              		.loc 1 136 0
+ 196              		.cfi_startproc
+ 197              		@ args = 0, pretend = 0, frame = 8
+ 198              		@ frame_needed = 1, uses_anonymous_args = 0
+ 199 0000 80B5     		push	{r7, lr}
+ 200              		.cfi_def_cfa_offset 8
+ 201              		.cfi_offset 7, -8
+ 202              		.cfi_offset 14, -4
+ 203 0002 82B0     		sub	sp, sp, #8
+ 204              		.cfi_def_cfa_offset 16
+ 205 0004 00AF     		add	r7, sp, #0
+ 206              		.cfi_def_cfa_register 7
+ 207 0006 7860     		str	r0, [r7, #4]
+ 137:../lwip-1.4.1/src/core/timers.c ****   LWIP_UNUSED_ARG(arg);
+ 138:../lwip-1.4.1/src/core/timers.c ****   LWIP_DEBUGF(TIMERS_DEBUG, ("tcpip: etharp_tmr()\n"));
+ 139:../lwip-1.4.1/src/core/timers.c ****   etharp_tmr();
+ 208              		.loc 1 139 0
+ 209 0008 FFF7FEFF 		bl	etharp_tmr
+ 140:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(ARP_TMR_INTERVAL, arp_timer, NULL);
+ 210              		.loc 1 140 0
+ 211 000c 41F28830 		movw	r0, #5000
+ 212 0010 0349     		ldr	r1, .L16
+ 213 0012 0022     		movs	r2, #0
+ 214 0014 FFF7FEFF 		bl	sys_timeout
+ 141:../lwip-1.4.1/src/core/timers.c **** }
+ 215              		.loc 1 141 0
+ 216 0018 0837     		adds	r7, r7, #8
+ 217              		.cfi_def_cfa_offset 8
+ 218 001a BD46     		mov	sp, r7
+ 219              		.cfi_def_cfa_register 13
+ 220              		@ sp needed
+ 221 001c 80BD     		pop	{r7, pc}
+ 222              	.L17:
+ 223 001e 00BF     		.align	2
+ 224              	.L16:
+ 225 0020 00000000 		.word	arp_timer
+ 226              		.cfi_endproc
+ 227              	.LFE3:
+ 229              		.section	.text.sys_timeouts_init,"ax",%progbits
+ 230              		.align	2
+ 231              		.global	sys_timeouts_init
+ 232              		.thumb
+ 233              		.thumb_func
+ 235              	sys_timeouts_init:
+ 236              	.LFB4:
+ 142:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_ARP */
+ 143:../lwip-1.4.1/src/core/timers.c **** 
+ 144:../lwip-1.4.1/src/core/timers.c **** #if LWIP_DHCP
+ 145:../lwip-1.4.1/src/core/timers.c **** /**
+ 146:../lwip-1.4.1/src/core/timers.c ****  * Timer callback function that calls dhcp_coarse_tmr() and reschedules itself.
+ 147:../lwip-1.4.1/src/core/timers.c ****  *
+ 148:../lwip-1.4.1/src/core/timers.c ****  * @param arg unused argument
+ 149:../lwip-1.4.1/src/core/timers.c ****  */
+ 150:../lwip-1.4.1/src/core/timers.c **** static void
+ 151:../lwip-1.4.1/src/core/timers.c **** dhcp_timer_coarse(void *arg)
+ 152:../lwip-1.4.1/src/core/timers.c **** {
+ 153:../lwip-1.4.1/src/core/timers.c ****   LWIP_UNUSED_ARG(arg);
+ 154:../lwip-1.4.1/src/core/timers.c ****   LWIP_DEBUGF(TIMERS_DEBUG, ("tcpip: dhcp_coarse_tmr()\n"));
+ 155:../lwip-1.4.1/src/core/timers.c ****   dhcp_coarse_tmr();
+ 156:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(DHCP_COARSE_TIMER_MSECS, dhcp_timer_coarse, NULL);
+ 157:../lwip-1.4.1/src/core/timers.c **** }
+ 158:../lwip-1.4.1/src/core/timers.c **** 
+ 159:../lwip-1.4.1/src/core/timers.c **** /**
+ 160:../lwip-1.4.1/src/core/timers.c ****  * Timer callback function that calls dhcp_fine_tmr() and reschedules itself.
+ 161:../lwip-1.4.1/src/core/timers.c ****  *
+ 162:../lwip-1.4.1/src/core/timers.c ****  * @param arg unused argument
+ 163:../lwip-1.4.1/src/core/timers.c ****  */
+ 164:../lwip-1.4.1/src/core/timers.c **** static void
+ 165:../lwip-1.4.1/src/core/timers.c **** dhcp_timer_fine(void *arg)
+ 166:../lwip-1.4.1/src/core/timers.c **** {
+ 167:../lwip-1.4.1/src/core/timers.c ****   LWIP_UNUSED_ARG(arg);
+ 168:../lwip-1.4.1/src/core/timers.c ****   LWIP_DEBUGF(TIMERS_DEBUG, ("tcpip: dhcp_fine_tmr()\n"));
+ 169:../lwip-1.4.1/src/core/timers.c ****   dhcp_fine_tmr();
+ 170:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(DHCP_FINE_TIMER_MSECS, dhcp_timer_fine, NULL);
+ 171:../lwip-1.4.1/src/core/timers.c **** }
+ 172:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_DHCP */
+ 173:../lwip-1.4.1/src/core/timers.c **** 
+ 174:../lwip-1.4.1/src/core/timers.c **** #if LWIP_AUTOIP
+ 175:../lwip-1.4.1/src/core/timers.c **** /**
+ 176:../lwip-1.4.1/src/core/timers.c ****  * Timer callback function that calls autoip_tmr() and reschedules itself.
+ 177:../lwip-1.4.1/src/core/timers.c ****  *
+ 178:../lwip-1.4.1/src/core/timers.c ****  * @param arg unused argument
+ 179:../lwip-1.4.1/src/core/timers.c ****  */
+ 180:../lwip-1.4.1/src/core/timers.c **** static void
+ 181:../lwip-1.4.1/src/core/timers.c **** autoip_timer(void *arg)
+ 182:../lwip-1.4.1/src/core/timers.c **** {
+ 183:../lwip-1.4.1/src/core/timers.c ****   LWIP_UNUSED_ARG(arg);
+ 184:../lwip-1.4.1/src/core/timers.c ****   LWIP_DEBUGF(TIMERS_DEBUG, ("tcpip: autoip_tmr()\n"));
+ 185:../lwip-1.4.1/src/core/timers.c ****   autoip_tmr();
+ 186:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(AUTOIP_TMR_INTERVAL, autoip_timer, NULL);
+ 187:../lwip-1.4.1/src/core/timers.c **** }
+ 188:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_AUTOIP */
+ 189:../lwip-1.4.1/src/core/timers.c **** 
+ 190:../lwip-1.4.1/src/core/timers.c **** #if LWIP_IGMP
+ 191:../lwip-1.4.1/src/core/timers.c **** /**
+ 192:../lwip-1.4.1/src/core/timers.c ****  * Timer callback function that calls igmp_tmr() and reschedules itself.
+ 193:../lwip-1.4.1/src/core/timers.c ****  *
+ 194:../lwip-1.4.1/src/core/timers.c ****  * @param arg unused argument
+ 195:../lwip-1.4.1/src/core/timers.c ****  */
+ 196:../lwip-1.4.1/src/core/timers.c **** static void
+ 197:../lwip-1.4.1/src/core/timers.c **** igmp_timer(void *arg)
+ 198:../lwip-1.4.1/src/core/timers.c **** {
+ 199:../lwip-1.4.1/src/core/timers.c ****   LWIP_UNUSED_ARG(arg);
+ 200:../lwip-1.4.1/src/core/timers.c ****   LWIP_DEBUGF(TIMERS_DEBUG, ("tcpip: igmp_tmr()\n"));
+ 201:../lwip-1.4.1/src/core/timers.c ****   igmp_tmr();
+ 202:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(IGMP_TMR_INTERVAL, igmp_timer, NULL);
+ 203:../lwip-1.4.1/src/core/timers.c **** }
+ 204:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_IGMP */
+ 205:../lwip-1.4.1/src/core/timers.c **** 
+ 206:../lwip-1.4.1/src/core/timers.c **** #if LWIP_DNS
+ 207:../lwip-1.4.1/src/core/timers.c **** /**
+ 208:../lwip-1.4.1/src/core/timers.c ****  * Timer callback function that calls dns_tmr() and reschedules itself.
+ 209:../lwip-1.4.1/src/core/timers.c ****  *
+ 210:../lwip-1.4.1/src/core/timers.c ****  * @param arg unused argument
+ 211:../lwip-1.4.1/src/core/timers.c ****  */
+ 212:../lwip-1.4.1/src/core/timers.c **** static void
+ 213:../lwip-1.4.1/src/core/timers.c **** dns_timer(void *arg)
+ 214:../lwip-1.4.1/src/core/timers.c **** {
+ 215:../lwip-1.4.1/src/core/timers.c ****   LWIP_UNUSED_ARG(arg);
+ 216:../lwip-1.4.1/src/core/timers.c ****   LWIP_DEBUGF(TIMERS_DEBUG, ("tcpip: dns_tmr()\n"));
+ 217:../lwip-1.4.1/src/core/timers.c ****   dns_tmr();
+ 218:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(DNS_TMR_INTERVAL, dns_timer, NULL);
+ 219:../lwip-1.4.1/src/core/timers.c **** }
+ 220:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_DNS */
+ 221:../lwip-1.4.1/src/core/timers.c **** 
+ 222:../lwip-1.4.1/src/core/timers.c **** /** Initialize this module */
+ 223:../lwip-1.4.1/src/core/timers.c **** void sys_timeouts_init(void)
+ 224:../lwip-1.4.1/src/core/timers.c **** {
+ 237              		.loc 1 224 0
+ 238              		.cfi_startproc
+ 239              		@ args = 0, pretend = 0, frame = 0
+ 240              		@ frame_needed = 1, uses_anonymous_args = 0
+ 241 0000 80B5     		push	{r7, lr}
+ 242              		.cfi_def_cfa_offset 8
+ 243              		.cfi_offset 7, -8
+ 244              		.cfi_offset 14, -4
+ 245 0002 00AF     		add	r7, sp, #0
+ 246              		.cfi_def_cfa_register 7
+ 225:../lwip-1.4.1/src/core/timers.c **** #if IP_REASSEMBLY
+ 226:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(IP_TMR_INTERVAL, ip_reass_timer, NULL);
+ 247              		.loc 1 226 0
+ 248 0004 4FF47A70 		mov	r0, #1000
+ 249 0008 0749     		ldr	r1, .L19
+ 250 000a 0022     		movs	r2, #0
+ 251 000c FFF7FEFF 		bl	sys_timeout
+ 227:../lwip-1.4.1/src/core/timers.c **** #endif /* IP_REASSEMBLY */
+ 228:../lwip-1.4.1/src/core/timers.c **** #if LWIP_ARP
+ 229:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(ARP_TMR_INTERVAL, arp_timer, NULL);
+ 252              		.loc 1 229 0
+ 253 0010 41F28830 		movw	r0, #5000
+ 254 0014 0549     		ldr	r1, .L19+4
+ 255 0016 0022     		movs	r2, #0
+ 256 0018 FFF7FEFF 		bl	sys_timeout
+ 230:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_ARP */
+ 231:../lwip-1.4.1/src/core/timers.c **** #if LWIP_DHCP
+ 232:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(DHCP_COARSE_TIMER_MSECS, dhcp_timer_coarse, NULL);
+ 233:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(DHCP_FINE_TIMER_MSECS, dhcp_timer_fine, NULL);
+ 234:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_DHCP */
+ 235:../lwip-1.4.1/src/core/timers.c **** #if LWIP_AUTOIP
+ 236:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(AUTOIP_TMR_INTERVAL, autoip_timer, NULL);
+ 237:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_AUTOIP */
+ 238:../lwip-1.4.1/src/core/timers.c **** #if LWIP_IGMP
+ 239:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(IGMP_TMR_INTERVAL, igmp_timer, NULL);
+ 240:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_IGMP */
+ 241:../lwip-1.4.1/src/core/timers.c **** #if LWIP_DNS
+ 242:../lwip-1.4.1/src/core/timers.c ****   sys_timeout(DNS_TMR_INTERVAL, dns_timer, NULL);
+ 243:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_DNS */
+ 244:../lwip-1.4.1/src/core/timers.c **** 
+ 245:../lwip-1.4.1/src/core/timers.c **** #if NO_SYS
+ 246:../lwip-1.4.1/src/core/timers.c ****   /* Initialise timestamp for sys_check_timeouts */
+ 247:../lwip-1.4.1/src/core/timers.c ****   timeouts_last_time = sys_now();
+ 257              		.loc 1 247 0
+ 258 001c FFF7FEFF 		bl	sys_now
+ 259 0020 0246     		mov	r2, r0
+ 260 0022 034B     		ldr	r3, .L19+8
+ 261 0024 1A60     		str	r2, [r3]
+ 248:../lwip-1.4.1/src/core/timers.c **** #endif
+ 249:../lwip-1.4.1/src/core/timers.c **** }
+ 262              		.loc 1 249 0
+ 263 0026 80BD     		pop	{r7, pc}
+ 264              	.L20:
+ 265              		.align	2
+ 266              	.L19:
+ 267 0028 00000000 		.word	ip_reass_timer
+ 268 002c 00000000 		.word	arp_timer
+ 269 0030 04000000 		.word	timeouts_last_time
+ 270              		.cfi_endproc
+ 271              	.LFE4:
+ 273              		.section	.text.sys_timeout,"ax",%progbits
+ 274              		.align	2
+ 275              		.global	sys_timeout
+ 276              		.thumb
+ 277              		.thumb_func
+ 279              	sys_timeout:
+ 280              	.LFB5:
+ 250:../lwip-1.4.1/src/core/timers.c **** 
+ 251:../lwip-1.4.1/src/core/timers.c **** /**
+ 252:../lwip-1.4.1/src/core/timers.c ****  * Create a one-shot timer (aka timeout). Timeouts are processed in the
+ 253:../lwip-1.4.1/src/core/timers.c ****  * following cases:
+ 254:../lwip-1.4.1/src/core/timers.c ****  * - while waiting for a message using sys_timeouts_mbox_fetch()
+ 255:../lwip-1.4.1/src/core/timers.c ****  * - by calling sys_check_timeouts() (NO_SYS==1 only)
+ 256:../lwip-1.4.1/src/core/timers.c ****  *
+ 257:../lwip-1.4.1/src/core/timers.c ****  * @param msecs time in milliseconds after that the timer should expire
+ 258:../lwip-1.4.1/src/core/timers.c ****  * @param handler callback function to call when msecs have elapsed
+ 259:../lwip-1.4.1/src/core/timers.c ****  * @param arg argument to pass to the callback function
+ 260:../lwip-1.4.1/src/core/timers.c ****  */
+ 261:../lwip-1.4.1/src/core/timers.c **** #if LWIP_DEBUG_TIMERNAMES
+ 262:../lwip-1.4.1/src/core/timers.c **** void
+ 263:../lwip-1.4.1/src/core/timers.c **** sys_timeout_debug(u32_t msecs, sys_timeout_handler handler, void *arg, const char* handler_name)
+ 264:../lwip-1.4.1/src/core/timers.c **** #else /* LWIP_DEBUG_TIMERNAMES */
+ 265:../lwip-1.4.1/src/core/timers.c **** void
+ 266:../lwip-1.4.1/src/core/timers.c **** sys_timeout(u32_t msecs, sys_timeout_handler handler, void *arg)
+ 267:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_DEBUG_TIMERNAMES */
+ 268:../lwip-1.4.1/src/core/timers.c **** {
+ 281              		.loc 1 268 0
+ 282              		.cfi_startproc
+ 283              		@ args = 0, pretend = 0, frame = 24
+ 284              		@ frame_needed = 1, uses_anonymous_args = 0
+ 285 0000 80B5     		push	{r7, lr}
+ 286              		.cfi_def_cfa_offset 8
+ 287              		.cfi_offset 7, -8
+ 288              		.cfi_offset 14, -4
+ 289 0002 86B0     		sub	sp, sp, #24
+ 290              		.cfi_def_cfa_offset 32
+ 291 0004 00AF     		add	r7, sp, #0
+ 292              		.cfi_def_cfa_register 7
+ 293 0006 F860     		str	r0, [r7, #12]
+ 294 0008 B960     		str	r1, [r7, #8]
+ 295 000a 7A60     		str	r2, [r7, #4]
+ 269:../lwip-1.4.1/src/core/timers.c ****   struct sys_timeo *timeout, *t;
+ 270:../lwip-1.4.1/src/core/timers.c **** 
+ 271:../lwip-1.4.1/src/core/timers.c ****   timeout = (struct sys_timeo *)memp_malloc(MEMP_SYS_TIMEOUT);
+ 296              		.loc 1 271 0
+ 297 000c 0820     		movs	r0, #8
+ 298 000e FFF7FEFF 		bl	memp_malloc
+ 299 0012 3861     		str	r0, [r7, #16]
+ 272:../lwip-1.4.1/src/core/timers.c ****   if (timeout == NULL) {
+ 300              		.loc 1 272 0
+ 301 0014 3B69     		ldr	r3, [r7, #16]
+ 302 0016 002B     		cmp	r3, #0
+ 303 0018 00D1     		bne	.L22
+ 273:../lwip-1.4.1/src/core/timers.c ****     LWIP_ASSERT("sys_timeout: timeout != NULL, pool MEMP_SYS_TIMEOUT is empty", timeout != NULL);
+ 274:../lwip-1.4.1/src/core/timers.c ****     return;
+ 304              		.loc 1 274 0
+ 305 001a 5AE0     		b	.L21
+ 306              	.L22:
+ 275:../lwip-1.4.1/src/core/timers.c ****   }
+ 276:../lwip-1.4.1/src/core/timers.c ****   timeout->next = NULL;
+ 307              		.loc 1 276 0
+ 308 001c 3B69     		ldr	r3, [r7, #16]
+ 309 001e 0022     		movs	r2, #0
+ 310 0020 1A60     		str	r2, [r3]
+ 277:../lwip-1.4.1/src/core/timers.c ****   timeout->h = handler;
+ 311              		.loc 1 277 0
+ 312 0022 3B69     		ldr	r3, [r7, #16]
+ 313 0024 BA68     		ldr	r2, [r7, #8]
+ 314 0026 9A60     		str	r2, [r3, #8]
+ 278:../lwip-1.4.1/src/core/timers.c ****   timeout->arg = arg;
+ 315              		.loc 1 278 0
+ 316 0028 3B69     		ldr	r3, [r7, #16]
+ 317 002a 7A68     		ldr	r2, [r7, #4]
+ 318 002c DA60     		str	r2, [r3, #12]
+ 279:../lwip-1.4.1/src/core/timers.c ****   timeout->time = msecs;
+ 319              		.loc 1 279 0
+ 320 002e 3B69     		ldr	r3, [r7, #16]
+ 321 0030 FA68     		ldr	r2, [r7, #12]
+ 322 0032 5A60     		str	r2, [r3, #4]
+ 280:../lwip-1.4.1/src/core/timers.c **** #if LWIP_DEBUG_TIMERNAMES
+ 281:../lwip-1.4.1/src/core/timers.c ****   timeout->handler_name = handler_name;
+ 282:../lwip-1.4.1/src/core/timers.c ****   LWIP_DEBUGF(TIMERS_DEBUG, ("sys_timeout: %p msecs=%"U32_F" handler=%s arg=%p\n",
+ 283:../lwip-1.4.1/src/core/timers.c ****     (void *)timeout, msecs, handler_name, (void *)arg));
+ 284:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_DEBUG_TIMERNAMES */
+ 285:../lwip-1.4.1/src/core/timers.c **** 
+ 286:../lwip-1.4.1/src/core/timers.c ****   if (next_timeout == NULL) {
+ 323              		.loc 1 286 0
+ 324 0034 284B     		ldr	r3, .L31
+ 325 0036 1B68     		ldr	r3, [r3]
+ 326 0038 002B     		cmp	r3, #0
+ 327 003a 03D1     		bne	.L24
+ 287:../lwip-1.4.1/src/core/timers.c ****     next_timeout = timeout;
+ 328              		.loc 1 287 0
+ 329 003c 264A     		ldr	r2, .L31
+ 330 003e 3B69     		ldr	r3, [r7, #16]
+ 331 0040 1360     		str	r3, [r2]
+ 288:../lwip-1.4.1/src/core/timers.c ****     return;
+ 332              		.loc 1 288 0
+ 333 0042 46E0     		b	.L21
+ 334              	.L24:
+ 289:../lwip-1.4.1/src/core/timers.c ****   }
+ 290:../lwip-1.4.1/src/core/timers.c **** 
+ 291:../lwip-1.4.1/src/core/timers.c ****   if (next_timeout->time > msecs) {
+ 335              		.loc 1 291 0
+ 336 0044 244B     		ldr	r3, .L31
+ 337 0046 1B68     		ldr	r3, [r3]
+ 338 0048 5A68     		ldr	r2, [r3, #4]
+ 339 004a FB68     		ldr	r3, [r7, #12]
+ 340 004c 9A42     		cmp	r2, r3
+ 341 004e 0FD9     		bls	.L25
+ 292:../lwip-1.4.1/src/core/timers.c ****     next_timeout->time -= msecs;
+ 342              		.loc 1 292 0
+ 343 0050 214B     		ldr	r3, .L31
+ 344 0052 1B68     		ldr	r3, [r3]
+ 345 0054 204A     		ldr	r2, .L31
+ 346 0056 1268     		ldr	r2, [r2]
+ 347 0058 5168     		ldr	r1, [r2, #4]
+ 348 005a FA68     		ldr	r2, [r7, #12]
+ 349 005c 8A1A     		subs	r2, r1, r2
+ 350 005e 5A60     		str	r2, [r3, #4]
+ 293:../lwip-1.4.1/src/core/timers.c ****     timeout->next = next_timeout;
+ 351              		.loc 1 293 0
+ 352 0060 1D4B     		ldr	r3, .L31
+ 353 0062 1A68     		ldr	r2, [r3]
+ 354 0064 3B69     		ldr	r3, [r7, #16]
+ 355 0066 1A60     		str	r2, [r3]
+ 294:../lwip-1.4.1/src/core/timers.c ****     next_timeout = timeout;
+ 356              		.loc 1 294 0
+ 357 0068 1B4A     		ldr	r2, .L31
+ 358 006a 3B69     		ldr	r3, [r7, #16]
+ 359 006c 1360     		str	r3, [r2]
+ 360 006e 30E0     		b	.L21
+ 361              	.L25:
+ 295:../lwip-1.4.1/src/core/timers.c ****   } else {
+ 296:../lwip-1.4.1/src/core/timers.c ****     for(t = next_timeout; t != NULL; t = t->next) {
+ 362              		.loc 1 296 0
+ 363 0070 194B     		ldr	r3, .L31
+ 364 0072 1B68     		ldr	r3, [r3]
+ 365 0074 7B61     		str	r3, [r7, #20]
+ 366 0076 29E0     		b	.L26
+ 367              	.L30:
+ 297:../lwip-1.4.1/src/core/timers.c ****       timeout->time -= t->time;
+ 368              		.loc 1 297 0
+ 369 0078 3B69     		ldr	r3, [r7, #16]
+ 370 007a 5A68     		ldr	r2, [r3, #4]
+ 371 007c 7B69     		ldr	r3, [r7, #20]
+ 372 007e 5B68     		ldr	r3, [r3, #4]
+ 373 0080 D21A     		subs	r2, r2, r3
+ 374 0082 3B69     		ldr	r3, [r7, #16]
+ 375 0084 5A60     		str	r2, [r3, #4]
+ 298:../lwip-1.4.1/src/core/timers.c ****       if (t->next == NULL || t->next->time > timeout->time) {
+ 376              		.loc 1 298 0
+ 377 0086 7B69     		ldr	r3, [r7, #20]
+ 378 0088 1B68     		ldr	r3, [r3]
+ 379 008a 002B     		cmp	r3, #0
+ 380 008c 06D0     		beq	.L27
+ 381              		.loc 1 298 0 is_stmt 0 discriminator 1
+ 382 008e 7B69     		ldr	r3, [r7, #20]
+ 383 0090 1B68     		ldr	r3, [r3]
+ 384 0092 5A68     		ldr	r2, [r3, #4]
+ 385 0094 3B69     		ldr	r3, [r7, #16]
+ 386 0096 5B68     		ldr	r3, [r3, #4]
+ 387 0098 9A42     		cmp	r2, r3
+ 388 009a 14D9     		bls	.L28
+ 389              	.L27:
+ 299:../lwip-1.4.1/src/core/timers.c ****         if (t->next != NULL) {
+ 390              		.loc 1 299 0 is_stmt 1
+ 391 009c 7B69     		ldr	r3, [r7, #20]
+ 392 009e 1B68     		ldr	r3, [r3]
+ 393 00a0 002B     		cmp	r3, #0
+ 394 00a2 08D0     		beq	.L29
+ 300:../lwip-1.4.1/src/core/timers.c ****           t->next->time -= timeout->time;
+ 395              		.loc 1 300 0
+ 396 00a4 7B69     		ldr	r3, [r7, #20]
+ 397 00a6 1B68     		ldr	r3, [r3]
+ 398 00a8 7A69     		ldr	r2, [r7, #20]
+ 399 00aa 1268     		ldr	r2, [r2]
+ 400 00ac 5168     		ldr	r1, [r2, #4]
+ 401 00ae 3A69     		ldr	r2, [r7, #16]
+ 402 00b0 5268     		ldr	r2, [r2, #4]
+ 403 00b2 8A1A     		subs	r2, r1, r2
+ 404 00b4 5A60     		str	r2, [r3, #4]
+ 405              	.L29:
+ 301:../lwip-1.4.1/src/core/timers.c ****         }
+ 302:../lwip-1.4.1/src/core/timers.c ****         timeout->next = t->next;
+ 406              		.loc 1 302 0
+ 407 00b6 7B69     		ldr	r3, [r7, #20]
+ 408 00b8 1A68     		ldr	r2, [r3]
+ 409 00ba 3B69     		ldr	r3, [r7, #16]
+ 410 00bc 1A60     		str	r2, [r3]
+ 303:../lwip-1.4.1/src/core/timers.c ****         t->next = timeout;
+ 411              		.loc 1 303 0
+ 412 00be 7B69     		ldr	r3, [r7, #20]
+ 413 00c0 3A69     		ldr	r2, [r7, #16]
+ 414 00c2 1A60     		str	r2, [r3]
+ 304:../lwip-1.4.1/src/core/timers.c ****         break;
+ 415              		.loc 1 304 0
+ 416 00c4 05E0     		b	.L21
+ 417              	.L28:
+ 296:../lwip-1.4.1/src/core/timers.c ****       timeout->time -= t->time;
+ 418              		.loc 1 296 0 discriminator 2
+ 419 00c6 7B69     		ldr	r3, [r7, #20]
+ 420 00c8 1B68     		ldr	r3, [r3]
+ 421 00ca 7B61     		str	r3, [r7, #20]
+ 422              	.L26:
+ 296:../lwip-1.4.1/src/core/timers.c ****       timeout->time -= t->time;
+ 423              		.loc 1 296 0 is_stmt 0 discriminator 1
+ 424 00cc 7B69     		ldr	r3, [r7, #20]
+ 425 00ce 002B     		cmp	r3, #0
+ 426 00d0 D2D1     		bne	.L30
+ 427              	.L21:
+ 305:../lwip-1.4.1/src/core/timers.c ****       }
+ 306:../lwip-1.4.1/src/core/timers.c ****     }
+ 307:../lwip-1.4.1/src/core/timers.c ****   }
+ 308:../lwip-1.4.1/src/core/timers.c **** }
+ 428              		.loc 1 308 0 is_stmt 1
+ 429 00d2 1837     		adds	r7, r7, #24
+ 430              		.cfi_def_cfa_offset 8
+ 431 00d4 BD46     		mov	sp, r7
+ 432              		.cfi_def_cfa_register 13
+ 433              		@ sp needed
+ 434 00d6 80BD     		pop	{r7, pc}
+ 435              	.L32:
+ 436              		.align	2
+ 437              	.L31:
+ 438 00d8 00000000 		.word	next_timeout
+ 439              		.cfi_endproc
+ 440              	.LFE5:
+ 442              		.section	.text.sys_untimeout,"ax",%progbits
+ 443              		.align	2
+ 444              		.global	sys_untimeout
+ 445              		.thumb
+ 446              		.thumb_func
+ 448              	sys_untimeout:
+ 449              	.LFB6:
+ 309:../lwip-1.4.1/src/core/timers.c **** 
+ 310:../lwip-1.4.1/src/core/timers.c **** /**
+ 311:../lwip-1.4.1/src/core/timers.c ****  * Go through timeout list (for this task only) and remove the first matching
+ 312:../lwip-1.4.1/src/core/timers.c ****  * entry, even though the timeout has not triggered yet.
+ 313:../lwip-1.4.1/src/core/timers.c ****  *
+ 314:../lwip-1.4.1/src/core/timers.c ****  * @note This function only works as expected if there is only one timeout
+ 315:../lwip-1.4.1/src/core/timers.c ****  * calling 'handler' in the list of timeouts.
+ 316:../lwip-1.4.1/src/core/timers.c ****  *
+ 317:../lwip-1.4.1/src/core/timers.c ****  * @param handler callback function that would be called by the timeout
+ 318:../lwip-1.4.1/src/core/timers.c ****  * @param arg callback argument that would be passed to handler
+ 319:../lwip-1.4.1/src/core/timers.c **** */
+ 320:../lwip-1.4.1/src/core/timers.c **** void
+ 321:../lwip-1.4.1/src/core/timers.c **** sys_untimeout(sys_timeout_handler handler, void *arg)
+ 322:../lwip-1.4.1/src/core/timers.c **** {
+ 450              		.loc 1 322 0
+ 451              		.cfi_startproc
+ 452              		@ args = 0, pretend = 0, frame = 16
+ 453              		@ frame_needed = 1, uses_anonymous_args = 0
+ 454 0000 80B5     		push	{r7, lr}
+ 455              		.cfi_def_cfa_offset 8
+ 456              		.cfi_offset 7, -8
+ 457              		.cfi_offset 14, -4
+ 458 0002 84B0     		sub	sp, sp, #16
+ 459              		.cfi_def_cfa_offset 24
+ 460 0004 00AF     		add	r7, sp, #0
+ 461              		.cfi_def_cfa_register 7
+ 462 0006 7860     		str	r0, [r7, #4]
+ 463 0008 3960     		str	r1, [r7]
+ 323:../lwip-1.4.1/src/core/timers.c ****   struct sys_timeo *prev_t, *t;
+ 324:../lwip-1.4.1/src/core/timers.c **** 
+ 325:../lwip-1.4.1/src/core/timers.c ****   if (next_timeout == NULL) {
+ 464              		.loc 1 325 0
+ 465 000a 1F4B     		ldr	r3, .L42
+ 466 000c 1B68     		ldr	r3, [r3]
+ 467 000e 002B     		cmp	r3, #0
+ 468 0010 00D1     		bne	.L34
+ 326:../lwip-1.4.1/src/core/timers.c ****     return;
+ 469              		.loc 1 326 0
+ 470 0012 36E0     		b	.L33
+ 471              	.L34:
+ 327:../lwip-1.4.1/src/core/timers.c ****   }
+ 328:../lwip-1.4.1/src/core/timers.c **** 
+ 329:../lwip-1.4.1/src/core/timers.c ****   for (t = next_timeout, prev_t = NULL; t != NULL; prev_t = t, t = t->next) {
+ 472              		.loc 1 329 0
+ 473 0014 1C4B     		ldr	r3, .L42
+ 474 0016 1B68     		ldr	r3, [r3]
+ 475 0018 BB60     		str	r3, [r7, #8]
+ 476 001a 0023     		movs	r3, #0
+ 477 001c FB60     		str	r3, [r7, #12]
+ 478 001e 2CE0     		b	.L36
+ 479              	.L41:
+ 330:../lwip-1.4.1/src/core/timers.c ****     if ((t->h == handler) && (t->arg == arg)) {
+ 480              		.loc 1 330 0
+ 481 0020 BB68     		ldr	r3, [r7, #8]
+ 482 0022 9A68     		ldr	r2, [r3, #8]
+ 483 0024 7B68     		ldr	r3, [r7, #4]
+ 484 0026 9A42     		cmp	r2, r3
+ 485 0028 22D1     		bne	.L37
+ 486              		.loc 1 330 0 is_stmt 0 discriminator 1
+ 487 002a BB68     		ldr	r3, [r7, #8]
+ 488 002c DA68     		ldr	r2, [r3, #12]
+ 489 002e 3B68     		ldr	r3, [r7]
+ 490 0030 9A42     		cmp	r2, r3
+ 491 0032 1DD1     		bne	.L37
+ 331:../lwip-1.4.1/src/core/timers.c ****       /* We have a match */
+ 332:../lwip-1.4.1/src/core/timers.c ****       /* Unlink from previous in list */
+ 333:../lwip-1.4.1/src/core/timers.c ****       if (prev_t == NULL) {
+ 492              		.loc 1 333 0 is_stmt 1
+ 493 0034 FB68     		ldr	r3, [r7, #12]
+ 494 0036 002B     		cmp	r3, #0
+ 495 0038 04D1     		bne	.L38
+ 334:../lwip-1.4.1/src/core/timers.c ****         next_timeout = t->next;
+ 496              		.loc 1 334 0
+ 497 003a BB68     		ldr	r3, [r7, #8]
+ 498 003c 1B68     		ldr	r3, [r3]
+ 499 003e 124A     		ldr	r2, .L42
+ 500 0040 1360     		str	r3, [r2]
+ 501 0042 03E0     		b	.L39
+ 502              	.L38:
+ 335:../lwip-1.4.1/src/core/timers.c ****       } else {
+ 336:../lwip-1.4.1/src/core/timers.c ****         prev_t->next = t->next;
+ 503              		.loc 1 336 0
+ 504 0044 BB68     		ldr	r3, [r7, #8]
+ 505 0046 1A68     		ldr	r2, [r3]
+ 506 0048 FB68     		ldr	r3, [r7, #12]
+ 507 004a 1A60     		str	r2, [r3]
+ 508              	.L39:
+ 337:../lwip-1.4.1/src/core/timers.c ****       }
+ 338:../lwip-1.4.1/src/core/timers.c ****       /* If not the last one, add time of this one back to next */
+ 339:../lwip-1.4.1/src/core/timers.c ****       if (t->next != NULL) {
+ 509              		.loc 1 339 0
+ 510 004c BB68     		ldr	r3, [r7, #8]
+ 511 004e 1B68     		ldr	r3, [r3]
+ 512 0050 002B     		cmp	r3, #0
+ 513 0052 08D0     		beq	.L40
+ 340:../lwip-1.4.1/src/core/timers.c ****         t->next->time += t->time;
+ 514              		.loc 1 340 0
+ 515 0054 BB68     		ldr	r3, [r7, #8]
+ 516 0056 1B68     		ldr	r3, [r3]
+ 517 0058 BA68     		ldr	r2, [r7, #8]
+ 518 005a 1268     		ldr	r2, [r2]
+ 519 005c 5168     		ldr	r1, [r2, #4]
+ 520 005e BA68     		ldr	r2, [r7, #8]
+ 521 0060 5268     		ldr	r2, [r2, #4]
+ 522 0062 0A44     		add	r2, r2, r1
+ 523 0064 5A60     		str	r2, [r3, #4]
+ 524              	.L40:
+ 341:../lwip-1.4.1/src/core/timers.c ****       }
+ 342:../lwip-1.4.1/src/core/timers.c ****       memp_free(MEMP_SYS_TIMEOUT, t);
+ 525              		.loc 1 342 0
+ 526 0066 0820     		movs	r0, #8
+ 527 0068 B968     		ldr	r1, [r7, #8]
+ 528 006a FFF7FEFF 		bl	memp_free
+ 343:../lwip-1.4.1/src/core/timers.c ****       return;
+ 529              		.loc 1 343 0
+ 530 006e 08E0     		b	.L33
+ 531              	.L37:
+ 329:../lwip-1.4.1/src/core/timers.c ****     if ((t->h == handler) && (t->arg == arg)) {
+ 532              		.loc 1 329 0 discriminator 2
+ 533 0070 BB68     		ldr	r3, [r7, #8]
+ 534 0072 FB60     		str	r3, [r7, #12]
+ 535 0074 BB68     		ldr	r3, [r7, #8]
+ 536 0076 1B68     		ldr	r3, [r3]
+ 537 0078 BB60     		str	r3, [r7, #8]
+ 538              	.L36:
+ 329:../lwip-1.4.1/src/core/timers.c ****     if ((t->h == handler) && (t->arg == arg)) {
+ 539              		.loc 1 329 0 is_stmt 0 discriminator 1
+ 540 007a BB68     		ldr	r3, [r7, #8]
+ 541 007c 002B     		cmp	r3, #0
+ 542 007e CFD1     		bne	.L41
+ 344:../lwip-1.4.1/src/core/timers.c ****     }
+ 345:../lwip-1.4.1/src/core/timers.c ****   }
+ 346:../lwip-1.4.1/src/core/timers.c ****   return;
+ 543              		.loc 1 346 0 is_stmt 1 discriminator 2
+ 544 0080 00BF     		nop
+ 545              	.L33:
+ 347:../lwip-1.4.1/src/core/timers.c **** }
+ 546              		.loc 1 347 0
+ 547 0082 1037     		adds	r7, r7, #16
+ 548              		.cfi_def_cfa_offset 8
+ 549 0084 BD46     		mov	sp, r7
+ 550              		.cfi_def_cfa_register 13
+ 551              		@ sp needed
+ 552 0086 80BD     		pop	{r7, pc}
+ 553              	.L43:
+ 554              		.align	2
+ 555              	.L42:
+ 556 0088 00000000 		.word	next_timeout
+ 557              		.cfi_endproc
+ 558              	.LFE6:
+ 560              		.section	.text.sys_check_timeouts,"ax",%progbits
+ 561              		.align	2
+ 562              		.global	sys_check_timeouts
+ 563              		.thumb
+ 564              		.thumb_func
+ 566              	sys_check_timeouts:
+ 567              	.LFB7:
+ 348:../lwip-1.4.1/src/core/timers.c **** 
+ 349:../lwip-1.4.1/src/core/timers.c **** #if NO_SYS
+ 350:../lwip-1.4.1/src/core/timers.c **** 
+ 351:../lwip-1.4.1/src/core/timers.c **** /** Handle timeouts for NO_SYS==1 (i.e. without using
+ 352:../lwip-1.4.1/src/core/timers.c ****  * tcpip_thread/sys_timeouts_mbox_fetch(). Uses sys_now() to call timeout
+ 353:../lwip-1.4.1/src/core/timers.c ****  * handler functions when timeouts expire.
+ 354:../lwip-1.4.1/src/core/timers.c ****  *
+ 355:../lwip-1.4.1/src/core/timers.c ****  * Must be called periodically from your main loop.
+ 356:../lwip-1.4.1/src/core/timers.c ****  */
+ 357:../lwip-1.4.1/src/core/timers.c **** void
+ 358:../lwip-1.4.1/src/core/timers.c **** sys_check_timeouts(void)
+ 359:../lwip-1.4.1/src/core/timers.c **** {
+ 568              		.loc 1 359 0
+ 569              		.cfi_startproc
+ 570              		@ args = 0, pretend = 0, frame = 24
+ 571              		@ frame_needed = 1, uses_anonymous_args = 0
+ 572 0000 80B5     		push	{r7, lr}
+ 573              		.cfi_def_cfa_offset 8
+ 574              		.cfi_offset 7, -8
+ 575              		.cfi_offset 14, -4
+ 576 0002 86B0     		sub	sp, sp, #24
+ 577              		.cfi_def_cfa_offset 32
+ 578 0004 00AF     		add	r7, sp, #0
+ 579              		.cfi_def_cfa_register 7
+ 360:../lwip-1.4.1/src/core/timers.c ****   if (next_timeout) {
+ 580              		.loc 1 360 0
+ 581 0006 224B     		ldr	r3, .L49
+ 582 0008 1B68     		ldr	r3, [r3]
+ 583 000a 002B     		cmp	r3, #0
+ 584 000c 3CD0     		beq	.L44
+ 585              	.LBB2:
+ 361:../lwip-1.4.1/src/core/timers.c ****     struct sys_timeo *tmptimeout;
+ 362:../lwip-1.4.1/src/core/timers.c ****     u32_t diff;
+ 363:../lwip-1.4.1/src/core/timers.c ****     sys_timeout_handler handler;
+ 364:../lwip-1.4.1/src/core/timers.c ****     void *arg;
+ 365:../lwip-1.4.1/src/core/timers.c ****     u8_t had_one;
+ 366:../lwip-1.4.1/src/core/timers.c ****     u32_t now;
+ 367:../lwip-1.4.1/src/core/timers.c **** 
+ 368:../lwip-1.4.1/src/core/timers.c ****     now = sys_now();
+ 586              		.loc 1 368 0
+ 587 000e FFF7FEFF 		bl	sys_now
+ 588 0012 F860     		str	r0, [r7, #12]
+ 369:../lwip-1.4.1/src/core/timers.c ****     /* this cares for wraparounds */
+ 370:../lwip-1.4.1/src/core/timers.c ****     diff = now - timeouts_last_time;
+ 589              		.loc 1 370 0
+ 590 0014 1F4B     		ldr	r3, .L49+4
+ 591 0016 1B68     		ldr	r3, [r3]
+ 592 0018 FA68     		ldr	r2, [r7, #12]
+ 593 001a D31A     		subs	r3, r2, r3
+ 594 001c 7B61     		str	r3, [r7, #20]
+ 595              	.L48:
+ 371:../lwip-1.4.1/src/core/timers.c ****     do
+ 372:../lwip-1.4.1/src/core/timers.c ****     {
+ 373:../lwip-1.4.1/src/core/timers.c **** #if PBUF_POOL_FREE_OOSEQ
+ 374:../lwip-1.4.1/src/core/timers.c ****       PBUF_CHECK_FREE_OOSEQ();
+ 596              		.loc 1 374 0
+ 597 001e 1E4B     		ldr	r3, .L49+8
+ 598 0020 1B78     		ldrb	r3, [r3]
+ 599 0022 DBB2     		uxtb	r3, r3
+ 600 0024 002B     		cmp	r3, #0
+ 601 0026 01D0     		beq	.L46
+ 602              		.loc 1 374 0 is_stmt 0 discriminator 1
+ 603 0028 FFF7FEFF 		bl	pbuf_free_ooseq
+ 604              	.L46:
+ 375:../lwip-1.4.1/src/core/timers.c **** #endif /* PBUF_POOL_FREE_OOSEQ */
+ 376:../lwip-1.4.1/src/core/timers.c ****       had_one = 0;
+ 605              		.loc 1 376 0 is_stmt 1
+ 606 002c 0023     		movs	r3, #0
+ 607 002e FB74     		strb	r3, [r7, #19]
+ 377:../lwip-1.4.1/src/core/timers.c ****       tmptimeout = next_timeout;
+ 608              		.loc 1 377 0
+ 609 0030 174B     		ldr	r3, .L49
+ 610 0032 1B68     		ldr	r3, [r3]
+ 611 0034 BB60     		str	r3, [r7, #8]
+ 378:../lwip-1.4.1/src/core/timers.c ****       if (tmptimeout && (tmptimeout->time <= diff)) {
+ 612              		.loc 1 378 0
+ 613 0036 BB68     		ldr	r3, [r7, #8]
+ 614 0038 002B     		cmp	r3, #0
+ 615 003a 22D0     		beq	.L47
+ 616              		.loc 1 378 0 is_stmt 0 discriminator 1
+ 617 003c BB68     		ldr	r3, [r7, #8]
+ 618 003e 5A68     		ldr	r2, [r3, #4]
+ 619 0040 7B69     		ldr	r3, [r7, #20]
+ 620 0042 9A42     		cmp	r2, r3
+ 621 0044 1DD8     		bhi	.L47
+ 379:../lwip-1.4.1/src/core/timers.c ****         /* timeout has expired */
+ 380:../lwip-1.4.1/src/core/timers.c ****         had_one = 1;
+ 622              		.loc 1 380 0 is_stmt 1
+ 623 0046 0123     		movs	r3, #1
+ 624 0048 FB74     		strb	r3, [r7, #19]
+ 381:../lwip-1.4.1/src/core/timers.c ****         timeouts_last_time = now;
+ 625              		.loc 1 381 0
+ 626 004a 124A     		ldr	r2, .L49+4
+ 627 004c FB68     		ldr	r3, [r7, #12]
+ 628 004e 1360     		str	r3, [r2]
+ 382:../lwip-1.4.1/src/core/timers.c ****         diff -= tmptimeout->time;
+ 629              		.loc 1 382 0
+ 630 0050 BB68     		ldr	r3, [r7, #8]
+ 631 0052 5B68     		ldr	r3, [r3, #4]
+ 632 0054 7A69     		ldr	r2, [r7, #20]
+ 633 0056 D31A     		subs	r3, r2, r3
+ 634 0058 7B61     		str	r3, [r7, #20]
+ 383:../lwip-1.4.1/src/core/timers.c ****         next_timeout = tmptimeout->next;
+ 635              		.loc 1 383 0
+ 636 005a BB68     		ldr	r3, [r7, #8]
+ 637 005c 1B68     		ldr	r3, [r3]
+ 638 005e 0C4A     		ldr	r2, .L49
+ 639 0060 1360     		str	r3, [r2]
+ 384:../lwip-1.4.1/src/core/timers.c ****         handler = tmptimeout->h;
+ 640              		.loc 1 384 0
+ 641 0062 BB68     		ldr	r3, [r7, #8]
+ 642 0064 9B68     		ldr	r3, [r3, #8]
+ 643 0066 7B60     		str	r3, [r7, #4]
+ 385:../lwip-1.4.1/src/core/timers.c ****         arg = tmptimeout->arg;
+ 644              		.loc 1 385 0
+ 645 0068 BB68     		ldr	r3, [r7, #8]
+ 646 006a DB68     		ldr	r3, [r3, #12]
+ 647 006c 3B60     		str	r3, [r7]
+ 386:../lwip-1.4.1/src/core/timers.c **** #if LWIP_DEBUG_TIMERNAMES
+ 387:../lwip-1.4.1/src/core/timers.c ****         if (handler != NULL) {
+ 388:../lwip-1.4.1/src/core/timers.c ****           LWIP_DEBUGF(TIMERS_DEBUG, ("sct calling h=%s arg=%p\n",
+ 389:../lwip-1.4.1/src/core/timers.c ****             tmptimeout->handler_name, arg));
+ 390:../lwip-1.4.1/src/core/timers.c ****         }
+ 391:../lwip-1.4.1/src/core/timers.c **** #endif /* LWIP_DEBUG_TIMERNAMES */
+ 392:../lwip-1.4.1/src/core/timers.c ****         memp_free(MEMP_SYS_TIMEOUT, tmptimeout);
+ 648              		.loc 1 392 0
+ 649 006e 0820     		movs	r0, #8
+ 650 0070 B968     		ldr	r1, [r7, #8]
+ 651 0072 FFF7FEFF 		bl	memp_free
+ 393:../lwip-1.4.1/src/core/timers.c ****         if (handler != NULL) {
+ 652              		.loc 1 393 0
+ 653 0076 7B68     		ldr	r3, [r7, #4]
+ 654 0078 002B     		cmp	r3, #0
+ 655 007a 02D0     		beq	.L47
+ 394:../lwip-1.4.1/src/core/timers.c ****           handler(arg);
+ 656              		.loc 1 394 0
+ 657 007c 7B68     		ldr	r3, [r7, #4]
+ 658 007e 3868     		ldr	r0, [r7]
+ 659 0080 9847     		blx	r3
+ 660              	.L47:
+ 395:../lwip-1.4.1/src/core/timers.c ****         }
+ 396:../lwip-1.4.1/src/core/timers.c ****       }
+ 397:../lwip-1.4.1/src/core/timers.c ****     /* repeat until all expired timers have been called */
+ 398:../lwip-1.4.1/src/core/timers.c ****     }while(had_one);
+ 661              		.loc 1 398 0
+ 662 0082 FB7C     		ldrb	r3, [r7, #19]	@ zero_extendqisi2
+ 663 0084 002B     		cmp	r3, #0
+ 664 0086 CAD1     		bne	.L48
+ 665              	.L44:
+ 666              	.LBE2:
+ 399:../lwip-1.4.1/src/core/timers.c ****   }
+ 400:../lwip-1.4.1/src/core/timers.c **** }
+ 667              		.loc 1 400 0
+ 668 0088 1837     		adds	r7, r7, #24
+ 669              		.cfi_def_cfa_offset 8
+ 670 008a BD46     		mov	sp, r7
+ 671              		.cfi_def_cfa_register 13
+ 672              		@ sp needed
+ 673 008c 80BD     		pop	{r7, pc}
+ 674              	.L50:
+ 675 008e 00BF     		.align	2
+ 676              	.L49:
+ 677 0090 00000000 		.word	next_timeout
+ 678 0094 04000000 		.word	timeouts_last_time
+ 679 0098 00000000 		.word	pbuf_free_ooseq_pending
+ 680              		.cfi_endproc
+ 681              	.LFE7:
+ 683              		.section	.text.sys_restart_timeouts,"ax",%progbits
+ 684              		.align	2
+ 685              		.global	sys_restart_timeouts
+ 686              		.thumb
+ 687              		.thumb_func
+ 689              	sys_restart_timeouts:
+ 690              	.LFB8:
+ 401:../lwip-1.4.1/src/core/timers.c **** 
+ 402:../lwip-1.4.1/src/core/timers.c **** /** Set back the timestamp of the last call to sys_check_timeouts()
+ 403:../lwip-1.4.1/src/core/timers.c ****  * This is necessary if sys_check_timeouts() hasn't been called for a long
+ 404:../lwip-1.4.1/src/core/timers.c ****  * time (e.g. while saving energy) to prevent all timer functions of that
+ 405:../lwip-1.4.1/src/core/timers.c ****  * period being called.
+ 406:../lwip-1.4.1/src/core/timers.c ****  */
+ 407:../lwip-1.4.1/src/core/timers.c **** void
+ 408:../lwip-1.4.1/src/core/timers.c **** sys_restart_timeouts(void)
+ 409:../lwip-1.4.1/src/core/timers.c **** {
+ 691              		.loc 1 409 0
+ 692              		.cfi_startproc
+ 693              		@ args = 0, pretend = 0, frame = 0
+ 694              		@ frame_needed = 1, uses_anonymous_args = 0
+ 695 0000 80B5     		push	{r7, lr}
+ 696              		.cfi_def_cfa_offset 8
+ 697              		.cfi_offset 7, -8
+ 698              		.cfi_offset 14, -4
+ 699 0002 00AF     		add	r7, sp, #0
+ 700              		.cfi_def_cfa_register 7
+ 410:../lwip-1.4.1/src/core/timers.c ****   timeouts_last_time = sys_now();
+ 701              		.loc 1 410 0
+ 702 0004 FFF7FEFF 		bl	sys_now
+ 703 0008 0246     		mov	r2, r0
+ 704 000a 014B     		ldr	r3, .L52
+ 705 000c 1A60     		str	r2, [r3]
+ 411:../lwip-1.4.1/src/core/timers.c **** }
+ 706              		.loc 1 411 0
+ 707 000e 80BD     		pop	{r7, pc}
+ 708              	.L53:
+ 709              		.align	2
+ 710              	.L52:
+ 711 0010 04000000 		.word	timeouts_last_time
+ 712              		.cfi_endproc
+ 713              	.LFE8:
+ 715              		.text
+ 716              	.Letext0:
+ 717              		.file 2 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\port/arch/cc.h"
+ 718              		.file 3 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/err.h"
+ 719              		.file 4 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/timers
+ 720              		.file 5 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/pbuf.h
+ 721              		.file 6 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include\\ipv4/lwip/
+ 722              		.file 7 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/tcp.h"
+ 723              		.file 8 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/tcp_im
+ 724              		.file 9 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/memp.h
+DEFINED SYMBOLS
+                            *ABS*:00000000 timers.c
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:19     .bss:00000000 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:20     .bss:00000000 next_timeout
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:23     .bss:00000004 timeouts_last_time
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:26     .bss:00000008 tcpip_tcp_timer_active
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:29     .text.tcpip_tcp_timer:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:33     .text.tcpip_tcp_timer:00000000 tcpip_tcp_timer
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:279    .text.sys_timeout:00000000 sys_timeout
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:84     .text.tcpip_tcp_timer:00000034 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:92     .text.tcp_timer_needed:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:97     .text.tcp_timer_needed:00000000 tcp_timer_needed
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:140    .text.tcp_timer_needed:00000030 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:148    .text.ip_reass_timer:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:152    .text.ip_reass_timer:00000000 ip_reass_timer
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:184    .text.ip_reass_timer:00000020 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:189    .text.arp_timer:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:193    .text.arp_timer:00000000 arp_timer
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:225    .text.arp_timer:00000020 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:230    .text.sys_timeouts_init:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:235    .text.sys_timeouts_init:00000000 sys_timeouts_init
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:267    .text.sys_timeouts_init:00000028 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:274    .text.sys_timeout:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:438    .text.sys_timeout:000000d8 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:443    .text.sys_untimeout:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:448    .text.sys_untimeout:00000000 sys_untimeout
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:556    .text.sys_untimeout:00000088 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:561    .text.sys_check_timeouts:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:566    .text.sys_check_timeouts:00000000 sys_check_timeouts
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:677    .text.sys_check_timeouts:00000090 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:684    .text.sys_restart_timeouts:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:689    .text.sys_restart_timeouts:00000000 sys_restart_timeouts
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccIg9RN2.s:711    .text.sys_restart_timeouts:00000010 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.2d80f1b5ce3c69d13e258577ddf29668
+                           .group:00000000 wm4.lwipopts.h.25.76e03deb318fbe54d896a83c1b611e55
+                           .group:00000000 wm4.arch.h.33.6fa4aa86d33d1490ae882caef7316405
+                           .group:00000000 wm4.cpu.h.33.0ec64ad8cd52614da6479c7936fa3efa
+                           .group:00000000 wm4.cc.h.49.217a0c46a6dd8448cb36cccbf00f897f
+                           .group:00000000 wm4.arch.h.52.2e97dbd839a1aa815d8c47878a7f8e2b
+                           .group:00000000 wm4.newlib.h.8.2702bca278809460f0af6fba1d84eb68
+                           .group:00000000 wm4.features.h.22.2e382148a0560adabf236cddd4e880f4
+                           .group:00000000 wm4.config.h.220.a09b0b0de3c25be3f39d71990e617bff
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.35ee9e747940367bf2a634907d1c2382
+                           .group:00000000 wm4.stddef.h.184.159df79b4ca79c76561572a55985524c
+                           .group:00000000 wm4.cdefs.h.47.3052445825803de6c3a3b68ec8193866
+                           .group:00000000 wm4.stddef.h.39.7e3d906ac58942e0b374c527445f5de5
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.types.h.24.b2be5f53932a9c9d07787288b29b6d75
+                           .group:00000000 wm4._stdint.h.10.f76354baea1c7088202064e6f3d4f5e3
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.82.82b71f3f44c70e3a459d0f66642b05eb
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.68.ff6d7571d3ad75c55f15e26dbaa81e35
+                           .group:00000000 wm4.debug.h.45.223028a5c052c9f879ffd43dd519f3f1
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.opt.h.76.0e16bb9c23144e1f631b5b5afa9a69f6
+                           .group:00000000 wm4.timers.h.34.682ec8dc00871f721776dd412cf90f47
+                           .group:00000000 wm4.err.h.33.909ff4b35439192d64931f0a04fc8fdb
+                           .group:00000000 wm4.mem.h.33.ae21028c0b1f3dc3305003fc71edaf5a
+                           .group:00000000 wm4.pbuf.h.34.bb639510af5bfdff8eae9cce62bf5909
+                           .group:00000000 wm4.def.h.33.d4208c3cd3e0fc64e20a8b9f95a681f3
+                           .group:00000000 wm4.ip_addr.h.33.906726af218ee6749c0aa25e08c3a1fe
+                           .group:00000000 wm4.netif.h.33.f0b62f0135b4c001826f0908df525042
+                           .group:00000000 wm4.ip.h.48.c2e3a3e3a9e009c03a30eff6a88b0a33
+                           .group:00000000 wm4.icmp.h.33.9c8da59f6edf08fae1a2f37336a6e965
+                           .group:00000000 wm4.tcp.h.148.20c69d62fcb119a5d6bfd32bc982e4fb
+                           .group:00000000 wm4.tcp_impl.h.84.6e9c66479f429d69332d497d793a73a6
+                           .group:00000000 wm4.memp.h.34.a409f52ec6d44b5681de26eb10b0c08b
+                           .group:00000000 wm4.memp_std.h.15.637bb4287b70e9d70dbd8dd3c6f62f3b
+                           .group:00000000 wm4.ip_frag.h.34.76bff4fdea9b2f7a21dbc22d7e2c2dd3
+                           .group:00000000 wm4.etharp.h.36.01a1086ca2aee91a18155b6f03ca98c6
+                           .group:00000000 wm4.sys.h.33.9424e51cd78278e60066cd7d6333ec27
+
+UNDEFINED SYMBOLS
+tcp_tmr
+tcp_active_pcbs
+tcp_tw_pcbs
+ip_reass_tmr
+etharp_tmr
+sys_now
+memp_malloc
+memp_free
+pbuf_free_ooseq
+pbuf_free_ooseq_pending

@@ -1,0 +1,1099 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"raw.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.bss
+  19              		.align	2
+  20              	raw_pcbs:
+  21 0000 00000000 		.space	4
+  22              		.section	.text.raw_input,"ax",%progbits
+  23              		.align	2
+  24              		.global	raw_input
+  25              		.thumb
+  26              		.thumb_func
+  28              	raw_input:
+  29              	.LFB0:
+  30              		.file 1 "../lwip-1.4.1/src/core/raw.c"
+   1:../lwip-1.4.1/src/core/raw.c **** /**
+   2:../lwip-1.4.1/src/core/raw.c ****  * @file
+   3:../lwip-1.4.1/src/core/raw.c ****  * Implementation of raw protocol PCBs for low-level handling of
+   4:../lwip-1.4.1/src/core/raw.c ****  * different types of protocols besides (or overriding) those
+   5:../lwip-1.4.1/src/core/raw.c ****  * already available in lwIP.
+   6:../lwip-1.4.1/src/core/raw.c ****  *
+   7:../lwip-1.4.1/src/core/raw.c ****  */
+   8:../lwip-1.4.1/src/core/raw.c **** 
+   9:../lwip-1.4.1/src/core/raw.c **** /*
+  10:../lwip-1.4.1/src/core/raw.c ****  * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
+  11:../lwip-1.4.1/src/core/raw.c ****  * All rights reserved.
+  12:../lwip-1.4.1/src/core/raw.c ****  *
+  13:../lwip-1.4.1/src/core/raw.c ****  * Redistribution and use in source and binary forms, with or without modification,
+  14:../lwip-1.4.1/src/core/raw.c ****  * are permitted provided that the following conditions are met:
+  15:../lwip-1.4.1/src/core/raw.c ****  *
+  16:../lwip-1.4.1/src/core/raw.c ****  * 1. Redistributions of source code must retain the above copyright notice,
+  17:../lwip-1.4.1/src/core/raw.c ****  *    this list of conditions and the following disclaimer.
+  18:../lwip-1.4.1/src/core/raw.c ****  * 2. Redistributions in binary form must reproduce the above copyright notice,
+  19:../lwip-1.4.1/src/core/raw.c ****  *    this list of conditions and the following disclaimer in the documentation
+  20:../lwip-1.4.1/src/core/raw.c ****  *    and/or other materials provided with the distribution.
+  21:../lwip-1.4.1/src/core/raw.c ****  * 3. The name of the author may not be used to endorse or promote products
+  22:../lwip-1.4.1/src/core/raw.c ****  *    derived from this software without specific prior written permission.
+  23:../lwip-1.4.1/src/core/raw.c ****  *
+  24:../lwip-1.4.1/src/core/raw.c ****  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+  25:../lwip-1.4.1/src/core/raw.c ****  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+  26:../lwip-1.4.1/src/core/raw.c ****  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+  27:../lwip-1.4.1/src/core/raw.c ****  * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+  28:../lwip-1.4.1/src/core/raw.c ****  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+  29:../lwip-1.4.1/src/core/raw.c ****  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  30:../lwip-1.4.1/src/core/raw.c ****  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  31:../lwip-1.4.1/src/core/raw.c ****  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+  32:../lwip-1.4.1/src/core/raw.c ****  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+  33:../lwip-1.4.1/src/core/raw.c ****  * OF SUCH DAMAGE.
+  34:../lwip-1.4.1/src/core/raw.c ****  *
+  35:../lwip-1.4.1/src/core/raw.c ****  * This file is part of the lwIP TCP/IP stack.
+  36:../lwip-1.4.1/src/core/raw.c ****  *
+  37:../lwip-1.4.1/src/core/raw.c ****  * Author: Adam Dunkels <adam@sics.se>
+  38:../lwip-1.4.1/src/core/raw.c ****  *
+  39:../lwip-1.4.1/src/core/raw.c ****  */
+  40:../lwip-1.4.1/src/core/raw.c **** 
+  41:../lwip-1.4.1/src/core/raw.c **** #include "lwip/opt.h"
+  42:../lwip-1.4.1/src/core/raw.c **** 
+  43:../lwip-1.4.1/src/core/raw.c **** #if LWIP_RAW /* don't build if not configured for use in lwipopts.h */
+  44:../lwip-1.4.1/src/core/raw.c **** 
+  45:../lwip-1.4.1/src/core/raw.c **** #include "lwip/def.h"
+  46:../lwip-1.4.1/src/core/raw.c **** #include "lwip/memp.h"
+  47:../lwip-1.4.1/src/core/raw.c **** #include "lwip/ip_addr.h"
+  48:../lwip-1.4.1/src/core/raw.c **** #include "lwip/netif.h"
+  49:../lwip-1.4.1/src/core/raw.c **** #include "lwip/raw.h"
+  50:../lwip-1.4.1/src/core/raw.c **** #include "lwip/stats.h"
+  51:../lwip-1.4.1/src/core/raw.c **** #include "arch/perf.h"
+  52:../lwip-1.4.1/src/core/raw.c **** 
+  53:../lwip-1.4.1/src/core/raw.c **** #include <string.h>
+  54:../lwip-1.4.1/src/core/raw.c **** 
+  55:../lwip-1.4.1/src/core/raw.c **** /** The list of RAW PCBs */
+  56:../lwip-1.4.1/src/core/raw.c **** static struct raw_pcb *raw_pcbs;
+  57:../lwip-1.4.1/src/core/raw.c **** 
+  58:../lwip-1.4.1/src/core/raw.c **** /**
+  59:../lwip-1.4.1/src/core/raw.c ****  * Determine if in incoming IP packet is covered by a RAW PCB
+  60:../lwip-1.4.1/src/core/raw.c ****  * and if so, pass it to a user-provided receive callback function.
+  61:../lwip-1.4.1/src/core/raw.c ****  *
+  62:../lwip-1.4.1/src/core/raw.c ****  * Given an incoming IP datagram (as a chain of pbufs) this function
+  63:../lwip-1.4.1/src/core/raw.c ****  * finds a corresponding RAW PCB and calls the corresponding receive
+  64:../lwip-1.4.1/src/core/raw.c ****  * callback function.
+  65:../lwip-1.4.1/src/core/raw.c ****  *
+  66:../lwip-1.4.1/src/core/raw.c ****  * @param p pbuf to be demultiplexed to a RAW PCB.
+  67:../lwip-1.4.1/src/core/raw.c ****  * @param inp network interface on which the datagram was received.
+  68:../lwip-1.4.1/src/core/raw.c ****  * @return - 1 if the packet has been eaten by a RAW PCB receive
+  69:../lwip-1.4.1/src/core/raw.c ****  *           callback function. The caller MAY NOT not reference the
+  70:../lwip-1.4.1/src/core/raw.c ****  *           packet any longer, and MAY NOT call pbuf_free().
+  71:../lwip-1.4.1/src/core/raw.c ****  * @return - 0 if packet is not eaten (pbuf is still referenced by the
+  72:../lwip-1.4.1/src/core/raw.c ****  *           caller).
+  73:../lwip-1.4.1/src/core/raw.c ****  *
+  74:../lwip-1.4.1/src/core/raw.c ****  */
+  75:../lwip-1.4.1/src/core/raw.c **** u8_t
+  76:../lwip-1.4.1/src/core/raw.c **** raw_input(struct pbuf *p, struct netif *inp)
+  77:../lwip-1.4.1/src/core/raw.c **** {
+  31              		.loc 1 77 0
+  32              		.cfi_startproc
+  33              		@ args = 0, pretend = 0, frame = 32
+  34              		@ frame_needed = 1, uses_anonymous_args = 0
+  35 0000 90B5     		push	{r4, r7, lr}
+  36              		.cfi_def_cfa_offset 12
+  37              		.cfi_offset 4, -12
+  38              		.cfi_offset 7, -8
+  39              		.cfi_offset 14, -4
+  40 0002 89B0     		sub	sp, sp, #36
+  41              		.cfi_def_cfa_offset 48
+  42 0004 00AF     		add	r7, sp, #0
+  43              		.cfi_def_cfa_register 7
+  44 0006 7860     		str	r0, [r7, #4]
+  45 0008 3960     		str	r1, [r7]
+  78:../lwip-1.4.1/src/core/raw.c ****   struct raw_pcb *pcb, *prev;
+  79:../lwip-1.4.1/src/core/raw.c ****   struct ip_hdr *iphdr;
+  80:../lwip-1.4.1/src/core/raw.c ****   s16_t proto;
+  81:../lwip-1.4.1/src/core/raw.c ****   u8_t eaten = 0;
+  46              		.loc 1 81 0
+  47 000a 0023     		movs	r3, #0
+  48 000c FB75     		strb	r3, [r7, #23]
+  82:../lwip-1.4.1/src/core/raw.c **** 
+  83:../lwip-1.4.1/src/core/raw.c ****   LWIP_UNUSED_ARG(inp);
+  84:../lwip-1.4.1/src/core/raw.c **** 
+  85:../lwip-1.4.1/src/core/raw.c ****   iphdr = (struct ip_hdr *)p->payload;
+  49              		.loc 1 85 0
+  50 000e 7B68     		ldr	r3, [r7, #4]
+  51 0010 5B68     		ldr	r3, [r3, #4]
+  52 0012 3B61     		str	r3, [r7, #16]
+  86:../lwip-1.4.1/src/core/raw.c ****   proto = IPH_PROTO(iphdr);
+  53              		.loc 1 86 0
+  54 0014 3B69     		ldr	r3, [r7, #16]
+  55 0016 5B7A     		ldrb	r3, [r3, #9]	@ zero_extendqisi2
+  56 0018 FB81     		strh	r3, [r7, #14]	@ movhi
+  87:../lwip-1.4.1/src/core/raw.c **** 
+  88:../lwip-1.4.1/src/core/raw.c ****   prev = NULL;
+  57              		.loc 1 88 0
+  58 001a 0023     		movs	r3, #0
+  59 001c BB61     		str	r3, [r7, #24]
+  89:../lwip-1.4.1/src/core/raw.c ****   pcb = raw_pcbs;
+  60              		.loc 1 89 0
+  61 001e 254B     		ldr	r3, .L8
+  62 0020 1B68     		ldr	r3, [r3]
+  63 0022 FB61     		str	r3, [r7, #28]
+  90:../lwip-1.4.1/src/core/raw.c ****   /* loop through all raw pcbs until the packet is eaten by one */
+  91:../lwip-1.4.1/src/core/raw.c ****   /* this allows multiple pcbs to match against the packet by design */
+  92:../lwip-1.4.1/src/core/raw.c ****   while ((eaten == 0) && (pcb != NULL)) {
+  64              		.loc 1 92 0
+  65 0024 3AE0     		b	.L2
+  66              	.L6:
+  93:../lwip-1.4.1/src/core/raw.c ****     if ((pcb->protocol == proto) &&
+  67              		.loc 1 93 0
+  68 0026 FB69     		ldr	r3, [r7, #28]
+  69 0028 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+  70 002a 1A46     		mov	r2, r3
+  71 002c B7F90E30 		ldrsh	r3, [r7, #14]
+  72 0030 9A42     		cmp	r2, r3
+  73 0032 2ED1     		bne	.L3
+  94:../lwip-1.4.1/src/core/raw.c ****         (ip_addr_isany(&pcb->local_ip) ||
+  74              		.loc 1 94 0 discriminator 1
+  75 0034 FB69     		ldr	r3, [r7, #28]
+  93:../lwip-1.4.1/src/core/raw.c ****     if ((pcb->protocol == proto) &&
+  76              		.loc 1 93 0 discriminator 1
+  77 0036 002B     		cmp	r3, #0
+  78 0038 09D0     		beq	.L4
+  79              		.loc 1 94 0
+  80 003a FB69     		ldr	r3, [r7, #28]
+  81 003c 1B68     		ldr	r3, [r3]
+  82 003e 002B     		cmp	r3, #0
+  83 0040 05D0     		beq	.L4
+  95:../lwip-1.4.1/src/core/raw.c ****          ip_addr_cmp(&(pcb->local_ip), &current_iphdr_dest))) {
+  84              		.loc 1 95 0 discriminator 1
+  85 0042 FB69     		ldr	r3, [r7, #28]
+  86 0044 1A68     		ldr	r2, [r3]
+  87 0046 1C4B     		ldr	r3, .L8+4
+  88 0048 1B68     		ldr	r3, [r3]
+  94:../lwip-1.4.1/src/core/raw.c ****         (ip_addr_isany(&pcb->local_ip) ||
+  89              		.loc 1 94 0 discriminator 1
+  90 004a 9A42     		cmp	r2, r3
+  91 004c 21D1     		bne	.L3
+  92              	.L4:
+  96:../lwip-1.4.1/src/core/raw.c **** #if IP_SOF_BROADCAST_RECV
+  97:../lwip-1.4.1/src/core/raw.c ****       /* broadcast filter? */
+  98:../lwip-1.4.1/src/core/raw.c ****       if (ip_get_option(pcb, SOF_BROADCAST) || !ip_addr_isbroadcast(&current_iphdr_dest, inp))
+  99:../lwip-1.4.1/src/core/raw.c **** #endif /* IP_SOF_BROADCAST_RECV */
+ 100:../lwip-1.4.1/src/core/raw.c ****       {
+ 101:../lwip-1.4.1/src/core/raw.c ****         /* receive callback function available? */
+ 102:../lwip-1.4.1/src/core/raw.c ****         if (pcb->recv != NULL) {
+  93              		.loc 1 102 0
+  94 004e FB69     		ldr	r3, [r7, #28]
+  95 0050 5B69     		ldr	r3, [r3, #20]
+  96 0052 002B     		cmp	r3, #0
+  97 0054 1DD0     		beq	.L3
+ 103:../lwip-1.4.1/src/core/raw.c ****           /* the receive callback function did not eat the packet? */
+ 104:../lwip-1.4.1/src/core/raw.c ****           if (pcb->recv(pcb->recv_arg, pcb, p, ip_current_src_addr()) != 0) {
+  98              		.loc 1 104 0
+  99 0056 FB69     		ldr	r3, [r7, #28]
+ 100 0058 5C69     		ldr	r4, [r3, #20]
+ 101 005a FB69     		ldr	r3, [r7, #28]
+ 102 005c 9B69     		ldr	r3, [r3, #24]
+ 103 005e 1846     		mov	r0, r3
+ 104 0060 F969     		ldr	r1, [r7, #28]
+ 105 0062 7A68     		ldr	r2, [r7, #4]
+ 106 0064 154B     		ldr	r3, .L8+8
+ 107 0066 A047     		blx	r4
+ 108 0068 0346     		mov	r3, r0
+ 109 006a 002B     		cmp	r3, #0
+ 110 006c 11D0     		beq	.L3
+ 105:../lwip-1.4.1/src/core/raw.c ****             /* receive function ate the packet */
+ 106:../lwip-1.4.1/src/core/raw.c ****             p = NULL;
+ 111              		.loc 1 106 0
+ 112 006e 0023     		movs	r3, #0
+ 113 0070 7B60     		str	r3, [r7, #4]
+ 107:../lwip-1.4.1/src/core/raw.c ****             eaten = 1;
+ 114              		.loc 1 107 0
+ 115 0072 0123     		movs	r3, #1
+ 116 0074 FB75     		strb	r3, [r7, #23]
+ 108:../lwip-1.4.1/src/core/raw.c ****             if (prev != NULL) {
+ 117              		.loc 1 108 0
+ 118 0076 BB69     		ldr	r3, [r7, #24]
+ 119 0078 002B     		cmp	r3, #0
+ 120 007a 0AD0     		beq	.L3
+ 109:../lwip-1.4.1/src/core/raw.c ****             /* move the pcb to the front of raw_pcbs so that is
+ 110:../lwip-1.4.1/src/core/raw.c ****                found faster next time */
+ 111:../lwip-1.4.1/src/core/raw.c ****               prev->next = pcb->next;
+ 121              		.loc 1 111 0
+ 122 007c FB69     		ldr	r3, [r7, #28]
+ 123 007e DA68     		ldr	r2, [r3, #12]
+ 124 0080 BB69     		ldr	r3, [r7, #24]
+ 125 0082 DA60     		str	r2, [r3, #12]
+ 112:../lwip-1.4.1/src/core/raw.c ****               pcb->next = raw_pcbs;
+ 126              		.loc 1 112 0
+ 127 0084 0B4B     		ldr	r3, .L8
+ 128 0086 1A68     		ldr	r2, [r3]
+ 129 0088 FB69     		ldr	r3, [r7, #28]
+ 130 008a DA60     		str	r2, [r3, #12]
+ 113:../lwip-1.4.1/src/core/raw.c ****               raw_pcbs = pcb;
+ 131              		.loc 1 113 0
+ 132 008c 094A     		ldr	r2, .L8
+ 133 008e FB69     		ldr	r3, [r7, #28]
+ 134 0090 1360     		str	r3, [r2]
+ 135              	.L3:
+ 114:../lwip-1.4.1/src/core/raw.c ****             }
+ 115:../lwip-1.4.1/src/core/raw.c ****           }
+ 116:../lwip-1.4.1/src/core/raw.c ****         }
+ 117:../lwip-1.4.1/src/core/raw.c ****         /* no receive callback function was set for this raw PCB */
+ 118:../lwip-1.4.1/src/core/raw.c ****       }
+ 119:../lwip-1.4.1/src/core/raw.c ****       /* drop the packet */
+ 120:../lwip-1.4.1/src/core/raw.c ****     }
+ 121:../lwip-1.4.1/src/core/raw.c ****     prev = pcb;
+ 136              		.loc 1 121 0
+ 137 0092 FB69     		ldr	r3, [r7, #28]
+ 138 0094 BB61     		str	r3, [r7, #24]
+ 122:../lwip-1.4.1/src/core/raw.c ****     pcb = pcb->next;
+ 139              		.loc 1 122 0
+ 140 0096 FB69     		ldr	r3, [r7, #28]
+ 141 0098 DB68     		ldr	r3, [r3, #12]
+ 142 009a FB61     		str	r3, [r7, #28]
+ 143              	.L2:
+  92:../lwip-1.4.1/src/core/raw.c ****     if ((pcb->protocol == proto) &&
+ 144              		.loc 1 92 0
+ 145 009c FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 146 009e 002B     		cmp	r3, #0
+ 147 00a0 02D1     		bne	.L5
+  92:../lwip-1.4.1/src/core/raw.c ****     if ((pcb->protocol == proto) &&
+ 148              		.loc 1 92 0 is_stmt 0 discriminator 1
+ 149 00a2 FB69     		ldr	r3, [r7, #28]
+ 150 00a4 002B     		cmp	r3, #0
+ 151 00a6 BED1     		bne	.L6
+ 152              	.L5:
+ 123:../lwip-1.4.1/src/core/raw.c ****   }
+ 124:../lwip-1.4.1/src/core/raw.c ****   return eaten;
+ 153              		.loc 1 124 0 is_stmt 1
+ 154 00a8 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 125:../lwip-1.4.1/src/core/raw.c **** }
+ 155              		.loc 1 125 0
+ 156 00aa 1846     		mov	r0, r3
+ 157 00ac 2437     		adds	r7, r7, #36
+ 158              		.cfi_def_cfa_offset 12
+ 159 00ae BD46     		mov	sp, r7
+ 160              		.cfi_def_cfa_register 13
+ 161              		@ sp needed
+ 162 00b0 90BD     		pop	{r4, r7, pc}
+ 163              	.L9:
+ 164 00b2 00BF     		.align	2
+ 165              	.L8:
+ 166 00b4 00000000 		.word	raw_pcbs
+ 167 00b8 00000000 		.word	current_iphdr_dest
+ 168 00bc 00000000 		.word	current_iphdr_src
+ 169              		.cfi_endproc
+ 170              	.LFE0:
+ 172              		.section	.text.raw_bind,"ax",%progbits
+ 173              		.align	2
+ 174              		.global	raw_bind
+ 175              		.thumb
+ 176              		.thumb_func
+ 178              	raw_bind:
+ 179              	.LFB1:
+ 126:../lwip-1.4.1/src/core/raw.c **** 
+ 127:../lwip-1.4.1/src/core/raw.c **** /**
+ 128:../lwip-1.4.1/src/core/raw.c ****  * Bind a RAW PCB.
+ 129:../lwip-1.4.1/src/core/raw.c ****  *
+ 130:../lwip-1.4.1/src/core/raw.c ****  * @param pcb RAW PCB to be bound with a local address ipaddr.
+ 131:../lwip-1.4.1/src/core/raw.c ****  * @param ipaddr local IP address to bind with. Use IP_ADDR_ANY to
+ 132:../lwip-1.4.1/src/core/raw.c ****  * bind to all local interfaces.
+ 133:../lwip-1.4.1/src/core/raw.c ****  *
+ 134:../lwip-1.4.1/src/core/raw.c ****  * @return lwIP error code.
+ 135:../lwip-1.4.1/src/core/raw.c ****  * - ERR_OK. Successful. No error occured.
+ 136:../lwip-1.4.1/src/core/raw.c ****  * - ERR_USE. The specified IP address is already bound to by
+ 137:../lwip-1.4.1/src/core/raw.c ****  * another RAW PCB.
+ 138:../lwip-1.4.1/src/core/raw.c ****  *
+ 139:../lwip-1.4.1/src/core/raw.c ****  * @see raw_disconnect()
+ 140:../lwip-1.4.1/src/core/raw.c ****  */
+ 141:../lwip-1.4.1/src/core/raw.c **** err_t
+ 142:../lwip-1.4.1/src/core/raw.c **** raw_bind(struct raw_pcb *pcb, ip_addr_t *ipaddr)
+ 143:../lwip-1.4.1/src/core/raw.c **** {
+ 180              		.loc 1 143 0
+ 181              		.cfi_startproc
+ 182              		@ args = 0, pretend = 0, frame = 8
+ 183              		@ frame_needed = 1, uses_anonymous_args = 0
+ 184              		@ link register save eliminated.
+ 185 0000 80B4     		push	{r7}
+ 186              		.cfi_def_cfa_offset 4
+ 187              		.cfi_offset 7, -4
+ 188 0002 83B0     		sub	sp, sp, #12
+ 189              		.cfi_def_cfa_offset 16
+ 190 0004 00AF     		add	r7, sp, #0
+ 191              		.cfi_def_cfa_register 7
+ 192 0006 7860     		str	r0, [r7, #4]
+ 193 0008 3960     		str	r1, [r7]
+ 144:../lwip-1.4.1/src/core/raw.c ****   ip_addr_set(&pcb->local_ip, ipaddr);
+ 194              		.loc 1 144 0
+ 195 000a 3B68     		ldr	r3, [r7]
+ 196 000c 002B     		cmp	r3, #0
+ 197 000e 02D0     		beq	.L11
+ 198              		.loc 1 144 0 is_stmt 0 discriminator 1
+ 199 0010 3B68     		ldr	r3, [r7]
+ 200 0012 1B68     		ldr	r3, [r3]
+ 201 0014 00E0     		b	.L12
+ 202              	.L11:
+ 203              		.loc 1 144 0 discriminator 2
+ 204 0016 0023     		movs	r3, #0
+ 205              	.L12:
+ 206              		.loc 1 144 0 discriminator 4
+ 207 0018 7A68     		ldr	r2, [r7, #4]
+ 208 001a 1360     		str	r3, [r2]
+ 145:../lwip-1.4.1/src/core/raw.c ****   return ERR_OK;
+ 209              		.loc 1 145 0 is_stmt 1 discriminator 4
+ 210 001c 0023     		movs	r3, #0
+ 211 001e 5BB2     		sxtb	r3, r3
+ 146:../lwip-1.4.1/src/core/raw.c **** }
+ 212              		.loc 1 146 0 discriminator 4
+ 213 0020 1846     		mov	r0, r3
+ 214 0022 0C37     		adds	r7, r7, #12
+ 215              		.cfi_def_cfa_offset 4
+ 216 0024 BD46     		mov	sp, r7
+ 217              		.cfi_def_cfa_register 13
+ 218              		@ sp needed
+ 219 0026 5DF8047B 		ldr	r7, [sp], #4
+ 220              		.cfi_restore 7
+ 221              		.cfi_def_cfa_offset 0
+ 222 002a 7047     		bx	lr
+ 223              		.cfi_endproc
+ 224              	.LFE1:
+ 226              		.section	.text.raw_connect,"ax",%progbits
+ 227              		.align	2
+ 228              		.global	raw_connect
+ 229              		.thumb
+ 230              		.thumb_func
+ 232              	raw_connect:
+ 233              	.LFB2:
+ 147:../lwip-1.4.1/src/core/raw.c **** 
+ 148:../lwip-1.4.1/src/core/raw.c **** /**
+ 149:../lwip-1.4.1/src/core/raw.c ****  * Connect an RAW PCB. This function is required by upper layers
+ 150:../lwip-1.4.1/src/core/raw.c ****  * of lwip. Using the raw api you could use raw_sendto() instead
+ 151:../lwip-1.4.1/src/core/raw.c ****  *
+ 152:../lwip-1.4.1/src/core/raw.c ****  * This will associate the RAW PCB with the remote address.
+ 153:../lwip-1.4.1/src/core/raw.c ****  *
+ 154:../lwip-1.4.1/src/core/raw.c ****  * @param pcb RAW PCB to be connected with remote address ipaddr and port.
+ 155:../lwip-1.4.1/src/core/raw.c ****  * @param ipaddr remote IP address to connect with.
+ 156:../lwip-1.4.1/src/core/raw.c ****  *
+ 157:../lwip-1.4.1/src/core/raw.c ****  * @return lwIP error code
+ 158:../lwip-1.4.1/src/core/raw.c ****  *
+ 159:../lwip-1.4.1/src/core/raw.c ****  * @see raw_disconnect() and raw_sendto()
+ 160:../lwip-1.4.1/src/core/raw.c ****  */
+ 161:../lwip-1.4.1/src/core/raw.c **** err_t
+ 162:../lwip-1.4.1/src/core/raw.c **** raw_connect(struct raw_pcb *pcb, ip_addr_t *ipaddr)
+ 163:../lwip-1.4.1/src/core/raw.c **** {
+ 234              		.loc 1 163 0
+ 235              		.cfi_startproc
+ 236              		@ args = 0, pretend = 0, frame = 8
+ 237              		@ frame_needed = 1, uses_anonymous_args = 0
+ 238              		@ link register save eliminated.
+ 239 0000 80B4     		push	{r7}
+ 240              		.cfi_def_cfa_offset 4
+ 241              		.cfi_offset 7, -4
+ 242 0002 83B0     		sub	sp, sp, #12
+ 243              		.cfi_def_cfa_offset 16
+ 244 0004 00AF     		add	r7, sp, #0
+ 245              		.cfi_def_cfa_register 7
+ 246 0006 7860     		str	r0, [r7, #4]
+ 247 0008 3960     		str	r1, [r7]
+ 164:../lwip-1.4.1/src/core/raw.c ****   ip_addr_set(&pcb->remote_ip, ipaddr);
+ 248              		.loc 1 164 0
+ 249 000a 3B68     		ldr	r3, [r7]
+ 250 000c 002B     		cmp	r3, #0
+ 251 000e 02D0     		beq	.L15
+ 252              		.loc 1 164 0 is_stmt 0 discriminator 1
+ 253 0010 3B68     		ldr	r3, [r7]
+ 254 0012 1B68     		ldr	r3, [r3]
+ 255 0014 00E0     		b	.L16
+ 256              	.L15:
+ 257              		.loc 1 164 0 discriminator 2
+ 258 0016 0023     		movs	r3, #0
+ 259              	.L16:
+ 260              		.loc 1 164 0 discriminator 4
+ 261 0018 7A68     		ldr	r2, [r7, #4]
+ 262 001a 5360     		str	r3, [r2, #4]
+ 165:../lwip-1.4.1/src/core/raw.c ****   return ERR_OK;
+ 263              		.loc 1 165 0 is_stmt 1 discriminator 4
+ 264 001c 0023     		movs	r3, #0
+ 265 001e 5BB2     		sxtb	r3, r3
+ 166:../lwip-1.4.1/src/core/raw.c **** }
+ 266              		.loc 1 166 0 discriminator 4
+ 267 0020 1846     		mov	r0, r3
+ 268 0022 0C37     		adds	r7, r7, #12
+ 269              		.cfi_def_cfa_offset 4
+ 270 0024 BD46     		mov	sp, r7
+ 271              		.cfi_def_cfa_register 13
+ 272              		@ sp needed
+ 273 0026 5DF8047B 		ldr	r7, [sp], #4
+ 274              		.cfi_restore 7
+ 275              		.cfi_def_cfa_offset 0
+ 276 002a 7047     		bx	lr
+ 277              		.cfi_endproc
+ 278              	.LFE2:
+ 280              		.section	.text.raw_recv,"ax",%progbits
+ 281              		.align	2
+ 282              		.global	raw_recv
+ 283              		.thumb
+ 284              		.thumb_func
+ 286              	raw_recv:
+ 287              	.LFB3:
+ 167:../lwip-1.4.1/src/core/raw.c **** 
+ 168:../lwip-1.4.1/src/core/raw.c **** 
+ 169:../lwip-1.4.1/src/core/raw.c **** /**
+ 170:../lwip-1.4.1/src/core/raw.c ****  * Set the callback function for received packets that match the
+ 171:../lwip-1.4.1/src/core/raw.c ****  * raw PCB's protocol and binding. 
+ 172:../lwip-1.4.1/src/core/raw.c ****  * 
+ 173:../lwip-1.4.1/src/core/raw.c ****  * The callback function MUST either
+ 174:../lwip-1.4.1/src/core/raw.c ****  * - eat the packet by calling pbuf_free() and returning non-zero. The
+ 175:../lwip-1.4.1/src/core/raw.c ****  *   packet will not be passed to other raw PCBs or other protocol layers.
+ 176:../lwip-1.4.1/src/core/raw.c ****  * - not free the packet, and return zero. The packet will be matched
+ 177:../lwip-1.4.1/src/core/raw.c ****  *   against further PCBs and/or forwarded to another protocol layers.
+ 178:../lwip-1.4.1/src/core/raw.c ****  * 
+ 179:../lwip-1.4.1/src/core/raw.c ****  * @return non-zero if the packet was free()d, zero if the packet remains
+ 180:../lwip-1.4.1/src/core/raw.c ****  * available for others.
+ 181:../lwip-1.4.1/src/core/raw.c ****  */
+ 182:../lwip-1.4.1/src/core/raw.c **** void
+ 183:../lwip-1.4.1/src/core/raw.c **** raw_recv(struct raw_pcb *pcb, raw_recv_fn recv, void *recv_arg)
+ 184:../lwip-1.4.1/src/core/raw.c **** {
+ 288              		.loc 1 184 0
+ 289              		.cfi_startproc
+ 290              		@ args = 0, pretend = 0, frame = 16
+ 291              		@ frame_needed = 1, uses_anonymous_args = 0
+ 292              		@ link register save eliminated.
+ 293 0000 80B4     		push	{r7}
+ 294              		.cfi_def_cfa_offset 4
+ 295              		.cfi_offset 7, -4
+ 296 0002 85B0     		sub	sp, sp, #20
+ 297              		.cfi_def_cfa_offset 24
+ 298 0004 00AF     		add	r7, sp, #0
+ 299              		.cfi_def_cfa_register 7
+ 300 0006 F860     		str	r0, [r7, #12]
+ 301 0008 B960     		str	r1, [r7, #8]
+ 302 000a 7A60     		str	r2, [r7, #4]
+ 185:../lwip-1.4.1/src/core/raw.c ****   /* remember recv() callback and user data */
+ 186:../lwip-1.4.1/src/core/raw.c ****   pcb->recv = recv;
+ 303              		.loc 1 186 0
+ 304 000c FB68     		ldr	r3, [r7, #12]
+ 305 000e BA68     		ldr	r2, [r7, #8]
+ 306 0010 5A61     		str	r2, [r3, #20]
+ 187:../lwip-1.4.1/src/core/raw.c ****   pcb->recv_arg = recv_arg;
+ 307              		.loc 1 187 0
+ 308 0012 FB68     		ldr	r3, [r7, #12]
+ 309 0014 7A68     		ldr	r2, [r7, #4]
+ 310 0016 9A61     		str	r2, [r3, #24]
+ 188:../lwip-1.4.1/src/core/raw.c **** }
+ 311              		.loc 1 188 0
+ 312 0018 1437     		adds	r7, r7, #20
+ 313              		.cfi_def_cfa_offset 4
+ 314 001a BD46     		mov	sp, r7
+ 315              		.cfi_def_cfa_register 13
+ 316              		@ sp needed
+ 317 001c 5DF8047B 		ldr	r7, [sp], #4
+ 318              		.cfi_restore 7
+ 319              		.cfi_def_cfa_offset 0
+ 320 0020 7047     		bx	lr
+ 321              		.cfi_endproc
+ 322              	.LFE3:
+ 324 0022 00BF     		.section	.text.raw_sendto,"ax",%progbits
+ 325              		.align	2
+ 326              		.global	raw_sendto
+ 327              		.thumb
+ 328              		.thumb_func
+ 330              	raw_sendto:
+ 331              	.LFB4:
+ 189:../lwip-1.4.1/src/core/raw.c **** 
+ 190:../lwip-1.4.1/src/core/raw.c **** /**
+ 191:../lwip-1.4.1/src/core/raw.c ****  * Send the raw IP packet to the given address. Note that actually you cannot
+ 192:../lwip-1.4.1/src/core/raw.c ****  * modify the IP headers (this is inconsistent with the receive callback where
+ 193:../lwip-1.4.1/src/core/raw.c ****  * you actually get the IP headers), you can only specify the IP payload here.
+ 194:../lwip-1.4.1/src/core/raw.c ****  * It requires some more changes in lwIP. (there will be a raw_send() function
+ 195:../lwip-1.4.1/src/core/raw.c ****  * then.)
+ 196:../lwip-1.4.1/src/core/raw.c ****  *
+ 197:../lwip-1.4.1/src/core/raw.c ****  * @param pcb the raw pcb which to send
+ 198:../lwip-1.4.1/src/core/raw.c ****  * @param p the IP payload to send
+ 199:../lwip-1.4.1/src/core/raw.c ****  * @param ipaddr the destination address of the IP packet
+ 200:../lwip-1.4.1/src/core/raw.c ****  *
+ 201:../lwip-1.4.1/src/core/raw.c ****  */
+ 202:../lwip-1.4.1/src/core/raw.c **** err_t
+ 203:../lwip-1.4.1/src/core/raw.c **** raw_sendto(struct raw_pcb *pcb, struct pbuf *p, ip_addr_t *ipaddr)
+ 204:../lwip-1.4.1/src/core/raw.c **** {
+ 332              		.loc 1 204 0
+ 333              		.cfi_startproc
+ 334              		@ args = 0, pretend = 0, frame = 32
+ 335              		@ frame_needed = 1, uses_anonymous_args = 0
+ 336 0000 90B5     		push	{r4, r7, lr}
+ 337              		.cfi_def_cfa_offset 12
+ 338              		.cfi_offset 4, -12
+ 339              		.cfi_offset 7, -8
+ 340              		.cfi_offset 14, -4
+ 341 0002 8DB0     		sub	sp, sp, #52
+ 342              		.cfi_def_cfa_offset 64
+ 343 0004 04AF     		add	r7, sp, #16
+ 344              		.cfi_def_cfa 7, 48
+ 345 0006 F860     		str	r0, [r7, #12]
+ 346 0008 B960     		str	r1, [r7, #8]
+ 347 000a 7A60     		str	r2, [r7, #4]
+ 205:../lwip-1.4.1/src/core/raw.c ****   err_t err;
+ 206:../lwip-1.4.1/src/core/raw.c ****   struct netif *netif;
+ 207:../lwip-1.4.1/src/core/raw.c ****   ip_addr_t *src_ip;
+ 208:../lwip-1.4.1/src/core/raw.c ****   struct pbuf *q; /* q will be sent down the stack */
+ 209:../lwip-1.4.1/src/core/raw.c ****   
+ 210:../lwip-1.4.1/src/core/raw.c ****   LWIP_DEBUGF(RAW_DEBUG | LWIP_DBG_TRACE, ("raw_sendto\n"));
+ 211:../lwip-1.4.1/src/core/raw.c ****   
+ 212:../lwip-1.4.1/src/core/raw.c ****   /* not enough space to add an IP header to first pbuf in given p chain? */
+ 213:../lwip-1.4.1/src/core/raw.c ****   if (pbuf_header(p, IP_HLEN)) {
+ 348              		.loc 1 213 0
+ 349 000c B868     		ldr	r0, [r7, #8]
+ 350 000e 1421     		movs	r1, #20
+ 351 0010 FFF7FEFF 		bl	pbuf_header
+ 352 0014 0346     		mov	r3, r0
+ 353 0016 002B     		cmp	r3, #0
+ 354 0018 13D0     		beq	.L20
+ 214:../lwip-1.4.1/src/core/raw.c ****     /* allocate header in new pbuf */
+ 215:../lwip-1.4.1/src/core/raw.c ****     q = pbuf_alloc(PBUF_IP, 0, PBUF_RAM);
+ 355              		.loc 1 215 0
+ 356 001a 0120     		movs	r0, #1
+ 357 001c 0021     		movs	r1, #0
+ 358 001e 0022     		movs	r2, #0
+ 359 0020 FFF7FEFF 		bl	pbuf_alloc
+ 360 0024 B861     		str	r0, [r7, #24]
+ 216:../lwip-1.4.1/src/core/raw.c ****     /* new header pbuf could not be allocated? */
+ 217:../lwip-1.4.1/src/core/raw.c ****     if (q == NULL) {
+ 361              		.loc 1 217 0
+ 362 0026 BB69     		ldr	r3, [r7, #24]
+ 363 0028 002B     		cmp	r3, #0
+ 364 002a 01D1     		bne	.L21
+ 218:../lwip-1.4.1/src/core/raw.c ****       LWIP_DEBUGF(RAW_DEBUG | LWIP_DBG_TRACE | LWIP_DBG_LEVEL_SERIOUS, ("raw_sendto: could not allo
+ 219:../lwip-1.4.1/src/core/raw.c ****       return ERR_MEM;
+ 365              		.loc 1 219 0
+ 366 002c FF23     		movs	r3, #255
+ 367 002e 4BE0     		b	.L22
+ 368              	.L21:
+ 220:../lwip-1.4.1/src/core/raw.c ****     }
+ 221:../lwip-1.4.1/src/core/raw.c ****     if (p->tot_len != 0) {
+ 369              		.loc 1 221 0
+ 370 0030 BB68     		ldr	r3, [r7, #8]
+ 371 0032 1B89     		ldrh	r3, [r3, #8]
+ 372 0034 002B     		cmp	r3, #0
+ 373 0036 10D0     		beq	.L24
+ 222:../lwip-1.4.1/src/core/raw.c ****       /* chain header q in front of given pbuf p */
+ 223:../lwip-1.4.1/src/core/raw.c ****       pbuf_chain(q, p);
+ 374              		.loc 1 223 0
+ 375 0038 B869     		ldr	r0, [r7, #24]
+ 376 003a B968     		ldr	r1, [r7, #8]
+ 377 003c FFF7FEFF 		bl	pbuf_chain
+ 378 0040 0BE0     		b	.L24
+ 379              	.L20:
+ 224:../lwip-1.4.1/src/core/raw.c ****     }
+ 225:../lwip-1.4.1/src/core/raw.c ****     /* { first pbuf q points to header pbuf } */
+ 226:../lwip-1.4.1/src/core/raw.c ****     LWIP_DEBUGF(RAW_DEBUG, ("raw_sendto: added header pbuf %p before given pbuf %p\n", (void *)q, (
+ 227:../lwip-1.4.1/src/core/raw.c ****   }  else {
+ 228:../lwip-1.4.1/src/core/raw.c ****     /* first pbuf q equals given pbuf */
+ 229:../lwip-1.4.1/src/core/raw.c ****     q = p;
+ 380              		.loc 1 229 0
+ 381 0042 BB68     		ldr	r3, [r7, #8]
+ 382 0044 BB61     		str	r3, [r7, #24]
+ 230:../lwip-1.4.1/src/core/raw.c ****     if(pbuf_header(q, -IP_HLEN)) {
+ 383              		.loc 1 230 0
+ 384 0046 B869     		ldr	r0, [r7, #24]
+ 385 0048 6FF01301 		mvn	r1, #19
+ 386 004c FFF7FEFF 		bl	pbuf_header
+ 387 0050 0346     		mov	r3, r0
+ 388 0052 002B     		cmp	r3, #0
+ 389 0054 01D0     		beq	.L24
+ 231:../lwip-1.4.1/src/core/raw.c ****       LWIP_ASSERT("Can't restore header we just removed!", 0);
+ 232:../lwip-1.4.1/src/core/raw.c ****       return ERR_MEM;
+ 390              		.loc 1 232 0
+ 391 0056 FF23     		movs	r3, #255
+ 392 0058 36E0     		b	.L22
+ 393              	.L24:
+ 233:../lwip-1.4.1/src/core/raw.c ****     }
+ 234:../lwip-1.4.1/src/core/raw.c ****   }
+ 235:../lwip-1.4.1/src/core/raw.c **** 
+ 236:../lwip-1.4.1/src/core/raw.c ****   if ((netif = ip_route(ipaddr)) == NULL) {
+ 394              		.loc 1 236 0
+ 395 005a 7868     		ldr	r0, [r7, #4]
+ 396 005c FFF7FEFF 		bl	ip_route
+ 397 0060 7861     		str	r0, [r7, #20]
+ 398 0062 7B69     		ldr	r3, [r7, #20]
+ 399 0064 002B     		cmp	r3, #0
+ 400 0066 08D1     		bne	.L25
+ 237:../lwip-1.4.1/src/core/raw.c ****     LWIP_DEBUGF(RAW_DEBUG | LWIP_DBG_LEVEL_WARNING, ("raw_sendto: No route to %"U16_F".%"U16_F".%"U
+ 238:../lwip-1.4.1/src/core/raw.c ****       ip4_addr1_16(ipaddr), ip4_addr2_16(ipaddr), ip4_addr3_16(ipaddr), ip4_addr4_16(ipaddr)));
+ 239:../lwip-1.4.1/src/core/raw.c ****     /* free any temporary header pbuf allocated by pbuf_header() */
+ 240:../lwip-1.4.1/src/core/raw.c ****     if (q != p) {
+ 401              		.loc 1 240 0
+ 402 0068 BA69     		ldr	r2, [r7, #24]
+ 403 006a BB68     		ldr	r3, [r7, #8]
+ 404 006c 9A42     		cmp	r2, r3
+ 405 006e 02D0     		beq	.L26
+ 241:../lwip-1.4.1/src/core/raw.c ****       pbuf_free(q);
+ 406              		.loc 1 241 0
+ 407 0070 B869     		ldr	r0, [r7, #24]
+ 408 0072 FFF7FEFF 		bl	pbuf_free
+ 409              	.L26:
+ 242:../lwip-1.4.1/src/core/raw.c ****     }
+ 243:../lwip-1.4.1/src/core/raw.c ****     return ERR_RTE;
+ 410              		.loc 1 243 0
+ 411 0076 FC23     		movs	r3, #252
+ 412 0078 26E0     		b	.L22
+ 413              	.L25:
+ 244:../lwip-1.4.1/src/core/raw.c ****   }
+ 245:../lwip-1.4.1/src/core/raw.c **** 
+ 246:../lwip-1.4.1/src/core/raw.c **** #if IP_SOF_BROADCAST
+ 247:../lwip-1.4.1/src/core/raw.c ****   /* broadcast filter? */
+ 248:../lwip-1.4.1/src/core/raw.c ****   if (!ip_get_option(pcb, SOF_BROADCAST) && ip_addr_isbroadcast(ipaddr, netif)) {
+ 249:../lwip-1.4.1/src/core/raw.c ****     LWIP_DEBUGF(RAW_DEBUG | LWIP_DBG_LEVEL_WARNING, ("raw_sendto: SOF_BROADCAST not enabled on pcb 
+ 250:../lwip-1.4.1/src/core/raw.c ****     /* free any temporary header pbuf allocated by pbuf_header() */
+ 251:../lwip-1.4.1/src/core/raw.c ****     if (q != p) {
+ 252:../lwip-1.4.1/src/core/raw.c ****       pbuf_free(q);
+ 253:../lwip-1.4.1/src/core/raw.c ****     }
+ 254:../lwip-1.4.1/src/core/raw.c ****     return ERR_VAL;
+ 255:../lwip-1.4.1/src/core/raw.c ****   }
+ 256:../lwip-1.4.1/src/core/raw.c **** #endif /* IP_SOF_BROADCAST */
+ 257:../lwip-1.4.1/src/core/raw.c **** 
+ 258:../lwip-1.4.1/src/core/raw.c ****   if (ip_addr_isany(&pcb->local_ip)) {
+ 414              		.loc 1 258 0
+ 415 007a FB68     		ldr	r3, [r7, #12]
+ 416 007c 002B     		cmp	r3, #0
+ 417 007e 03D0     		beq	.L27
+ 418              		.loc 1 258 0 is_stmt 0 discriminator 1
+ 419 0080 FB68     		ldr	r3, [r7, #12]
+ 420 0082 1B68     		ldr	r3, [r3]
+ 421 0084 002B     		cmp	r3, #0
+ 422 0086 03D1     		bne	.L28
+ 423              	.L27:
+ 259:../lwip-1.4.1/src/core/raw.c ****     /* use outgoing network interface IP address as source address */
+ 260:../lwip-1.4.1/src/core/raw.c ****     src_ip = &(netif->ip_addr);
+ 424              		.loc 1 260 0 is_stmt 1
+ 425 0088 7B69     		ldr	r3, [r7, #20]
+ 426 008a 0433     		adds	r3, r3, #4
+ 427 008c FB61     		str	r3, [r7, #28]
+ 428 008e 01E0     		b	.L29
+ 429              	.L28:
+ 261:../lwip-1.4.1/src/core/raw.c ****   } else {
+ 262:../lwip-1.4.1/src/core/raw.c ****     /* use RAW PCB local IP address as source address */
+ 263:../lwip-1.4.1/src/core/raw.c ****     src_ip = &(pcb->local_ip);
+ 430              		.loc 1 263 0
+ 431 0090 FB68     		ldr	r3, [r7, #12]
+ 432 0092 FB61     		str	r3, [r7, #28]
+ 433              	.L29:
+ 264:../lwip-1.4.1/src/core/raw.c ****   }
+ 265:../lwip-1.4.1/src/core/raw.c **** 
+ 266:../lwip-1.4.1/src/core/raw.c ****   NETIF_SET_HWADDRHINT(netif, &pcb->addr_hint);
+ 267:../lwip-1.4.1/src/core/raw.c ****   err = ip_output_if (q, src_ip, ipaddr, pcb->ttl, pcb->tos, pcb->protocol, netif);
+ 434              		.loc 1 267 0
+ 435 0094 FB68     		ldr	r3, [r7, #12]
+ 436 0096 9C7A     		ldrb	r4, [r3, #10]	@ zero_extendqisi2
+ 437 0098 FB68     		ldr	r3, [r7, #12]
+ 438 009a 5A7A     		ldrb	r2, [r3, #9]	@ zero_extendqisi2
+ 439 009c FB68     		ldr	r3, [r7, #12]
+ 440 009e 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 441 00a0 0092     		str	r2, [sp]
+ 442 00a2 0193     		str	r3, [sp, #4]
+ 443 00a4 7B69     		ldr	r3, [r7, #20]
+ 444 00a6 0293     		str	r3, [sp, #8]
+ 445 00a8 B869     		ldr	r0, [r7, #24]
+ 446 00aa F969     		ldr	r1, [r7, #28]
+ 447 00ac 7A68     		ldr	r2, [r7, #4]
+ 448 00ae 2346     		mov	r3, r4
+ 449 00b0 FFF7FEFF 		bl	ip_output_if
+ 450 00b4 0346     		mov	r3, r0
+ 451 00b6 FB74     		strb	r3, [r7, #19]
+ 268:../lwip-1.4.1/src/core/raw.c ****   NETIF_SET_HWADDRHINT(netif, NULL);
+ 269:../lwip-1.4.1/src/core/raw.c **** 
+ 270:../lwip-1.4.1/src/core/raw.c ****   /* did we chain a header earlier? */
+ 271:../lwip-1.4.1/src/core/raw.c ****   if (q != p) {
+ 452              		.loc 1 271 0
+ 453 00b8 BA69     		ldr	r2, [r7, #24]
+ 454 00ba BB68     		ldr	r3, [r7, #8]
+ 455 00bc 9A42     		cmp	r2, r3
+ 456 00be 02D0     		beq	.L30
+ 272:../lwip-1.4.1/src/core/raw.c ****     /* free the header */
+ 273:../lwip-1.4.1/src/core/raw.c ****     pbuf_free(q);
+ 457              		.loc 1 273 0
+ 458 00c0 B869     		ldr	r0, [r7, #24]
+ 459 00c2 FFF7FEFF 		bl	pbuf_free
+ 460              	.L30:
+ 274:../lwip-1.4.1/src/core/raw.c ****   }
+ 275:../lwip-1.4.1/src/core/raw.c ****   return err;
+ 461              		.loc 1 275 0
+ 462 00c6 FB7C     		ldrb	r3, [r7, #19]	@ zero_extendqisi2
+ 463              	.L22:
+ 464 00c8 5BB2     		sxtb	r3, r3
+ 276:../lwip-1.4.1/src/core/raw.c **** }
+ 465              		.loc 1 276 0
+ 466 00ca 1846     		mov	r0, r3
+ 467 00cc 2437     		adds	r7, r7, #36
+ 468              		.cfi_def_cfa_offset 12
+ 469 00ce BD46     		mov	sp, r7
+ 470              		.cfi_def_cfa_register 13
+ 471              		@ sp needed
+ 472 00d0 90BD     		pop	{r4, r7, pc}
+ 473              		.cfi_endproc
+ 474              	.LFE4:
+ 476 00d2 00BF     		.section	.text.raw_send,"ax",%progbits
+ 477              		.align	2
+ 478              		.global	raw_send
+ 479              		.thumb
+ 480              		.thumb_func
+ 482              	raw_send:
+ 483              	.LFB5:
+ 277:../lwip-1.4.1/src/core/raw.c **** 
+ 278:../lwip-1.4.1/src/core/raw.c **** /**
+ 279:../lwip-1.4.1/src/core/raw.c ****  * Send the raw IP packet to the address given by raw_connect()
+ 280:../lwip-1.4.1/src/core/raw.c ****  *
+ 281:../lwip-1.4.1/src/core/raw.c ****  * @param pcb the raw pcb which to send
+ 282:../lwip-1.4.1/src/core/raw.c ****  * @param p the IP payload to send
+ 283:../lwip-1.4.1/src/core/raw.c ****  *
+ 284:../lwip-1.4.1/src/core/raw.c ****  */
+ 285:../lwip-1.4.1/src/core/raw.c **** err_t
+ 286:../lwip-1.4.1/src/core/raw.c **** raw_send(struct raw_pcb *pcb, struct pbuf *p)
+ 287:../lwip-1.4.1/src/core/raw.c **** {
+ 484              		.loc 1 287 0
+ 485              		.cfi_startproc
+ 486              		@ args = 0, pretend = 0, frame = 8
+ 487              		@ frame_needed = 1, uses_anonymous_args = 0
+ 488 0000 80B5     		push	{r7, lr}
+ 489              		.cfi_def_cfa_offset 8
+ 490              		.cfi_offset 7, -8
+ 491              		.cfi_offset 14, -4
+ 492 0002 82B0     		sub	sp, sp, #8
+ 493              		.cfi_def_cfa_offset 16
+ 494 0004 00AF     		add	r7, sp, #0
+ 495              		.cfi_def_cfa_register 7
+ 496 0006 7860     		str	r0, [r7, #4]
+ 497 0008 3960     		str	r1, [r7]
+ 288:../lwip-1.4.1/src/core/raw.c ****   return raw_sendto(pcb, p, &pcb->remote_ip);
+ 498              		.loc 1 288 0
+ 499 000a 7B68     		ldr	r3, [r7, #4]
+ 500 000c 0433     		adds	r3, r3, #4
+ 501 000e 7868     		ldr	r0, [r7, #4]
+ 502 0010 3968     		ldr	r1, [r7]
+ 503 0012 1A46     		mov	r2, r3
+ 504 0014 FFF7FEFF 		bl	raw_sendto
+ 505 0018 0346     		mov	r3, r0
+ 289:../lwip-1.4.1/src/core/raw.c **** }
+ 506              		.loc 1 289 0
+ 507 001a 1846     		mov	r0, r3
+ 508 001c 0837     		adds	r7, r7, #8
+ 509              		.cfi_def_cfa_offset 8
+ 510 001e BD46     		mov	sp, r7
+ 511              		.cfi_def_cfa_register 13
+ 512              		@ sp needed
+ 513 0020 80BD     		pop	{r7, pc}
+ 514              		.cfi_endproc
+ 515              	.LFE5:
+ 517 0022 00BF     		.section	.text.raw_remove,"ax",%progbits
+ 518              		.align	2
+ 519              		.global	raw_remove
+ 520              		.thumb
+ 521              		.thumb_func
+ 523              	raw_remove:
+ 524              	.LFB6:
+ 290:../lwip-1.4.1/src/core/raw.c **** 
+ 291:../lwip-1.4.1/src/core/raw.c **** /**
+ 292:../lwip-1.4.1/src/core/raw.c ****  * Remove an RAW PCB.
+ 293:../lwip-1.4.1/src/core/raw.c ****  *
+ 294:../lwip-1.4.1/src/core/raw.c ****  * @param pcb RAW PCB to be removed. The PCB is removed from the list of
+ 295:../lwip-1.4.1/src/core/raw.c ****  * RAW PCB's and the data structure is freed from memory.
+ 296:../lwip-1.4.1/src/core/raw.c ****  *
+ 297:../lwip-1.4.1/src/core/raw.c ****  * @see raw_new()
+ 298:../lwip-1.4.1/src/core/raw.c ****  */
+ 299:../lwip-1.4.1/src/core/raw.c **** void
+ 300:../lwip-1.4.1/src/core/raw.c **** raw_remove(struct raw_pcb *pcb)
+ 301:../lwip-1.4.1/src/core/raw.c **** {
+ 525              		.loc 1 301 0
+ 526              		.cfi_startproc
+ 527              		@ args = 0, pretend = 0, frame = 16
+ 528              		@ frame_needed = 1, uses_anonymous_args = 0
+ 529 0000 80B5     		push	{r7, lr}
+ 530              		.cfi_def_cfa_offset 8
+ 531              		.cfi_offset 7, -8
+ 532              		.cfi_offset 14, -4
+ 533 0002 84B0     		sub	sp, sp, #16
+ 534              		.cfi_def_cfa_offset 24
+ 535 0004 00AF     		add	r7, sp, #0
+ 536              		.cfi_def_cfa_register 7
+ 537 0006 7860     		str	r0, [r7, #4]
+ 302:../lwip-1.4.1/src/core/raw.c ****   struct raw_pcb *pcb2;
+ 303:../lwip-1.4.1/src/core/raw.c ****   /* pcb to be removed is first in list? */
+ 304:../lwip-1.4.1/src/core/raw.c ****   if (raw_pcbs == pcb) {
+ 538              		.loc 1 304 0
+ 539 0008 144B     		ldr	r3, .L39
+ 540 000a 1A68     		ldr	r2, [r3]
+ 541 000c 7B68     		ldr	r3, [r7, #4]
+ 542 000e 9A42     		cmp	r2, r3
+ 543 0010 05D1     		bne	.L34
+ 305:../lwip-1.4.1/src/core/raw.c ****     /* make list start at 2nd pcb */
+ 306:../lwip-1.4.1/src/core/raw.c ****     raw_pcbs = raw_pcbs->next;
+ 544              		.loc 1 306 0
+ 545 0012 124B     		ldr	r3, .L39
+ 546 0014 1B68     		ldr	r3, [r3]
+ 547 0016 DB68     		ldr	r3, [r3, #12]
+ 548 0018 104A     		ldr	r2, .L39
+ 549 001a 1360     		str	r3, [r2]
+ 550 001c 16E0     		b	.L35
+ 551              	.L34:
+ 307:../lwip-1.4.1/src/core/raw.c ****     /* pcb not 1st in list */
+ 308:../lwip-1.4.1/src/core/raw.c ****   } else {
+ 309:../lwip-1.4.1/src/core/raw.c ****     for(pcb2 = raw_pcbs; pcb2 != NULL; pcb2 = pcb2->next) {
+ 552              		.loc 1 309 0
+ 553 001e 0F4B     		ldr	r3, .L39
+ 554 0020 1B68     		ldr	r3, [r3]
+ 555 0022 FB60     		str	r3, [r7, #12]
+ 556 0024 0FE0     		b	.L36
+ 557              	.L38:
+ 310:../lwip-1.4.1/src/core/raw.c ****       /* find pcb in raw_pcbs list */
+ 311:../lwip-1.4.1/src/core/raw.c ****       if (pcb2->next != NULL && pcb2->next == pcb) {
+ 558              		.loc 1 311 0
+ 559 0026 FB68     		ldr	r3, [r7, #12]
+ 560 0028 DB68     		ldr	r3, [r3, #12]
+ 561 002a 002B     		cmp	r3, #0
+ 562 002c 08D0     		beq	.L37
+ 563              		.loc 1 311 0 is_stmt 0 discriminator 1
+ 564 002e FB68     		ldr	r3, [r7, #12]
+ 565 0030 DA68     		ldr	r2, [r3, #12]
+ 566 0032 7B68     		ldr	r3, [r7, #4]
+ 567 0034 9A42     		cmp	r2, r3
+ 568 0036 03D1     		bne	.L37
+ 312:../lwip-1.4.1/src/core/raw.c ****         /* remove pcb from list */
+ 313:../lwip-1.4.1/src/core/raw.c ****         pcb2->next = pcb->next;
+ 569              		.loc 1 313 0 is_stmt 1
+ 570 0038 7B68     		ldr	r3, [r7, #4]
+ 571 003a DA68     		ldr	r2, [r3, #12]
+ 572 003c FB68     		ldr	r3, [r7, #12]
+ 573 003e DA60     		str	r2, [r3, #12]
+ 574              	.L37:
+ 309:../lwip-1.4.1/src/core/raw.c ****       /* find pcb in raw_pcbs list */
+ 575              		.loc 1 309 0 discriminator 2
+ 576 0040 FB68     		ldr	r3, [r7, #12]
+ 577 0042 DB68     		ldr	r3, [r3, #12]
+ 578 0044 FB60     		str	r3, [r7, #12]
+ 579              	.L36:
+ 309:../lwip-1.4.1/src/core/raw.c ****       /* find pcb in raw_pcbs list */
+ 580              		.loc 1 309 0 is_stmt 0 discriminator 1
+ 581 0046 FB68     		ldr	r3, [r7, #12]
+ 582 0048 002B     		cmp	r3, #0
+ 583 004a ECD1     		bne	.L38
+ 584              	.L35:
+ 314:../lwip-1.4.1/src/core/raw.c ****       }
+ 315:../lwip-1.4.1/src/core/raw.c ****     }
+ 316:../lwip-1.4.1/src/core/raw.c ****   }
+ 317:../lwip-1.4.1/src/core/raw.c ****   memp_free(MEMP_RAW_PCB, pcb);
+ 585              		.loc 1 317 0 is_stmt 1
+ 586 004c 0020     		movs	r0, #0
+ 587 004e 7968     		ldr	r1, [r7, #4]
+ 588 0050 FFF7FEFF 		bl	memp_free
+ 318:../lwip-1.4.1/src/core/raw.c **** }
+ 589              		.loc 1 318 0
+ 590 0054 1037     		adds	r7, r7, #16
+ 591              		.cfi_def_cfa_offset 8
+ 592 0056 BD46     		mov	sp, r7
+ 593              		.cfi_def_cfa_register 13
+ 594              		@ sp needed
+ 595 0058 80BD     		pop	{r7, pc}
+ 596              	.L40:
+ 597 005a 00BF     		.align	2
+ 598              	.L39:
+ 599 005c 00000000 		.word	raw_pcbs
+ 600              		.cfi_endproc
+ 601              	.LFE6:
+ 603              		.section	.text.raw_new,"ax",%progbits
+ 604              		.align	2
+ 605              		.global	raw_new
+ 606              		.thumb
+ 607              		.thumb_func
+ 609              	raw_new:
+ 610              	.LFB7:
+ 319:../lwip-1.4.1/src/core/raw.c **** 
+ 320:../lwip-1.4.1/src/core/raw.c **** /**
+ 321:../lwip-1.4.1/src/core/raw.c ****  * Create a RAW PCB.
+ 322:../lwip-1.4.1/src/core/raw.c ****  *
+ 323:../lwip-1.4.1/src/core/raw.c ****  * @return The RAW PCB which was created. NULL if the PCB data structure
+ 324:../lwip-1.4.1/src/core/raw.c ****  * could not be allocated.
+ 325:../lwip-1.4.1/src/core/raw.c ****  *
+ 326:../lwip-1.4.1/src/core/raw.c ****  * @param proto the protocol number of the IPs payload (e.g. IP_PROTO_ICMP)
+ 327:../lwip-1.4.1/src/core/raw.c ****  *
+ 328:../lwip-1.4.1/src/core/raw.c ****  * @see raw_remove()
+ 329:../lwip-1.4.1/src/core/raw.c ****  */
+ 330:../lwip-1.4.1/src/core/raw.c **** struct raw_pcb *
+ 331:../lwip-1.4.1/src/core/raw.c **** raw_new(u8_t proto)
+ 332:../lwip-1.4.1/src/core/raw.c **** {
+ 611              		.loc 1 332 0
+ 612              		.cfi_startproc
+ 613              		@ args = 0, pretend = 0, frame = 16
+ 614              		@ frame_needed = 1, uses_anonymous_args = 0
+ 615 0000 80B5     		push	{r7, lr}
+ 616              		.cfi_def_cfa_offset 8
+ 617              		.cfi_offset 7, -8
+ 618              		.cfi_offset 14, -4
+ 619 0002 84B0     		sub	sp, sp, #16
+ 620              		.cfi_def_cfa_offset 24
+ 621 0004 00AF     		add	r7, sp, #0
+ 622              		.cfi_def_cfa_register 7
+ 623 0006 0346     		mov	r3, r0
+ 624 0008 FB71     		strb	r3, [r7, #7]
+ 333:../lwip-1.4.1/src/core/raw.c ****   struct raw_pcb *pcb;
+ 334:../lwip-1.4.1/src/core/raw.c **** 
+ 335:../lwip-1.4.1/src/core/raw.c ****   LWIP_DEBUGF(RAW_DEBUG | LWIP_DBG_TRACE, ("raw_new\n"));
+ 336:../lwip-1.4.1/src/core/raw.c **** 
+ 337:../lwip-1.4.1/src/core/raw.c ****   pcb = (struct raw_pcb *)memp_malloc(MEMP_RAW_PCB);
+ 625              		.loc 1 337 0
+ 626 000a 0020     		movs	r0, #0
+ 627 000c FFF7FEFF 		bl	memp_malloc
+ 628 0010 F860     		str	r0, [r7, #12]
+ 338:../lwip-1.4.1/src/core/raw.c ****   /* could allocate RAW PCB? */
+ 339:../lwip-1.4.1/src/core/raw.c ****   if (pcb != NULL) {
+ 629              		.loc 1 339 0
+ 630 0012 FB68     		ldr	r3, [r7, #12]
+ 631 0014 002B     		cmp	r3, #0
+ 632 0016 11D0     		beq	.L42
+ 340:../lwip-1.4.1/src/core/raw.c ****     /* initialize PCB to all zeroes */
+ 341:../lwip-1.4.1/src/core/raw.c ****     memset(pcb, 0, sizeof(struct raw_pcb));
+ 633              		.loc 1 341 0
+ 634 0018 F868     		ldr	r0, [r7, #12]
+ 635 001a 0021     		movs	r1, #0
+ 636 001c 1C22     		movs	r2, #28
+ 637 001e FFF7FEFF 		bl	memset
+ 342:../lwip-1.4.1/src/core/raw.c ****     pcb->protocol = proto;
+ 638              		.loc 1 342 0
+ 639 0022 FB68     		ldr	r3, [r7, #12]
+ 640 0024 FA79     		ldrb	r2, [r7, #7]
+ 641 0026 1A74     		strb	r2, [r3, #16]
+ 343:../lwip-1.4.1/src/core/raw.c ****     pcb->ttl = RAW_TTL;
+ 642              		.loc 1 343 0
+ 643 0028 FB68     		ldr	r3, [r7, #12]
+ 644 002a FF22     		movs	r2, #255
+ 645 002c 9A72     		strb	r2, [r3, #10]
+ 344:../lwip-1.4.1/src/core/raw.c ****     pcb->next = raw_pcbs;
+ 646              		.loc 1 344 0
+ 647 002e 064B     		ldr	r3, .L44
+ 648 0030 1A68     		ldr	r2, [r3]
+ 649 0032 FB68     		ldr	r3, [r7, #12]
+ 650 0034 DA60     		str	r2, [r3, #12]
+ 345:../lwip-1.4.1/src/core/raw.c ****     raw_pcbs = pcb;
+ 651              		.loc 1 345 0
+ 652 0036 044A     		ldr	r2, .L44
+ 653 0038 FB68     		ldr	r3, [r7, #12]
+ 654 003a 1360     		str	r3, [r2]
+ 655              	.L42:
+ 346:../lwip-1.4.1/src/core/raw.c ****   }
+ 347:../lwip-1.4.1/src/core/raw.c ****   return pcb;
+ 656              		.loc 1 347 0
+ 657 003c FB68     		ldr	r3, [r7, #12]
+ 348:../lwip-1.4.1/src/core/raw.c **** }
+ 658              		.loc 1 348 0
+ 659 003e 1846     		mov	r0, r3
+ 660 0040 1037     		adds	r7, r7, #16
+ 661              		.cfi_def_cfa_offset 8
+ 662 0042 BD46     		mov	sp, r7
+ 663              		.cfi_def_cfa_register 13
+ 664              		@ sp needed
+ 665 0044 80BD     		pop	{r7, pc}
+ 666              	.L45:
+ 667 0046 00BF     		.align	2
+ 668              	.L44:
+ 669 0048 00000000 		.word	raw_pcbs
+ 670              		.cfi_endproc
+ 671              	.LFE7:
+ 673              		.text
+ 674              	.Letext0:
+ 675              		.file 2 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\port/arch/cc.h"
+ 676              		.file 3 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include\\ipv4/lwip/
+ 677              		.file 4 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/err.h"
+ 678              		.file 5 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/memp.h
+ 679              		.file 6 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/pbuf.h
+ 680              		.file 7 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/netif.
+ 681              		.file 8 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include\\ipv4/lwip/
+ 682              		.file 9 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\src\\include/lwip/raw.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 raw.c
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:19     .bss:00000000 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:20     .bss:00000000 raw_pcbs
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:23     .text.raw_input:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:28     .text.raw_input:00000000 raw_input
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:166    .text.raw_input:000000b4 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:173    .text.raw_bind:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:178    .text.raw_bind:00000000 raw_bind
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:227    .text.raw_connect:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:232    .text.raw_connect:00000000 raw_connect
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:281    .text.raw_recv:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:286    .text.raw_recv:00000000 raw_recv
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:325    .text.raw_sendto:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:330    .text.raw_sendto:00000000 raw_sendto
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:477    .text.raw_send:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:482    .text.raw_send:00000000 raw_send
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:518    .text.raw_remove:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:523    .text.raw_remove:00000000 raw_remove
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:599    .text.raw_remove:0000005c $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:604    .text.raw_new:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:609    .text.raw_new:00000000 raw_new
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\ccQUrnbi.s:669    .text.raw_new:00000048 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.2d80f1b5ce3c69d13e258577ddf29668
+                           .group:00000000 wm4.lwipopts.h.25.76e03deb318fbe54d896a83c1b611e55
+                           .group:00000000 wm4.arch.h.33.6fa4aa86d33d1490ae882caef7316405
+                           .group:00000000 wm4.cpu.h.33.0ec64ad8cd52614da6479c7936fa3efa
+                           .group:00000000 wm4.cc.h.49.217a0c46a6dd8448cb36cccbf00f897f
+                           .group:00000000 wm4.arch.h.52.2e97dbd839a1aa815d8c47878a7f8e2b
+                           .group:00000000 wm4.newlib.h.8.2702bca278809460f0af6fba1d84eb68
+                           .group:00000000 wm4.features.h.22.2e382148a0560adabf236cddd4e880f4
+                           .group:00000000 wm4.config.h.220.a09b0b0de3c25be3f39d71990e617bff
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.35ee9e747940367bf2a634907d1c2382
+                           .group:00000000 wm4.stddef.h.184.159df79b4ca79c76561572a55985524c
+                           .group:00000000 wm4.cdefs.h.47.3052445825803de6c3a3b68ec8193866
+                           .group:00000000 wm4.stddef.h.39.7e3d906ac58942e0b374c527445f5de5
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.types.h.24.b2be5f53932a9c9d07787288b29b6d75
+                           .group:00000000 wm4._stdint.h.10.f76354baea1c7088202064e6f3d4f5e3
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.82.82b71f3f44c70e3a459d0f66642b05eb
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.68.ff6d7571d3ad75c55f15e26dbaa81e35
+                           .group:00000000 wm4.debug.h.45.223028a5c052c9f879ffd43dd519f3f1
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.opt.h.76.0e16bb9c23144e1f631b5b5afa9a69f6
+                           .group:00000000 wm4.def.h.33.d4208c3cd3e0fc64e20a8b9f95a681f3
+                           .group:00000000 wm4.memp.h.34.a409f52ec6d44b5681de26eb10b0c08b
+                           .group:00000000 wm4.memp_std.h.15.637bb4287b70e9d70dbd8dd3c6f62f3b
+                           .group:00000000 wm4.ip_addr.h.33.906726af218ee6749c0aa25e08c3a1fe
+                           .group:00000000 wm4.netif.h.33.e68fa2fc48174dad7292f51867e80534
+                           .group:00000000 wm4.err.h.33.909ff4b35439192d64931f0a04fc8fdb
+                           .group:00000000 wm4.pbuf.h.34.bb639510af5bfdff8eae9cce62bf5909
+                           .group:00000000 wm4.netif.h.61.25a4ec33204158dc7a027270d7b19690
+                           .group:00000000 wm4.ip.h.33.cd1106783490741294b06617fff8c08f
+                           .group:00000000 wm4.mem.h.33.ae21028c0b1f3dc3305003fc71edaf5a
+                           .group:00000000 wm4.stats.h.51.0db2d210618aedce9edea4fb7e0fbaf1
+                           .group:00000000 wm4.perf.h.33.85c55671e1b7570634f49777a207ad9f
+
+UNDEFINED SYMBOLS
+current_iphdr_dest
+current_iphdr_src
+pbuf_header
+pbuf_alloc
+pbuf_chain
+ip_route
+pbuf_free
+ip_output_if
+memp_free
+memp_malloc
+memset

@@ -1,0 +1,1517 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"main.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.__enable_irq,"ax",%progbits
+  19              		.align	2
+  20              		.thumb
+  21              		.thumb_func
+  23              	__enable_irq:
+  24              	.LFB0:
+  25              		.file 1 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\cmsis/core_cm3.h"
+   1:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**************************************************************************//**
+   2:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @file     core_cm3.h
+   3:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief    CMSIS Cortex-M3 Core Peripheral Access Layer Header File
+   4:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @version  V1.30
+   5:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @date     30. October 2009
+   6:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+   7:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @note
+   8:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Copyright (C) 2009 ARM Limited. All rights reserved.
+   9:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+  10:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @par
+  11:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * ARM Limited (ARM) is supplying this software for use with Cortex-M 
+  12:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * processor based microcontrollers.  This file can be freely distributed 
+  13:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * within development tools that are supporting such ARM based processors. 
+  14:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+  15:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @par
+  16:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
+  17:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
+  18:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE.
+  19:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * ARM SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
+  20:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+  21:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+  22:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  ******************************************************************************/
+  23:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+  24:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #ifndef __CM3_CORE_H__
+  25:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __CM3_CORE_H__
+  26:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+  27:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /** @addtogroup CMSIS_CM3_core_LintCinfiguration CMSIS CM3 Core Lint Configuration
+  28:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+  29:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * List of Lint messages which will be suppressed and not shown:
+  30:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *   - Error 10: \n
+  31:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     register uint32_t __regBasePri         __asm("basepri"); \n
+  32:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     Error 10: Expecting ';'
+  33:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * .
+  34:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *   - Error 530: \n
+  35:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     return(__regBasePri); \n
+  36:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     Warning 530: Symbol '__regBasePri' (line 264) not initialized
+  37:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * . 
+  38:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *   - Error 550: \n
+  39:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     __regBasePri = (basePri & 0x1ff); \n
+  40:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     Warning 550: Symbol '__regBasePri' (line 271) not accessed
+  41:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * .
+  42:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *   - Error 754: \n
+  43:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     uint32_t RESERVED0[24]; \n
+  44:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     Info 754: local structure member '<some, not used in the HAL>' (line 109, file ./cm3_core.h)
+  45:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * .
+  46:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *   - Error 750: \n
+  47:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     #define __CM3_CORE_H__ \n
+  48:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     Info 750: local macro '__CM3_CORE_H__' (line 43, file./cm3_core.h) not referenced
+  49:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * .
+  50:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *   - Error 528: \n
+  51:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     static __INLINE void NVIC_DisableIRQ(uint32_t IRQn) \n
+  52:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     Warning 528: Symbol 'NVIC_DisableIRQ(unsigned int)' (line 419, file ./cm3_core.h) not refere
+  53:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * .
+  54:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *   - Error 751: \n
+  55:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     } InterruptType_Type; \n
+  56:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *     Info 751: local typedef 'InterruptType_Type' (line 170, file ./cm3_core.h) not referenced
+  57:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * .
+  58:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Note:  To re-enable a Message, insert a space before 'lint' *
+  59:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+  60:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+  61:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+  62:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*lint -save */
+  63:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*lint -e10  */
+  64:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*lint -e530 */
+  65:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*lint -e550 */
+  66:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*lint -e754 */
+  67:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*lint -e750 */
+  68:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*lint -e528 */
+  69:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*lint -e751 */
+  70:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+  71:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+  72:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /** @addtogroup CMSIS_CM3_core_definitions CM3 Core Definitions
+  73:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   This file defines all structures and symbols for CMSIS core:
+  74:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****     - CMSIS version number
+  75:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****     - Cortex-M core registers and bitfields
+  76:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****     - Cortex-M core peripheral base address
+  77:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   @{
+  78:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+  79:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+  80:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #ifdef __cplusplus
+  81:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  extern "C" {
+  82:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #endif 
+  83:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+  84:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __CM3_CMSIS_VERSION_MAIN  (0x01)                                                       /*!<
+  85:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __CM3_CMSIS_VERSION_SUB   (0x30)                                                       /*!<
+  86:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __CM3_CMSIS_VERSION       ((__CM3_CMSIS_VERSION_MAIN << 16) | __CM3_CMSIS_VERSION_SUB) /*!<
+  87:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+  88:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __CORTEX_M                (0x03)                                                       /*!<
+  89:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+  90:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #include <stdint.h>                           /* Include standard types */
+  91:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+  92:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #if defined (__ICCARM__)
+  93:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #include <intrinsics.h>                     /* IAR Intrinsics   */
+  94:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #endif
+  95:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+  96:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+  97:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #ifndef __NVIC_PRIO_BITS
+  98:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #define __NVIC_PRIO_BITS    4               /*!< standard definition for NVIC Priority Bits */
+  99:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #endif
+ 100:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 101:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 102:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 103:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 104:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 105:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * IO definitions
+ 106:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 107:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * define access restrictions to peripheral registers
+ 108:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 109:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 110:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #ifdef __cplusplus
+ 111:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #define     __I     volatile                /*!< defines 'read only' permissions      */
+ 112:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #else
+ 113:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #define     __I     volatile const          /*!< defines 'read only' permissions      */
+ 114:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #endif
+ 115:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define     __O     volatile                  /*!< defines 'write only' permissions     */
+ 116:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define     __IO    volatile                  /*!< defines 'read / write' permissions   */
+ 117:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 118:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 119:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 120:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*******************************************************************************
+ 121:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *                 Register Abstraction
+ 122:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  ******************************************************************************/
+ 123:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /** @addtogroup CMSIS_CM3_core_register CMSIS CM3 Core Register
+ 124:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  @{
+ 125:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** */
+ 126:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 127:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 128:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /** @addtogroup CMSIS_CM3_NVIC CMSIS CM3 NVIC
+ 129:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   memory mapped structure for Nested Vectored Interrupt Controller (NVIC)
+ 130:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   @{
+ 131:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 132:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** typedef struct
+ 133:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+ 134:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t ISER[8];                      /*!< Offset: 0x000  Interrupt Set Enable Register    
+ 135:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RESERVED0[24];                                   
+ 136:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t ICER[8];                      /*!< Offset: 0x080  Interrupt Clear Enable Register  
+ 137:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RSERVED1[24];                                    
+ 138:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t ISPR[8];                      /*!< Offset: 0x100  Interrupt Set Pending Register   
+ 139:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RESERVED2[24];                                   
+ 140:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t ICPR[8];                      /*!< Offset: 0x180  Interrupt Clear Pending Register 
+ 141:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RESERVED3[24];                                   
+ 142:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t IABR[8];                      /*!< Offset: 0x200  Interrupt Active bit Register    
+ 143:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RESERVED4[56];                                   
+ 144:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint8_t  IP[240];                      /*!< Offset: 0x300  Interrupt Priority Register (8Bit
+ 145:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RESERVED5[644];                                  
+ 146:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __O  uint32_t STIR;                         /*!< Offset: 0xE00  Software Trigger Interrupt Regist
+ 147:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** }  NVIC_Type;                                               
+ 148:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_NVIC */
+ 149:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 150:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 151:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /** @addtogroup CMSIS_CM3_SCB CMSIS CM3 SCB
+ 152:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   memory mapped structure for System Control Block (SCB)
+ 153:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   @{
+ 154:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 155:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** typedef struct
+ 156:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+ 157:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t CPUID;                        /*!< Offset: 0x00  CPU ID Base Register              
+ 158:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t ICSR;                         /*!< Offset: 0x04  Interrupt Control State Register  
+ 159:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t VTOR;                         /*!< Offset: 0x08  Vector Table Offset Register      
+ 160:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t AIRCR;                        /*!< Offset: 0x0C  Application Interrupt / Reset Cont
+ 161:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t SCR;                          /*!< Offset: 0x10  System Control Register           
+ 162:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t CCR;                          /*!< Offset: 0x14  Configuration Control Register    
+ 163:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint8_t  SHP[12];                      /*!< Offset: 0x18  System Handlers Priority Registers
+ 164:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t SHCSR;                        /*!< Offset: 0x24  System Handler Control and State R
+ 165:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t CFSR;                         /*!< Offset: 0x28  Configurable Fault Status Register
+ 166:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t HFSR;                         /*!< Offset: 0x2C  Hard Fault Status Register        
+ 167:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t DFSR;                         /*!< Offset: 0x30  Debug Fault Status Register       
+ 168:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t MMFAR;                        /*!< Offset: 0x34  Mem Manage Address Register       
+ 169:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t BFAR;                         /*!< Offset: 0x38  Bus Fault Address Register        
+ 170:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t AFSR;                         /*!< Offset: 0x3C  Auxiliary Fault Status Register   
+ 171:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t PFR[2];                       /*!< Offset: 0x40  Processor Feature Register        
+ 172:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t DFR;                          /*!< Offset: 0x48  Debug Feature Register            
+ 173:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t ADR;                          /*!< Offset: 0x4C  Auxiliary Feature Register        
+ 174:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t MMFR[4];                      /*!< Offset: 0x50  Memory Model Feature Register     
+ 175:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t ISAR[5];                      /*!< Offset: 0x60  ISA Feature Register              
+ 176:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** } SCB_Type;                                                
+ 177:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 178:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SCB CPUID Register Definitions */
+ 179:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CPUID_IMPLEMENTER_Pos          24                                             /*!< SCB 
+ 180:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CPUID_IMPLEMENTER_Msk          (0xFFul << SCB_CPUID_IMPLEMENTER_Pos)          /*!< SCB 
+ 181:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 182:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CPUID_VARIANT_Pos              20                                             /*!< SCB 
+ 183:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CPUID_VARIANT_Msk              (0xFul << SCB_CPUID_VARIANT_Pos)               /*!< SCB 
+ 184:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 185:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CPUID_PARTNO_Pos                4                                             /*!< SCB 
+ 186:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CPUID_PARTNO_Msk               (0xFFFul << SCB_CPUID_PARTNO_Pos)              /*!< SCB 
+ 187:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 188:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CPUID_REVISION_Pos              0                                             /*!< SCB 
+ 189:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CPUID_REVISION_Msk             (0xFul << SCB_CPUID_REVISION_Pos)              /*!< SCB 
+ 190:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 191:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SCB Interrupt Control State Register Definitions */
+ 192:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_NMIPENDSET_Pos            31                                             /*!< SCB 
+ 193:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_NMIPENDSET_Msk            (1ul << SCB_ICSR_NMIPENDSET_Pos)               /*!< SCB 
+ 194:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 195:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_PENDSVSET_Pos             28                                             /*!< SCB 
+ 196:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_PENDSVSET_Msk             (1ul << SCB_ICSR_PENDSVSET_Pos)                /*!< SCB 
+ 197:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 198:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_PENDSVCLR_Pos             27                                             /*!< SCB 
+ 199:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_PENDSVCLR_Msk             (1ul << SCB_ICSR_PENDSVCLR_Pos)                /*!< SCB 
+ 200:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 201:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_PENDSTSET_Pos             26                                             /*!< SCB 
+ 202:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_PENDSTSET_Msk             (1ul << SCB_ICSR_PENDSTSET_Pos)                /*!< SCB 
+ 203:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 204:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_PENDSTCLR_Pos             25                                             /*!< SCB 
+ 205:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_PENDSTCLR_Msk             (1ul << SCB_ICSR_PENDSTCLR_Pos)                /*!< SCB 
+ 206:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 207:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_ISRPREEMPT_Pos            23                                             /*!< SCB 
+ 208:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_ISRPREEMPT_Msk            (1ul << SCB_ICSR_ISRPREEMPT_Pos)               /*!< SCB 
+ 209:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 210:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_ISRPENDING_Pos            22                                             /*!< SCB 
+ 211:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_ISRPENDING_Msk            (1ul << SCB_ICSR_ISRPENDING_Pos)               /*!< SCB 
+ 212:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 213:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_VECTPENDING_Pos           12                                             /*!< SCB 
+ 214:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_VECTPENDING_Msk           (0x1FFul << SCB_ICSR_VECTPENDING_Pos)          /*!< SCB 
+ 215:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 216:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_RETTOBASE_Pos             11                                             /*!< SCB 
+ 217:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_RETTOBASE_Msk             (1ul << SCB_ICSR_RETTOBASE_Pos)                /*!< SCB 
+ 218:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 219:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_VECTACTIVE_Pos             0                                             /*!< SCB 
+ 220:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_ICSR_VECTACTIVE_Msk            (0x1FFul << SCB_ICSR_VECTACTIVE_Pos)           /*!< SCB 
+ 221:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 222:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SCB Interrupt Control State Register Definitions */
+ 223:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_VTOR_TBLBASE_Pos               29                                             /*!< SCB 
+ 224:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_VTOR_TBLBASE_Msk               (0x1FFul << SCB_VTOR_TBLBASE_Pos)              /*!< SCB 
+ 225:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 226:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_VTOR_TBLOFF_Pos                 7                                             /*!< SCB 
+ 227:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_VTOR_TBLOFF_Msk                (0x3FFFFFul << SCB_VTOR_TBLOFF_Pos)            /*!< SCB 
+ 228:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 229:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SCB Application Interrupt and Reset Control Register Definitions */
+ 230:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_VECTKEY_Pos              16                                             /*!< SCB 
+ 231:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_VECTKEY_Msk              (0xFFFFul << SCB_AIRCR_VECTKEY_Pos)            /*!< SCB 
+ 232:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 233:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_VECTKEYSTAT_Pos          16                                             /*!< SCB 
+ 234:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_VECTKEYSTAT_Msk          (0xFFFFul << SCB_AIRCR_VECTKEYSTAT_Pos)        /*!< SCB 
+ 235:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 236:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_ENDIANESS_Pos            15                                             /*!< SCB 
+ 237:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_ENDIANESS_Msk            (1ul << SCB_AIRCR_ENDIANESS_Pos)               /*!< SCB 
+ 238:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 239:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_PRIGROUP_Pos              8                                             /*!< SCB 
+ 240:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_PRIGROUP_Msk             (7ul << SCB_AIRCR_PRIGROUP_Pos)                /*!< SCB 
+ 241:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 242:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_SYSRESETREQ_Pos           2                                             /*!< SCB 
+ 243:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_SYSRESETREQ_Msk          (1ul << SCB_AIRCR_SYSRESETREQ_Pos)             /*!< SCB 
+ 244:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 245:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_VECTCLRACTIVE_Pos         1                                             /*!< SCB 
+ 246:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_VECTCLRACTIVE_Msk        (1ul << SCB_AIRCR_VECTCLRACTIVE_Pos)           /*!< SCB 
+ 247:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 248:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_VECTRESET_Pos             0                                             /*!< SCB 
+ 249:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_AIRCR_VECTRESET_Msk            (1ul << SCB_AIRCR_VECTRESET_Pos)               /*!< SCB 
+ 250:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 251:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SCB System Control Register Definitions */
+ 252:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SCR_SEVONPEND_Pos               4                                             /*!< SCB 
+ 253:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SCR_SEVONPEND_Msk              (1ul << SCB_SCR_SEVONPEND_Pos)                 /*!< SCB 
+ 254:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 255:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SCR_SLEEPDEEP_Pos               2                                             /*!< SCB 
+ 256:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SCR_SLEEPDEEP_Msk              (1ul << SCB_SCR_SLEEPDEEP_Pos)                 /*!< SCB 
+ 257:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 258:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SCR_SLEEPONEXIT_Pos             1                                             /*!< SCB 
+ 259:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SCR_SLEEPONEXIT_Msk            (1ul << SCB_SCR_SLEEPONEXIT_Pos)               /*!< SCB 
+ 260:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 261:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SCB Configuration Control Register Definitions */
+ 262:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CCR_STKALIGN_Pos                9                                             /*!< SCB 
+ 263:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CCR_STKALIGN_Msk               (1ul << SCB_CCR_STKALIGN_Pos)                  /*!< SCB 
+ 264:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 265:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CCR_BFHFNMIGN_Pos               8                                             /*!< SCB 
+ 266:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CCR_BFHFNMIGN_Msk              (1ul << SCB_CCR_BFHFNMIGN_Pos)                 /*!< SCB 
+ 267:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 268:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CCR_DIV_0_TRP_Pos               4                                             /*!< SCB 
+ 269:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CCR_DIV_0_TRP_Msk              (1ul << SCB_CCR_DIV_0_TRP_Pos)                 /*!< SCB 
+ 270:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 271:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CCR_UNALIGN_TRP_Pos             3                                             /*!< SCB 
+ 272:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CCR_UNALIGN_TRP_Msk            (1ul << SCB_CCR_UNALIGN_TRP_Pos)               /*!< SCB 
+ 273:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 274:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CCR_USERSETMPEND_Pos            1                                             /*!< SCB 
+ 275:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CCR_USERSETMPEND_Msk           (1ul << SCB_CCR_USERSETMPEND_Pos)              /*!< SCB 
+ 276:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 277:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CCR_NONBASETHRDENA_Pos          0                                             /*!< SCB 
+ 278:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CCR_NONBASETHRDENA_Msk         (1ul << SCB_CCR_NONBASETHRDENA_Pos)            /*!< SCB 
+ 279:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 280:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SCB System Handler Control and State Register Definitions */
+ 281:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_USGFAULTENA_Pos          18                                             /*!< SCB 
+ 282:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_USGFAULTENA_Msk          (1ul << SCB_SHCSR_USGFAULTENA_Pos)             /*!< SCB 
+ 283:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 284:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_BUSFAULTENA_Pos          17                                             /*!< SCB 
+ 285:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_BUSFAULTENA_Msk          (1ul << SCB_SHCSR_BUSFAULTENA_Pos)             /*!< SCB 
+ 286:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 287:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_MEMFAULTENA_Pos          16                                             /*!< SCB 
+ 288:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_MEMFAULTENA_Msk          (1ul << SCB_SHCSR_MEMFAULTENA_Pos)             /*!< SCB 
+ 289:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 290:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_SVCALLPENDED_Pos         15                                             /*!< SCB 
+ 291:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_SVCALLPENDED_Msk         (1ul << SCB_SHCSR_SVCALLPENDED_Pos)            /*!< SCB 
+ 292:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 293:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_BUSFAULTPENDED_Pos       14                                             /*!< SCB 
+ 294:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_BUSFAULTPENDED_Msk       (1ul << SCB_SHCSR_BUSFAULTPENDED_Pos)          /*!< SCB 
+ 295:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 296:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_MEMFAULTPENDED_Pos       13                                             /*!< SCB 
+ 297:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_MEMFAULTPENDED_Msk       (1ul << SCB_SHCSR_MEMFAULTPENDED_Pos)          /*!< SCB 
+ 298:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 299:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_USGFAULTPENDED_Pos       12                                             /*!< SCB 
+ 300:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_USGFAULTPENDED_Msk       (1ul << SCB_SHCSR_USGFAULTPENDED_Pos)          /*!< SCB 
+ 301:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 302:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_SYSTICKACT_Pos           11                                             /*!< SCB 
+ 303:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_SYSTICKACT_Msk           (1ul << SCB_SHCSR_SYSTICKACT_Pos)              /*!< SCB 
+ 304:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 305:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_PENDSVACT_Pos            10                                             /*!< SCB 
+ 306:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_PENDSVACT_Msk            (1ul << SCB_SHCSR_PENDSVACT_Pos)               /*!< SCB 
+ 307:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 308:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_MONITORACT_Pos            8                                             /*!< SCB 
+ 309:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_MONITORACT_Msk           (1ul << SCB_SHCSR_MONITORACT_Pos)              /*!< SCB 
+ 310:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 311:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_SVCALLACT_Pos             7                                             /*!< SCB 
+ 312:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_SVCALLACT_Msk            (1ul << SCB_SHCSR_SVCALLACT_Pos)               /*!< SCB 
+ 313:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****                                      
+ 314:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_USGFAULTACT_Pos           3                                             /*!< SCB 
+ 315:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_USGFAULTACT_Msk          (1ul << SCB_SHCSR_USGFAULTACT_Pos)             /*!< SCB 
+ 316:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 317:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_BUSFAULTACT_Pos           1                                             /*!< SCB 
+ 318:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_BUSFAULTACT_Msk          (1ul << SCB_SHCSR_BUSFAULTACT_Pos)             /*!< SCB 
+ 319:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 320:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_MEMFAULTACT_Pos           0                                             /*!< SCB 
+ 321:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_SHCSR_MEMFAULTACT_Msk          (1ul << SCB_SHCSR_MEMFAULTACT_Pos)             /*!< SCB 
+ 322:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 323:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SCB Configurable Fault Status Registers Definitions */
+ 324:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CFSR_USGFAULTSR_Pos            16                                             /*!< SCB 
+ 325:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CFSR_USGFAULTSR_Msk            (0xFFFFul << SCB_CFSR_USGFAULTSR_Pos)          /*!< SCB 
+ 326:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 327:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CFSR_BUSFAULTSR_Pos             8                                             /*!< SCB 
+ 328:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CFSR_BUSFAULTSR_Msk            (0xFFul << SCB_CFSR_BUSFAULTSR_Pos)            /*!< SCB 
+ 329:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 330:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CFSR_MEMFAULTSR_Pos             0                                             /*!< SCB 
+ 331:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_CFSR_MEMFAULTSR_Msk            (0xFFul << SCB_CFSR_MEMFAULTSR_Pos)            /*!< SCB 
+ 332:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 333:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SCB Hard Fault Status Registers Definitions */
+ 334:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_HFSR_DEBUGEVT_Pos              31                                             /*!< SCB 
+ 335:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_HFSR_DEBUGEVT_Msk              (1ul << SCB_HFSR_DEBUGEVT_Pos)                 /*!< SCB 
+ 336:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 337:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_HFSR_FORCED_Pos                30                                             /*!< SCB 
+ 338:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_HFSR_FORCED_Msk                (1ul << SCB_HFSR_FORCED_Pos)                   /*!< SCB 
+ 339:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 340:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_HFSR_VECTTBL_Pos                1                                             /*!< SCB 
+ 341:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_HFSR_VECTTBL_Msk               (1ul << SCB_HFSR_VECTTBL_Pos)                  /*!< SCB 
+ 342:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 343:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SCB Debug Fault Status Register Definitions */
+ 344:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_DFSR_EXTERNAL_Pos               4                                             /*!< SCB 
+ 345:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_DFSR_EXTERNAL_Msk              (1ul << SCB_DFSR_EXTERNAL_Pos)                 /*!< SCB 
+ 346:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 347:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_DFSR_VCATCH_Pos                 3                                             /*!< SCB 
+ 348:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_DFSR_VCATCH_Msk                (1ul << SCB_DFSR_VCATCH_Pos)                   /*!< SCB 
+ 349:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 350:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_DFSR_DWTTRAP_Pos                2                                             /*!< SCB 
+ 351:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_DFSR_DWTTRAP_Msk               (1ul << SCB_DFSR_DWTTRAP_Pos)                  /*!< SCB 
+ 352:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 353:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_DFSR_BKPT_Pos                   1                                             /*!< SCB 
+ 354:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_DFSR_BKPT_Msk                  (1ul << SCB_DFSR_BKPT_Pos)                     /*!< SCB 
+ 355:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 356:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_DFSR_HALTED_Pos                 0                                             /*!< SCB 
+ 357:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_DFSR_HALTED_Msk                (1ul << SCB_DFSR_HALTED_Pos)                   /*!< SCB 
+ 358:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_SCB */
+ 359:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 360:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 361:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /** @addtogroup CMSIS_CM3_SysTick CMSIS CM3 SysTick
+ 362:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   memory mapped structure for SysTick
+ 363:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   @{
+ 364:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 365:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** typedef struct
+ 366:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+ 367:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t CTRL;                         /*!< Offset: 0x00  SysTick Control and Status Registe
+ 368:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t LOAD;                         /*!< Offset: 0x04  SysTick Reload Value Register     
+ 369:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t VAL;                          /*!< Offset: 0x08  SysTick Current Value Register    
+ 370:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t CALIB;                        /*!< Offset: 0x0C  SysTick Calibration Register      
+ 371:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** } SysTick_Type;
+ 372:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 373:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SysTick Control / Status Register Definitions */
+ 374:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CTRL_COUNTFLAG_Pos         16                                             /*!< SysT
+ 375:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CTRL_COUNTFLAG_Msk         (1ul << SysTick_CTRL_COUNTFLAG_Pos)            /*!< SysT
+ 376:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 377:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CTRL_CLKSOURCE_Pos          2                                             /*!< SysT
+ 378:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CTRL_CLKSOURCE_Msk         (1ul << SysTick_CTRL_CLKSOURCE_Pos)            /*!< SysT
+ 379:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 380:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CTRL_TICKINT_Pos            1                                             /*!< SysT
+ 381:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CTRL_TICKINT_Msk           (1ul << SysTick_CTRL_TICKINT_Pos)              /*!< SysT
+ 382:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 383:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CTRL_ENABLE_Pos             0                                             /*!< SysT
+ 384:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CTRL_ENABLE_Msk            (1ul << SysTick_CTRL_ENABLE_Pos)               /*!< SysT
+ 385:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 386:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SysTick Reload Register Definitions */
+ 387:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_LOAD_RELOAD_Pos             0                                             /*!< SysT
+ 388:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_LOAD_RELOAD_Msk            (0xFFFFFFul << SysTick_LOAD_RELOAD_Pos)        /*!< SysT
+ 389:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 390:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SysTick Current Register Definitions */
+ 391:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_VAL_CURRENT_Pos             0                                             /*!< SysT
+ 392:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_VAL_CURRENT_Msk            (0xFFFFFFul << SysTick_VAL_CURRENT_Pos)        /*!< SysT
+ 393:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 394:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* SysTick Calibration Register Definitions */
+ 395:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CALIB_NOREF_Pos            31                                             /*!< SysT
+ 396:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CALIB_NOREF_Msk            (1ul << SysTick_CALIB_NOREF_Pos)               /*!< SysT
+ 397:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 398:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CALIB_SKEW_Pos             30                                             /*!< SysT
+ 399:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CALIB_SKEW_Msk             (1ul << SysTick_CALIB_SKEW_Pos)                /*!< SysT
+ 400:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 401:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CALIB_TENMS_Pos             0                                             /*!< SysT
+ 402:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_CALIB_TENMS_Msk            (0xFFFFFFul << SysTick_VAL_CURRENT_Pos)        /*!< SysT
+ 403:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_SysTick */
+ 404:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 405:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 406:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /** @addtogroup CMSIS_CM3_ITM CMSIS CM3 ITM
+ 407:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   memory mapped structure for Instrumentation Trace Macrocell (ITM)
+ 408:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   @{
+ 409:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 410:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** typedef struct
+ 411:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+ 412:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __O  union  
+ 413:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   {
+ 414:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****     __O  uint8_t    u8;                       /*!< Offset:       ITM Stimulus Port 8-bit           
+ 415:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****     __O  uint16_t   u16;                      /*!< Offset:       ITM Stimulus Port 16-bit          
+ 416:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****     __O  uint32_t   u32;                      /*!< Offset:       ITM Stimulus Port 32-bit          
+ 417:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   }  PORT [32];                               /*!< Offset: 0x00  ITM Stimulus Port Registers       
+ 418:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RESERVED0[864];                                 
+ 419:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t TER;                          /*!< Offset:       ITM Trace Enable Register         
+ 420:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RESERVED1[15];                                  
+ 421:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t TPR;                          /*!< Offset:       ITM Trace Privilege Register      
+ 422:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RESERVED2[15];                                  
+ 423:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t TCR;                          /*!< Offset:       ITM Trace Control Register        
+ 424:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RESERVED3[29];                                  
+ 425:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t IWR;                          /*!< Offset:       ITM Integration Write Register    
+ 426:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t IRR;                          /*!< Offset:       ITM Integration Read Register     
+ 427:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t IMCR;                         /*!< Offset:       ITM Integration Mode Control Regis
+ 428:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RESERVED4[43];                                  
+ 429:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t LAR;                          /*!< Offset:       ITM Lock Access Register          
+ 430:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t LSR;                          /*!< Offset:       ITM Lock Status Register          
+ 431:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RESERVED5[6];                                   
+ 432:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t PID4;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 433:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t PID5;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 434:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t PID6;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 435:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t PID7;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 436:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t PID0;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 437:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t PID1;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 438:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t PID2;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 439:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t PID3;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 440:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t CID0;                         /*!< Offset:       ITM Component  Identification Regi
+ 441:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t CID1;                         /*!< Offset:       ITM Component  Identification Regi
+ 442:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t CID2;                         /*!< Offset:       ITM Component  Identification Regi
+ 443:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t CID3;                         /*!< Offset:       ITM Component  Identification Regi
+ 444:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** } ITM_Type;                                                
+ 445:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 446:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* ITM Trace Privilege Register Definitions */
+ 447:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TPR_PRIVMASK_Pos                0                                             /*!< ITM 
+ 448:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TPR_PRIVMASK_Msk               (0xFul << ITM_TPR_PRIVMASK_Pos)                /*!< ITM 
+ 449:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 450:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* ITM Trace Control Register Definitions */
+ 451:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_BUSY_Pos                   23                                             /*!< ITM 
+ 452:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_BUSY_Msk                   (1ul << ITM_TCR_BUSY_Pos)                      /*!< ITM 
+ 453:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 454:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_ATBID_Pos                  16                                             /*!< ITM 
+ 455:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_ATBID_Msk                  (0x7Ful << ITM_TCR_ATBID_Pos)                  /*!< ITM 
+ 456:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 457:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_TSPrescale_Pos              8                                             /*!< ITM 
+ 458:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_TSPrescale_Msk             (3ul << ITM_TCR_TSPrescale_Pos)                /*!< ITM 
+ 459:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 460:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_SWOENA_Pos                  4                                             /*!< ITM 
+ 461:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_SWOENA_Msk                 (1ul << ITM_TCR_SWOENA_Pos)                    /*!< ITM 
+ 462:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 463:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_DWTENA_Pos                  3                                             /*!< ITM 
+ 464:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_DWTENA_Msk                 (1ul << ITM_TCR_DWTENA_Pos)                    /*!< ITM 
+ 465:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 466:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_SYNCENA_Pos                 2                                             /*!< ITM 
+ 467:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_SYNCENA_Msk                (1ul << ITM_TCR_SYNCENA_Pos)                   /*!< ITM 
+ 468:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 469:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_TSENA_Pos                   1                                             /*!< ITM 
+ 470:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_TSENA_Msk                  (1ul << ITM_TCR_TSENA_Pos)                     /*!< ITM 
+ 471:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 472:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_ITMENA_Pos                  0                                             /*!< ITM 
+ 473:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_TCR_ITMENA_Msk                 (1ul << ITM_TCR_ITMENA_Pos)                    /*!< ITM 
+ 474:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 475:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* ITM Integration Write Register Definitions */
+ 476:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_IWR_ATVALIDM_Pos                0                                             /*!< ITM 
+ 477:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_IWR_ATVALIDM_Msk               (1ul << ITM_IWR_ATVALIDM_Pos)                  /*!< ITM 
+ 478:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 479:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* ITM Integration Read Register Definitions */
+ 480:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_IRR_ATREADYM_Pos                0                                             /*!< ITM 
+ 481:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_IRR_ATREADYM_Msk               (1ul << ITM_IRR_ATREADYM_Pos)                  /*!< ITM 
+ 482:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 483:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* ITM Integration Mode Control Register Definitions */
+ 484:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_IMCR_INTEGRATION_Pos            0                                             /*!< ITM 
+ 485:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_IMCR_INTEGRATION_Msk           (1ul << ITM_IMCR_INTEGRATION_Pos)              /*!< ITM 
+ 486:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 487:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* ITM Lock Status Register Definitions */
+ 488:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_LSR_ByteAcc_Pos                 2                                             /*!< ITM 
+ 489:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_LSR_ByteAcc_Msk                (1ul << ITM_LSR_ByteAcc_Pos)                   /*!< ITM 
+ 490:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 491:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_LSR_Access_Pos                  1                                             /*!< ITM 
+ 492:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_LSR_Access_Msk                 (1ul << ITM_LSR_Access_Pos)                    /*!< ITM 
+ 493:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 494:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_LSR_Present_Pos                 0                                             /*!< ITM 
+ 495:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_LSR_Present_Msk                (1ul << ITM_LSR_Present_Pos)                   /*!< ITM 
+ 496:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_ITM */
+ 497:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 498:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 499:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /** @addtogroup CMSIS_CM3_InterruptType CMSIS CM3 Interrupt Type
+ 500:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   memory mapped structure for Interrupt Type
+ 501:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   @{
+ 502:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 503:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** typedef struct
+ 504:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+ 505:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RESERVED0;
+ 506:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t ICTR;                         /*!< Offset: 0x04  Interrupt Control Type Register */
+ 507:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #if ((defined __CM3_REV) && (__CM3_REV >= 0x200))
+ 508:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t ACTLR;                        /*!< Offset: 0x08  Auxiliary Control Register      */
+ 509:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #else
+ 510:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****        uint32_t RESERVED1;
+ 511:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #endif
+ 512:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** } InterruptType_Type;
+ 513:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 514:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* Interrupt Controller Type Register Definitions */
+ 515:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define InterruptType_ICTR_INTLINESNUM_Pos  0                                             /*!< Inte
+ 516:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define InterruptType_ICTR_INTLINESNUM_Msk (0x1Ful << InterruptType_ICTR_INTLINESNUM_Pos) /*!< Inte
+ 517:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 518:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* Auxiliary Control Register Definitions */
+ 519:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define InterruptType_ACTLR_DISFOLD_Pos     2                                             /*!< Inte
+ 520:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define InterruptType_ACTLR_DISFOLD_Msk    (1ul << InterruptType_ACTLR_DISFOLD_Pos)       /*!< Inte
+ 521:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 522:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define InterruptType_ACTLR_DISDEFWBUF_Pos  1                                             /*!< Inte
+ 523:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define InterruptType_ACTLR_DISDEFWBUF_Msk (1ul << InterruptType_ACTLR_DISDEFWBUF_Pos)    /*!< Inte
+ 524:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 525:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define InterruptType_ACTLR_DISMCYCINT_Pos  0                                             /*!< Inte
+ 526:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define InterruptType_ACTLR_DISMCYCINT_Msk (1ul << InterruptType_ACTLR_DISMCYCINT_Pos)    /*!< Inte
+ 527:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_InterruptType */
+ 528:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 529:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 530:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #if defined (__MPU_PRESENT) && (__MPU_PRESENT == 1)
+ 531:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /** @addtogroup CMSIS_CM3_MPU CMSIS CM3 MPU
+ 532:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   memory mapped structure for Memory Protection Unit (MPU)
+ 533:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   @{
+ 534:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 535:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** typedef struct
+ 536:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+ 537:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __I  uint32_t TYPE;                         /*!< Offset: 0x00  MPU Type Register                 
+ 538:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t CTRL;                         /*!< Offset: 0x04  MPU Control Register              
+ 539:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t RNR;                          /*!< Offset: 0x08  MPU Region RNRber Register        
+ 540:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t RBAR;                         /*!< Offset: 0x0C  MPU Region Base Address Register  
+ 541:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t RASR;                         /*!< Offset: 0x10  MPU Region Attribute and Size Regi
+ 542:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t RBAR_A1;                      /*!< Offset: 0x14  MPU Alias 1 Region Base Address Re
+ 543:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t RASR_A1;                      /*!< Offset: 0x18  MPU Alias 1 Region Attribute and S
+ 544:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t RBAR_A2;                      /*!< Offset: 0x1C  MPU Alias 2 Region Base Address Re
+ 545:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t RASR_A2;                      /*!< Offset: 0x20  MPU Alias 2 Region Attribute and S
+ 546:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t RBAR_A3;                      /*!< Offset: 0x24  MPU Alias 3 Region Base Address Re
+ 547:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t RASR_A3;                      /*!< Offset: 0x28  MPU Alias 3 Region Attribute and S
+ 548:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** } MPU_Type;                                                
+ 549:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 550:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* MPU Type Register */
+ 551:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_TYPE_IREGION_Pos               16                                             /*!< MPU 
+ 552:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_TYPE_IREGION_Msk               (0xFFul << MPU_TYPE_IREGION_Pos)               /*!< MPU 
+ 553:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 554:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_TYPE_DREGION_Pos                8                                             /*!< MPU 
+ 555:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_TYPE_DREGION_Msk               (0xFFul << MPU_TYPE_DREGION_Pos)               /*!< MPU 
+ 556:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 557:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_TYPE_SEPARATE_Pos               0                                             /*!< MPU 
+ 558:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_TYPE_SEPARATE_Msk              (1ul << MPU_TYPE_SEPARATE_Pos)                 /*!< MPU 
+ 559:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 560:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* MPU Control Register */
+ 561:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_CTRL_PRIVDEFENA_Pos             2                                             /*!< MPU 
+ 562:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_CTRL_PRIVDEFENA_Msk            (1ul << MPU_CTRL_PRIVDEFENA_Pos)               /*!< MPU 
+ 563:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 564:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_CTRL_HFNMIENA_Pos               1                                             /*!< MPU 
+ 565:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_CTRL_HFNMIENA_Msk              (1ul << MPU_CTRL_HFNMIENA_Pos)                 /*!< MPU 
+ 566:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 567:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_CTRL_ENABLE_Pos                 0                                             /*!< MPU 
+ 568:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_CTRL_ENABLE_Msk                (1ul << MPU_CTRL_ENABLE_Pos)                   /*!< MPU 
+ 569:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 570:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* MPU Region Number Register */
+ 571:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RNR_REGION_Pos                  0                                             /*!< MPU 
+ 572:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RNR_REGION_Msk                 (0xFFul << MPU_RNR_REGION_Pos)                 /*!< MPU 
+ 573:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 574:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* MPU Region Base Address Register */
+ 575:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RBAR_ADDR_Pos                   5                                             /*!< MPU 
+ 576:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RBAR_ADDR_Msk                  (0x7FFFFFFul << MPU_RBAR_ADDR_Pos)             /*!< MPU 
+ 577:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 578:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RBAR_VALID_Pos                  4                                             /*!< MPU 
+ 579:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RBAR_VALID_Msk                 (1ul << MPU_RBAR_VALID_Pos)                    /*!< MPU 
+ 580:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 581:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RBAR_REGION_Pos                 0                                             /*!< MPU 
+ 582:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RBAR_REGION_Msk                (0xFul << MPU_RBAR_REGION_Pos)                 /*!< MPU 
+ 583:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 584:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* MPU Region Attribute and Size Register */
+ 585:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_XN_Pos                    28                                             /*!< MPU 
+ 586:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_XN_Msk                    (1ul << MPU_RASR_XN_Pos)                       /*!< MPU 
+ 587:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 588:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_AP_Pos                    24                                             /*!< MPU 
+ 589:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_AP_Msk                    (7ul << MPU_RASR_AP_Pos)                       /*!< MPU 
+ 590:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 591:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_TEX_Pos                   19                                             /*!< MPU 
+ 592:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_TEX_Msk                   (7ul << MPU_RASR_TEX_Pos)                      /*!< MPU 
+ 593:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 594:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_S_Pos                     18                                             /*!< MPU 
+ 595:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_S_Msk                     (1ul << MPU_RASR_S_Pos)                        /*!< MPU 
+ 596:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 597:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_C_Pos                     17                                             /*!< MPU 
+ 598:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_C_Msk                     (1ul << MPU_RASR_C_Pos)                        /*!< MPU 
+ 599:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 600:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_B_Pos                     16                                             /*!< MPU 
+ 601:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_B_Msk                     (1ul << MPU_RASR_B_Pos)                        /*!< MPU 
+ 602:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 603:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_SRD_Pos                    8                                             /*!< MPU 
+ 604:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_SRD_Msk                   (0xFFul << MPU_RASR_SRD_Pos)                   /*!< MPU 
+ 605:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 606:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_SIZE_Pos                   1                                             /*!< MPU 
+ 607:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_SIZE_Msk                  (0x1Ful << MPU_RASR_SIZE_Pos)                  /*!< MPU 
+ 608:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 609:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_ENA_Pos                     0                                            /*!< MPU 
+ 610:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define MPU_RASR_ENA_Msk                    (0x1Ful << MPU_RASR_ENA_Pos)                  /*!< MPU 
+ 611:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 612:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_MPU */
+ 613:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #endif
+ 614:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 615:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 616:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /** @addtogroup CMSIS_CM3_CoreDebug CMSIS CM3 Core Debug
+ 617:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   memory mapped structure for Core Debug Register
+ 618:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   @{
+ 619:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 620:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** typedef struct
+ 621:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+ 622:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t DHCSR;                        /*!< Offset: 0x00  Debug Halting Control and Status R
+ 623:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __O  uint32_t DCRSR;                        /*!< Offset: 0x04  Debug Core Register Selector Regis
+ 624:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t DCRDR;                        /*!< Offset: 0x08  Debug Core Register Data Register 
+ 625:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __IO uint32_t DEMCR;                        /*!< Offset: 0x0C  Debug Exception and Monitor Contro
+ 626:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** } CoreDebug_Type;
+ 627:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 628:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* Debug Halting Control and Status Register */
+ 629:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_DBGKEY_Pos         16                                             /*!< Core
+ 630:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_DBGKEY_Msk         (0xFFFFul << CoreDebug_DHCSR_DBGKEY_Pos)       /*!< Core
+ 631:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 632:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_S_RESET_ST_Pos     25                                             /*!< Core
+ 633:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_S_RESET_ST_Msk     (1ul << CoreDebug_DHCSR_S_RESET_ST_Pos)        /*!< Core
+ 634:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 635:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_S_RETIRE_ST_Pos    24                                             /*!< Core
+ 636:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_S_RETIRE_ST_Msk    (1ul << CoreDebug_DHCSR_S_RETIRE_ST_Pos)       /*!< Core
+ 637:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 638:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_S_LOCKUP_Pos       19                                             /*!< Core
+ 639:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_S_LOCKUP_Msk       (1ul << CoreDebug_DHCSR_S_LOCKUP_Pos)          /*!< Core
+ 640:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 641:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_S_SLEEP_Pos        18                                             /*!< Core
+ 642:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_S_SLEEP_Msk        (1ul << CoreDebug_DHCSR_S_SLEEP_Pos)           /*!< Core
+ 643:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 644:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_S_HALT_Pos         17                                             /*!< Core
+ 645:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_S_HALT_Msk         (1ul << CoreDebug_DHCSR_S_HALT_Pos)            /*!< Core
+ 646:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 647:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_S_REGRDY_Pos       16                                             /*!< Core
+ 648:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_S_REGRDY_Msk       (1ul << CoreDebug_DHCSR_S_REGRDY_Pos)          /*!< Core
+ 649:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 650:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_C_SNAPSTALL_Pos     5                                             /*!< Core
+ 651:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_C_SNAPSTALL_Msk    (1ul << CoreDebug_DHCSR_C_SNAPSTALL_Pos)       /*!< Core
+ 652:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 653:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_C_MASKINTS_Pos      3                                             /*!< Core
+ 654:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_C_MASKINTS_Msk     (1ul << CoreDebug_DHCSR_C_MASKINTS_Pos)        /*!< Core
+ 655:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 656:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_C_STEP_Pos          2                                             /*!< Core
+ 657:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_C_STEP_Msk         (1ul << CoreDebug_DHCSR_C_STEP_Pos)            /*!< Core
+ 658:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 659:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_C_HALT_Pos          1                                             /*!< Core
+ 660:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_C_HALT_Msk         (1ul << CoreDebug_DHCSR_C_HALT_Pos)            /*!< Core
+ 661:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 662:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_C_DEBUGEN_Pos       0                                             /*!< Core
+ 663:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DHCSR_C_DEBUGEN_Msk      (1ul << CoreDebug_DHCSR_C_DEBUGEN_Pos)         /*!< Core
+ 664:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 665:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* Debug Core Register Selector Register */
+ 666:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DCRSR_REGWnR_Pos         16                                             /*!< Core
+ 667:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DCRSR_REGWnR_Msk         (1ul << CoreDebug_DCRSR_REGWnR_Pos)            /*!< Core
+ 668:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 669:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DCRSR_REGSEL_Pos          0                                             /*!< Core
+ 670:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DCRSR_REGSEL_Msk         (0x1Ful << CoreDebug_DCRSR_REGSEL_Pos)         /*!< Core
+ 671:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 672:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* Debug Exception and Monitor Control Register */
+ 673:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_TRCENA_Pos         24                                             /*!< Core
+ 674:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_TRCENA_Msk         (1ul << CoreDebug_DEMCR_TRCENA_Pos)            /*!< Core
+ 675:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 676:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_MON_REQ_Pos        19                                             /*!< Core
+ 677:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_MON_REQ_Msk        (1ul << CoreDebug_DEMCR_MON_REQ_Pos)           /*!< Core
+ 678:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 679:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_MON_STEP_Pos       18                                             /*!< Core
+ 680:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_MON_STEP_Msk       (1ul << CoreDebug_DEMCR_MON_STEP_Pos)          /*!< Core
+ 681:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 682:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_MON_PEND_Pos       17                                             /*!< Core
+ 683:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_MON_PEND_Msk       (1ul << CoreDebug_DEMCR_MON_PEND_Pos)          /*!< Core
+ 684:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 685:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_MON_EN_Pos         16                                             /*!< Core
+ 686:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_MON_EN_Msk         (1ul << CoreDebug_DEMCR_MON_EN_Pos)            /*!< Core
+ 687:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 688:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_HARDERR_Pos     10                                             /*!< Core
+ 689:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_HARDERR_Msk     (1ul << CoreDebug_DEMCR_VC_HARDERR_Pos)        /*!< Core
+ 690:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 691:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_INTERR_Pos       9                                             /*!< Core
+ 692:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_INTERR_Msk      (1ul << CoreDebug_DEMCR_VC_INTERR_Pos)         /*!< Core
+ 693:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 694:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_BUSERR_Pos       8                                             /*!< Core
+ 695:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_BUSERR_Msk      (1ul << CoreDebug_DEMCR_VC_BUSERR_Pos)         /*!< Core
+ 696:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 697:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_STATERR_Pos      7                                             /*!< Core
+ 698:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_STATERR_Msk     (1ul << CoreDebug_DEMCR_VC_STATERR_Pos)        /*!< Core
+ 699:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 700:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_CHKERR_Pos       6                                             /*!< Core
+ 701:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_CHKERR_Msk      (1ul << CoreDebug_DEMCR_VC_CHKERR_Pos)         /*!< Core
+ 702:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 703:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_NOCPERR_Pos      5                                             /*!< Core
+ 704:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_NOCPERR_Msk     (1ul << CoreDebug_DEMCR_VC_NOCPERR_Pos)        /*!< Core
+ 705:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 706:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_MMERR_Pos        4                                             /*!< Core
+ 707:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_MMERR_Msk       (1ul << CoreDebug_DEMCR_VC_MMERR_Pos)          /*!< Core
+ 708:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 709:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_CORERESET_Pos    0                                             /*!< Core
+ 710:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_DEMCR_VC_CORERESET_Msk   (1ul << CoreDebug_DEMCR_VC_CORERESET_Pos)      /*!< Core
+ 711:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_CoreDebug */
+ 712:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 713:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 714:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* Memory mapping of Cortex-M3 Hardware */
+ 715:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCS_BASE            (0xE000E000)                              /*!< System Control Space Bas
+ 716:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM_BASE            (0xE0000000)                              /*!< ITM Base Address        
+ 717:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug_BASE      (0xE000EDF0)                              /*!< Core Debug Base Address 
+ 718:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick_BASE        (SCS_BASE +  0x0010)                      /*!< SysTick Base Address    
+ 719:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define NVIC_BASE           (SCS_BASE +  0x0100)                      /*!< NVIC Base Address       
+ 720:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB_BASE            (SCS_BASE +  0x0D00)                      /*!< System Control Block Bas
+ 721:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 722:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define InterruptType       ((InterruptType_Type *) SCS_BASE)         /*!< Interrupt Type Register 
+ 723:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SCB                 ((SCB_Type *)           SCB_BASE)         /*!< SCB configuration struct
+ 724:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define SysTick             ((SysTick_Type *)       SysTick_BASE)     /*!< SysTick configuration st
+ 725:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define NVIC                ((NVIC_Type *)          NVIC_BASE)        /*!< NVIC configuration struc
+ 726:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define ITM                 ((ITM_Type *)           ITM_BASE)         /*!< ITM configuration struct
+ 727:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define CoreDebug           ((CoreDebug_Type *)     CoreDebug_BASE)   /*!< Core Debug configuration
+ 728:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 729:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #if defined (__MPU_PRESENT) && (__MPU_PRESENT == 1)
+ 730:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #define MPU_BASE          (SCS_BASE +  0x0D90)                      /*!< Memory Protection Unit  
+ 731:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #define MPU               ((MPU_Type*)            MPU_BASE)         /*!< Memory Protection Unit  
+ 732:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #endif
+ 733:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 734:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_core_register */
+ 735:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 736:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 737:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /*******************************************************************************
+ 738:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *                Hardware Abstraction Layer
+ 739:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  ******************************************************************************/
+ 740:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 741:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #if defined ( __CC_ARM   )
+ 742:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #define __ASM            __asm                                      /*!< asm keyword for ARM Comp
+ 743:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #define __INLINE         __inline                                   /*!< inline keyword for ARM C
+ 744:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 745:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #elif defined ( __ICCARM__ )
+ 746:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #define __ASM           __asm                                       /*!< asm keyword for IAR Comp
+ 747:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #define __INLINE        inline                                      /*!< inline keyword for IAR C
+ 748:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 749:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #elif defined   (  __GNUC__  )
+ 750:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #define __ASM            __asm                                      /*!< asm keyword for GNU Comp
+ 751:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #define __INLINE         inline                                     /*!< inline keyword for GNU C
+ 752:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 753:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #elif defined   (  __TASKING__  )
+ 754:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #define __ASM            __asm                                      /*!< asm keyword for TASKING 
+ 755:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   #define __INLINE         inline                                     /*!< inline keyword for TASKI
+ 756:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 757:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #endif
+ 758:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 759:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 760:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* ###################  Compiler specific Intrinsics  ########################### */
+ 761:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 762:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #if defined ( __CC_ARM   ) /*------------------RealView Compiler -----------------*/
+ 763:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* ARM armcc specific functions */
+ 764:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 765:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __enable_fault_irq                __enable_fiq
+ 766:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __disable_fault_irq               __disable_fiq
+ 767:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 768:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __NOP                             __nop
+ 769:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __WFI                             __wfi
+ 770:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __WFE                             __wfe
+ 771:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __SEV                             __sev
+ 772:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __ISB()                           __isb(0)
+ 773:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __DSB()                           __dsb(0)
+ 774:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __DMB()                           __dmb(0)
+ 775:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __REV                             __rev
+ 776:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __RBIT                            __rbit
+ 777:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __LDREXB(ptr)                     ((unsigned char ) __ldrex(ptr))
+ 778:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __LDREXH(ptr)                     ((unsigned short) __ldrex(ptr))
+ 779:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __LDREXW(ptr)                     ((unsigned int  ) __ldrex(ptr))
+ 780:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __STREXB(value, ptr)              __strex(value, ptr)
+ 781:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __STREXH(value, ptr)              __strex(value, ptr)
+ 782:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __STREXW(value, ptr)              __strex(value, ptr)
+ 783:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 784:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 785:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic unsigned long long __ldrexd(volatile void *ptr) */
+ 786:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic int __strexd(unsigned long long val, volatile void *ptr) */
+ 787:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic void __enable_irq();     */
+ 788:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic void __disable_irq();    */
+ 789:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 790:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 791:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 792:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Return the Process Stack Pointer
+ 793:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 794:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return ProcessStackPointer
+ 795:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 796:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Return the actual process stack pointer
+ 797:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 798:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __get_PSP(void);
+ 799:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 800:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 801:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Set the Process Stack Pointer
+ 802:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 803:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  topOfProcStack  Process Stack Pointer
+ 804:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 805:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Assign the value ProcessStackPointer to the MSP 
+ 806:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * (process stack pointer) Cortex processor register
+ 807:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 808:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern void __set_PSP(uint32_t topOfProcStack);
+ 809:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 810:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 811:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Return the Main Stack Pointer
+ 812:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 813:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return Main Stack Pointer
+ 814:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 815:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Return the current value of the MSP (main stack pointer)
+ 816:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Cortex processor register
+ 817:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 818:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __get_MSP(void);
+ 819:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 820:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 821:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Set the Main Stack Pointer
+ 822:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 823:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  topOfMainStack  Main Stack Pointer
+ 824:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 825:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Assign the value mainStackPointer to the MSP 
+ 826:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * (main stack pointer) Cortex processor register
+ 827:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 828:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern void __set_MSP(uint32_t topOfMainStack);
+ 829:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 830:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 831:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Reverse byte order in unsigned short value
+ 832:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 833:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param   value  value to reverse
+ 834:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return         reversed value
+ 835:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 836:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Reverse byte order in unsigned short value
+ 837:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 838:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __REV16(uint16_t value);
+ 839:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 840:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 841:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Reverse byte order in signed short value with sign extension to integer
+ 842:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 843:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param   value  value to reverse
+ 844:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return         reversed value
+ 845:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 846:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Reverse byte order in signed short value with sign extension to integer
+ 847:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 848:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern int32_t __REVSH(int16_t value);
+ 849:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 850:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 851:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #if (__ARMCC_VERSION < 400000)
+ 852:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 853:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 854:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Remove the exclusive lock created by ldrex
+ 855:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 856:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Removes the exclusive lock which is created by ldrex.
+ 857:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 858:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern void __CLREX(void);
+ 859:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 860:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 861:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Return the Base Priority value
+ 862:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 863:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return BasePriority
+ 864:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 865:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Return the content of the base priority register
+ 866:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 867:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __get_BASEPRI(void);
+ 868:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 869:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 870:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Set the Base Priority value
+ 871:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 872:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  basePri  BasePriority
+ 873:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 874:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Set the base priority register
+ 875:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 876:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern void __set_BASEPRI(uint32_t basePri);
+ 877:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 878:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 879:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Return the Priority Mask value
+ 880:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 881:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return PriMask
+ 882:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 883:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Return state of the priority mask bit from the priority mask register
+ 884:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 885:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __get_PRIMASK(void);
+ 886:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 887:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 888:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Set the Priority Mask value
+ 889:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 890:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param   priMask  PriMask
+ 891:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 892:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Set the priority mask bit in the priority mask register
+ 893:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 894:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern void __set_PRIMASK(uint32_t priMask);
+ 895:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 896:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 897:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Return the Fault Mask value
+ 898:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 899:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return FaultMask
+ 900:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 901:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Return the content of the fault mask register
+ 902:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 903:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __get_FAULTMASK(void);
+ 904:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 905:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 906:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Set the Fault Mask value
+ 907:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 908:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  faultMask faultMask value
+ 909:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 910:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Set the fault mask register
+ 911:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 912:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern void __set_FAULTMASK(uint32_t faultMask);
+ 913:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 914:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 915:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Return the Control Register value
+ 916:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * 
+ 917:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return Control value
+ 918:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 919:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Return the content of the control register
+ 920:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 921:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __get_CONTROL(void);
+ 922:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 923:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 924:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Set the Control Register value
+ 925:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 926:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  control  Control value
+ 927:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 928:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Set the control register
+ 929:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 930:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern void __set_CONTROL(uint32_t control);
+ 931:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 932:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #else  /* (__ARMCC_VERSION >= 400000)  */
+ 933:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 934:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 935:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Remove the exclusive lock created by ldrex
+ 936:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 937:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Removes the exclusive lock which is created by ldrex.
+ 938:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 939:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __CLREX                           __clrex
+ 940:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 941:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 942:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Return the Base Priority value
+ 943:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 944:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return BasePriority
+ 945:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 946:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Return the content of the base priority register
+ 947:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 948:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE uint32_t  __get_BASEPRI(void)
+ 949:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+ 950:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   register uint32_t __regBasePri         __ASM("basepri");
+ 951:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   return(__regBasePri);
+ 952:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** }
+ 953:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 954:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 955:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Set the Base Priority value
+ 956:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 957:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  basePri  BasePriority
+ 958:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 959:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Set the base priority register
+ 960:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 961:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE void __set_BASEPRI(uint32_t basePri)
+ 962:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+ 963:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   register uint32_t __regBasePri         __ASM("basepri");
+ 964:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __regBasePri = (basePri & 0xff);
+ 965:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** }
+ 966:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 967:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 968:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Return the Priority Mask value
+ 969:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 970:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return PriMask
+ 971:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 972:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Return state of the priority mask bit from the priority mask register
+ 973:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 974:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE uint32_t __get_PRIMASK(void)
+ 975:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+ 976:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   register uint32_t __regPriMask         __ASM("primask");
+ 977:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   return(__regPriMask);
+ 978:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** }
+ 979:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 980:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 981:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Set the Priority Mask value
+ 982:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 983:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  priMask  PriMask
+ 984:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 985:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Set the priority mask bit in the priority mask register
+ 986:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+ 987:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE void __set_PRIMASK(uint32_t priMask)
+ 988:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+ 989:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   register uint32_t __regPriMask         __ASM("primask");
+ 990:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __regPriMask = (priMask);
+ 991:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** }
+ 992:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+ 993:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+ 994:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Return the Fault Mask value
+ 995:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 996:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return FaultMask
+ 997:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+ 998:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Return the content of the fault mask register
+ 999:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1000:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE uint32_t __get_FAULTMASK(void)
+1001:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+1002:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   register uint32_t __regFaultMask       __ASM("faultmask");
+1003:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   return(__regFaultMask);
+1004:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** }
+1005:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1006:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1007:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Set the Fault Mask value
+1008:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1009:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  faultMask  faultMask value
+1010:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1011:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Set the fault mask register
+1012:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1013:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE void __set_FAULTMASK(uint32_t faultMask)
+1014:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+1015:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   register uint32_t __regFaultMask       __ASM("faultmask");
+1016:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __regFaultMask = (faultMask & 1);
+1017:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** }
+1018:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1019:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1020:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Return the Control Register value
+1021:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * 
+1022:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return Control value
+1023:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1024:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Return the content of the control register
+1025:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1026:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE uint32_t __get_CONTROL(void)
+1027:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+1028:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   register uint32_t __regControl         __ASM("control");
+1029:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   return(__regControl);
+1030:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** }
+1031:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1032:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1033:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Set the Control Register value
+1034:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1035:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  control  Control value
+1036:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1037:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Set the control register
+1038:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1039:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE void __set_CONTROL(uint32_t control)
+1040:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** {
+1041:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   register uint32_t __regControl         __ASM("control");
+1042:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****   __regControl = control;
+1043:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** }
+1044:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1045:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #endif /* __ARMCC_VERSION  */ 
+1046:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1047:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1048:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1049:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #elif (defined (__ICCARM__)) /*------------------ ICC Compiler -------------------*/
+1050:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* IAR iccarm specific functions */
+1051:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1052:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __enable_irq                              __enable_interrupt        /*!< global Interrupt e
+1053:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __disable_irq                             __disable_interrupt       /*!< global Interrupt d
+1054:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1055:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE void __enable_fault_irq()         { __ASM ("cpsie f"); }
+1056:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE void __disable_fault_irq()        { __ASM ("cpsid f"); }
+1057:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1058:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #define __NOP                                     __no_operation            /*!< no operation intri
+1059:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE  void __WFI()                     { __ASM ("wfi"); }
+1060:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE  void __WFE()                     { __ASM ("wfe"); }
+1061:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE  void __SEV()                     { __ASM ("sev"); }
+1062:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE  void __CLREX()                   { __ASM ("clrex"); }
+1063:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1064:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic void __ISB(void)                                     */
+1065:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic void __DSB(void)                                     */
+1066:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic void __DMB(void)                                     */
+1067:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic void __set_PRIMASK();                                */
+1068:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic void __get_PRIMASK();                                */
+1069:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic void __set_FAULTMASK();                              */
+1070:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic void __get_FAULTMASK();                              */
+1071:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic uint32_t __REV(uint32_t value);                      */
+1072:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic uint32_t __REVSH(uint32_t value);                    */
+1073:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic unsigned long __STREX(unsigned long, unsigned long); */
+1074:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* intrinsic unsigned long __LDREX(unsigned long *);              */
+1075:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1076:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1077:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1078:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Return the Process Stack Pointer
+1079:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1080:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return ProcessStackPointer
+1081:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1082:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Return the actual process stack pointer
+1083:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1084:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __get_PSP(void);
+1085:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1086:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1087:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Set the Process Stack Pointer
+1088:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1089:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  topOfProcStack  Process Stack Pointer
+1090:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1091:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Assign the value ProcessStackPointer to the MSP 
+1092:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * (process stack pointer) Cortex processor register
+1093:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1094:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern void __set_PSP(uint32_t topOfProcStack);
+1095:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1096:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1097:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Return the Main Stack Pointer
+1098:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1099:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return Main Stack Pointer
+1100:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1101:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Return the current value of the MSP (main stack pointer)
+1102:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Cortex processor register
+1103:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1104:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __get_MSP(void);
+1105:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1106:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1107:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Set the Main Stack Pointer
+1108:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1109:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  topOfMainStack  Main Stack Pointer
+1110:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1111:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Assign the value mainStackPointer to the MSP 
+1112:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * (main stack pointer) Cortex processor register
+1113:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1114:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern void __set_MSP(uint32_t topOfMainStack);
+1115:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1116:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1117:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Reverse byte order in unsigned short value
+1118:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1119:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  value  value to reverse
+1120:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return        reversed value
+1121:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1122:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Reverse byte order in unsigned short value
+1123:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1124:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __REV16(uint16_t value);
+1125:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1126:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1127:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  Reverse bit order of value
+1128:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1129:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  value  value to reverse
+1130:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return        reversed value
+1131:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1132:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Reverse bit order of value
+1133:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1134:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __RBIT(uint32_t value);
+1135:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1136:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1137:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  LDR Exclusive (8 bit)
+1138:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1139:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  *addr  address pointer
+1140:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return        value of (*address)
+1141:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1142:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Exclusive LDR command for 8 bit values)
+1143:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1144:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint8_t __LDREXB(uint8_t *addr);
+1145:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1146:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1147:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  LDR Exclusive (16 bit)
+1148:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1149:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  *addr  address pointer
+1150:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return        value of (*address)
+1151:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1152:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Exclusive LDR command for 16 bit values
+1153:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1154:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint16_t __LDREXH(uint16_t *addr);
+1155:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1156:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1157:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  LDR Exclusive (32 bit)
+1158:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1159:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  *addr  address pointer
+1160:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return        value of (*address)
+1161:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1162:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Exclusive LDR command for 32 bit values
+1163:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1164:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __LDREXW(uint32_t *addr);
+1165:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1166:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1167:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  STR Exclusive (8 bit)
+1168:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1169:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  value  value to store
+1170:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  *addr  address pointer
+1171:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return        successful / failed
+1172:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1173:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Exclusive STR command for 8 bit values
+1174:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1175:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __STREXB(uint8_t value, uint8_t *addr);
+1176:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1177:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1178:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  STR Exclusive (16 bit)
+1179:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1180:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  value  value to store
+1181:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  *addr  address pointer
+1182:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return        successful / failed
+1183:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1184:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Exclusive STR command for 16 bit values
+1185:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1186:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __STREXH(uint16_t value, uint16_t *addr);
+1187:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1188:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /**
+1189:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @brief  STR Exclusive (32 bit)
+1190:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1191:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  value  value to store
+1192:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @param  *addr  address pointer
+1193:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * @return        successful / failed
+1194:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  *
+1195:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  * Exclusive STR command for 32 bit values
+1196:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h ****  */
+1197:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** extern uint32_t __STREXW(uint32_t value, uint32_t *addr);
+1198:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1199:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1200:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1201:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** #elif (defined (__GNUC__)) /*------------------ GNU Compiler ---------------------*/
+1202:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** /* GNU gcc specific functions */
+1203:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** 
+1204:F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis\core_cm3.h **** static __INLINE void __enable_irq()               { __ASM volatile ("cpsie i"); }
+  26              		.loc 1 1204 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 0
+  29              		@ frame_needed = 1, uses_anonymous_args = 0
+  30              		@ link register save eliminated.
+  31 0000 80B4     		push	{r7}
+  32              		.cfi_def_cfa_offset 4
+  33              		.cfi_offset 7, -4
+  34 0002 00AF     		add	r7, sp, #0
+  35              		.cfi_def_cfa_register 7
+  36              		.loc 1 1204 0
+  37              	@ 1204 "F:\ARM\STM32 Eclipse Firmware\STM32F107_Template\cmsis/core_cm3.h" 1
+  38 0004 62B6     		cpsie i
+  39              	@ 0 "" 2
+  40              		.thumb
+  41 0006 BD46     		mov	sp, r7
+  42              		.cfi_def_cfa_register 13
+  43              		@ sp needed
+  44 0008 5DF8047B 		ldr	r7, [sp], #4
+  45              		.cfi_restore 7
+  46              		.cfi_def_cfa_offset 0
+  47 000c 7047     		bx	lr
+  48              		.cfi_endproc
+  49              	.LFE0:
+  51 000e 00BF     		.bss
+  52              		.align	2
+  53              	UID:
+  54 0000 00000000 		.space	4
+  55              		.comm	ModbusFunction_List,32,4
+  56              		.comm	ModbusRTU_InitStructure,12,4
+  57              		.section	.text.main,"ax",%progbits
+  58              		.align	2
+  59              		.global	main
+  60              		.thumb
+  61              		.thumb_func
+  63              	main:
+  64              	.LFB29:
+  65              		.file 2 "../main.c"
+   1:../main.c     **** #include "stm32f10x_conf.h"
+   2:../main.c     **** #include "stm32f107.h"
+   3:../main.c     **** #include "stm32f107_eth_bsp.h"
+   4:../main.c     **** #include "modbus.h"
+   5:../main.c     **** #include "lwip/tcp.h"
+   6:../main.c     **** #include "netif/etharp.h"
+   7:../main.c     **** 
+   8:../main.c     **** int main()
+   9:../main.c     **** {
+  66              		.loc 2 9 0
+  67              		.cfi_startproc
+  68              		@ args = 0, pretend = 0, frame = 8
+  69              		@ frame_needed = 1, uses_anonymous_args = 0
+  70 0000 80B5     		push	{r7, lr}
+  71              		.cfi_def_cfa_offset 8
+  72              		.cfi_offset 7, -8
+  73              		.cfi_offset 14, -4
+  74 0002 82B0     		sub	sp, sp, #8
+  75              		.cfi_def_cfa_offset 16
+  76 0004 00AF     		add	r7, sp, #0
+  77              		.cfi_def_cfa_register 7
+  10:../main.c     **** 	unsigned int i = 0;
+  78              		.loc 2 10 0
+  79 0006 0023     		movs	r3, #0
+  80 0008 7B60     		str	r3, [r7, #4]
+  11:../main.c     **** 	__enable_irq();
+  81              		.loc 2 11 0
+  82 000a FFF7FEFF 		bl	__enable_irq
+  12:../main.c     **** 
+  13:../main.c     **** 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD, ENABLE);
+  83              		.loc 2 13 0
+  84 000e 2020     		movs	r0, #32
+  85 0010 0121     		movs	r1, #1
+  86 0012 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  14:../main.c     **** 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+  87              		.loc 2 14 0
+  88 0016 0120     		movs	r0, #1
+  89 0018 0121     		movs	r1, #1
+  90 001a FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+  15:../main.c     **** 
+  16:../main.c     **** 	ETH_BSP_Config();
+  91              		.loc 2 16 0
+  92 001e FFF7FEFF 		bl	ETH_BSP_Config
+  17:../main.c     **** 	LwIP_Init();
+  93              		.loc 2 17 0
+  94 0022 FFF7FEFF 		bl	LwIP_Init
+  18:../main.c     **** 
+  19:../main.c     **** 	GPIO_InitTypeDef GPIO_InitStructure;
+  20:../main.c     **** 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12|GPIO_Pin_13;
+  95              		.loc 2 20 0
+  96 0026 4FF44053 		mov	r3, #12288
+  97 002a 3B80     		strh	r3, [r7]	@ movhi
+  21:../main.c     **** 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
+  98              		.loc 2 21 0
+  99 002c 0123     		movs	r3, #1
+ 100 002e BB70     		strb	r3, [r7, #2]
+  22:../main.c     **** 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+ 101              		.loc 2 22 0
+ 102 0030 1023     		movs	r3, #16
+ 103 0032 FB70     		strb	r3, [r7, #3]
+  23:../main.c     **** 	GPIO_Init(GPIOD, &GPIO_InitStructure);
+ 104              		.loc 2 23 0
+ 105 0034 3B46     		mov	r3, r7
+ 106 0036 1648     		ldr	r0, .L4
+ 107 0038 1946     		mov	r1, r3
+ 108 003a FFF7FEFF 		bl	GPIO_Init
+ 109              	.L3:
+ 110              	.LBB2:
+  24:../main.c     **** 
+  25:../main.c     **** 	while(1)
+  26:../main.c     **** 	{
+  27:../main.c     **** 		GPIO_SetBits(GPIOD, GPIO_Pin_13);
+ 111              		.loc 2 27 0 discriminator 1
+ 112 003e 1448     		ldr	r0, .L4
+ 113 0040 4FF40051 		mov	r1, #8192
+ 114 0044 FFF7FEFF 		bl	GPIO_SetBits
+  28:../main.c     **** 		delay_ms(500);
+ 115              		.loc 2 28 0 discriminator 1
+ 116 0048 4FF4FA70 		mov	r0, #500
+ 117 004c FFF7FEFF 		bl	delay_ms
+  29:../main.c     **** 		GPIO_SetBits(GPIOD, GPIO_Pin_12);
+ 118              		.loc 2 29 0 discriminator 1
+ 119 0050 0F48     		ldr	r0, .L4
+ 120 0052 4FF48051 		mov	r1, #4096
+ 121 0056 FFF7FEFF 		bl	GPIO_SetBits
+  30:../main.c     **** 		delay_ms(500);
+ 122              		.loc 2 30 0 discriminator 1
+ 123 005a 4FF4FA70 		mov	r0, #500
+ 124 005e FFF7FEFF 		bl	delay_ms
+  31:../main.c     **** 		GPIO_ResetBits(GPIOD, GPIO_Pin_13);
+ 125              		.loc 2 31 0 discriminator 1
+ 126 0062 0B48     		ldr	r0, .L4
+ 127 0064 4FF40051 		mov	r1, #8192
+ 128 0068 FFF7FEFF 		bl	GPIO_ResetBits
+  32:../main.c     **** 		delay_ms(500);
+ 129              		.loc 2 32 0 discriminator 1
+ 130 006c 4FF4FA70 		mov	r0, #500
+ 131 0070 FFF7FEFF 		bl	delay_ms
+  33:../main.c     **** 		GPIO_ResetBits(GPIOD, GPIO_Pin_12);
+ 132              		.loc 2 33 0 discriminator 1
+ 133 0074 0648     		ldr	r0, .L4
+ 134 0076 4FF48051 		mov	r1, #4096
+ 135 007a FFF7FEFF 		bl	GPIO_ResetBits
+  34:../main.c     **** 		delay_ms(500);
+ 136              		.loc 2 34 0 discriminator 1
+ 137 007e 4FF4FA70 		mov	r0, #500
+ 138 0082 FFF7FEFF 		bl	delay_ms
+  35:../main.c     **** 		tcp_tmr();
+ 139              		.loc 2 35 0 discriminator 1
+ 140 0086 FFF7FEFF 		bl	tcp_tmr
+  36:../main.c     **** 		etharp_tmr();
+ 141              		.loc 2 36 0 discriminator 1
+ 142 008a FFF7FEFF 		bl	etharp_tmr
+ 143              	.LBE2:
+  37:../main.c     **** 	}
+ 144              		.loc 2 37 0 discriminator 1
+ 145 008e D6E7     		b	.L3
+ 146              	.L5:
+ 147              		.align	2
+ 148              	.L4:
+ 149 0090 00140140 		.word	1073812480
+ 150              		.cfi_endproc
+ 151              	.LFE29:
+ 153              		.section	.text.HardFault_Handler,"ax",%progbits
+ 154              		.align	2
+ 155              		.global	HardFault_Handler
+ 156              		.thumb
+ 157              		.thumb_func
+ 159              	HardFault_Handler:
+ 160              	.LFB30:
+  38:../main.c     **** }
+  39:../main.c     **** 
+  40:../main.c     **** void HardFault_Handler(void)
+  41:../main.c     **** {
+ 161              		.loc 2 41 0
+ 162              		.cfi_startproc
+ 163              		@ args = 0, pretend = 0, frame = 0
+ 164              		@ frame_needed = 1, uses_anonymous_args = 0
+ 165 0000 80B5     		push	{r7, lr}
+ 166              		.cfi_def_cfa_offset 8
+ 167              		.cfi_offset 7, -8
+ 168              		.cfi_offset 14, -4
+ 169 0002 00AF     		add	r7, sp, #0
+ 170              		.cfi_def_cfa_register 7
+  42:../main.c     ****   /* Go into an infinite loop. */
+  43:../main.c     **** 	GPIO_ResetBits(GPIOD, GPIO_Pin_13);
+ 171              		.loc 2 43 0
+ 172 0004 0248     		ldr	r0, .L8
+ 173 0006 4FF40051 		mov	r1, #8192
+ 174 000a FFF7FEFF 		bl	GPIO_ResetBits
+ 175              	.L7:
+  44:../main.c     ****   while (1)
+  45:../main.c     ****   {
+  46:../main.c     ****   }
+ 176              		.loc 2 46 0 discriminator 1
+ 177 000e FEE7     		b	.L7
+ 178              	.L9:
+ 179              		.align	2
+ 180              	.L8:
+ 181 0010 00140140 		.word	1073812480
+ 182              		.cfi_endproc
+ 183              	.LFE30:
+ 185              		.text
+ 186              	.Letext0:
+ 187              		.file 3 "f:\\eclipse\\gcc\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 188              		.file 4 "f:\\eclipse\\gcc\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 189              		.file 5 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\cmsis/stm32f10x.h"
+ 190              		.file 6 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\inc/stm32f10x_gpio.h"
+ 191              		.file 7 "../modbus.h"
+ 192              		.file 8 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\inc/stm32f107.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc00Mxwp.s:19     .text.__enable_irq:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc00Mxwp.s:23     .text.__enable_irq:00000000 __enable_irq
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc00Mxwp.s:52     .bss:00000000 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc00Mxwp.s:53     .bss:00000000 UID
+                            *COM*:00000020 ModbusFunction_List
+                            *COM*:0000000c ModbusRTU_InitStructure
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc00Mxwp.s:58     .text.main:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc00Mxwp.s:63     .text.main:00000000 main
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc00Mxwp.s:149    .text.main:00000090 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc00Mxwp.s:154    .text.HardFault_Handler:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc00Mxwp.s:159    .text.HardFault_Handler:00000000 HardFault_Handler
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc00Mxwp.s:181    .text.HardFault_Handler:00000010 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.2d80f1b5ce3c69d13e258577ddf29668
+                           .group:00000000 wm4.stm32f10x.h.51.6e18fa0f6016a7ea66d7cfe7c3be3cd1
+                           .group:00000000 wm4.core_cm3.h.25.d35e9a9b04ec4aaebae9bf79fff061f9
+                           .group:00000000 wm4.features.h.22.2e382148a0560adabf236cddd4e880f4
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.35a45952db64d30146faa63a55c20c1c
+                           .group:00000000 wm4._stdint.h.10.f76354baea1c7088202064e6f3d4f5e3
+                           .group:00000000 wm4.stdint.h.23.373a9d32a9e4c2e88fd347156532d281
+                           .group:00000000 wm4.core_cm3.h.113.b286929a54d33b4c8909a7132437b244
+                           .group:00000000 wm4.stm32f10x.h.522.34c9721dbd76a587b38991fd58e2fdab
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.stm32f10x_bkp.h.25.4622919f1e30efdad5eb44e12edd5513
+                           .group:00000000 wm4.stm32f10x_flash.h.25.4be61fcb02863962a1e006449d310650
+                           .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
+                           .group:00000000 wm4.stm32f10x_pwr.h.25.37ef75009f751ef5fe27910e0bf00a62
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.cb32a32bef653f9e9414120b411eb1bf
+                           .group:00000000 wm4.stm32f10x_tim.h.25.21c6ec062f1e74898cb96a57da276fec
+                           .group:00000000 wm4.misc.h.25.068e106f368fa5369a681ef57c106f4b
+                           .group:00000000 wm4.cpu.h.33.0ec64ad8cd52614da6479c7936fa3efa
+                           .group:00000000 wm4.cc.h.49.217a0c46a6dd8448cb36cccbf00f897f
+                           .group:00000000 wm4.stm32f107_eth_bsp.h.44.721cbeebe3eeee62e2cad2377389aca6
+                           .group:00000000 wm4.lwipopts.h.25.76e03deb318fbe54d896a83c1b611e55
+                           .group:00000000 wm4.arch.h.33.eaeca0217701101e0981d8b022c1854f
+                           .group:00000000 wm4.newlib.h.8.2702bca278809460f0af6fba1d84eb68
+                           .group:00000000 wm4.config.h.220.a09b0b0de3c25be3f39d71990e617bff
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4.stddef.h.184.159df79b4ca79c76561572a55985524c
+                           .group:00000000 wm4.cdefs.h.47.3052445825803de6c3a3b68ec8193866
+                           .group:00000000 wm4.stddef.h.39.7e3d906ac58942e0b374c527445f5de5
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.54.d3d34a3b7f3cc230cd159baf022b4b08
+                           .group:00000000 wm4.stddef.h.158.61317cdbfb4026324507d123a50b0fd6
+                           .group:00000000 wm4.reent.h.17.8bd9e4098e0428508c282cad794fae43
+                           .group:00000000 wm4.types.h.24.b2be5f53932a9c9d07787288b29b6d75
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.82.82b71f3f44c70e3a459d0f66642b05eb
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.68.ff6d7571d3ad75c55f15e26dbaa81e35
+                           .group:00000000 wm4.debug.h.45.223028a5c052c9f879ffd43dd519f3f1
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.opt.h.76.0e16bb9c23144e1f631b5b5afa9a69f6
+                           .group:00000000 wm4.mem.h.33.ae21028c0b1f3dc3305003fc71edaf5a
+                           .group:00000000 wm4.err.h.33.909ff4b35439192d64931f0a04fc8fdb
+                           .group:00000000 wm4.pbuf.h.45.444f43edbf93d1b2ead9ba1554355b0e
+                           .group:00000000 wm4.def.h.33.d4208c3cd3e0fc64e20a8b9f95a681f3
+                           .group:00000000 wm4.ip_addr.h.33.906726af218ee6749c0aa25e08c3a1fe
+                           .group:00000000 wm4.netif.h.33.f0b62f0135b4c001826f0908df525042
+                           .group:00000000 wm4.ip.h.48.c2e3a3e3a9e009c03a30eff6a88b0a33
+                           .group:00000000 wm4.icmp.h.33.9c8da59f6edf08fae1a2f37336a6e965
+                           .group:00000000 wm4.tcp.h.148.20c69d62fcb119a5d6bfd32bc982e4fb
+                           .group:00000000 wm4.etharp.h.36.01a1086ca2aee91a18155b6f03ca98c6
+
+UNDEFINED SYMBOLS
+RCC_APB2PeriphClockCmd
+RCC_APB1PeriphClockCmd
+ETH_BSP_Config
+LwIP_Init
+GPIO_Init
+GPIO_SetBits
+delay_ms
+GPIO_ResetBits
+tcp_tmr
+etharp_tmr

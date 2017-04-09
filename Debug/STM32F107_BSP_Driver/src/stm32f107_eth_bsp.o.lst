@@ -1,0 +1,851 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"stm32f107_eth_bsp.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.bss
+  19              		.align	2
+  20              	UID:
+  21 0000 00000000 		.space	4
+  22              		.global	EthInitStatus
+  23              		.align	2
+  26              	EthInitStatus:
+  27 0004 00000000 		.space	4
+  28              		.section	.text.ETH_BSP_Config,"ax",%progbits
+  29              		.align	2
+  30              		.global	ETH_BSP_Config
+  31              		.thumb
+  32              		.thumb_func
+  34              	ETH_BSP_Config:
+  35              	.LFB29:
+  36              		.file 1 "../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c"
+   1:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** #include "stm32f107.h"
+   2:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** #include "stm32_eth.h"
+   3:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** #include "stm32f107_eth_bsp.h"
+   4:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+   5:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** __IO uint32_t EthInitStatus = 0;
+   6:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+   7:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** u32 ETH_BSP_Config(void)
+   8:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** {
+  37              		.loc 1 8 0
+  38              		.cfi_startproc
+  39              		@ args = 0, pretend = 0, frame = 0
+  40              		@ frame_needed = 1, uses_anonymous_args = 0
+  41 0000 80B5     		push	{r7, lr}
+  42              		.cfi_def_cfa_offset 8
+  43              		.cfi_offset 7, -8
+  44              		.cfi_offset 14, -4
+  45 0002 00AF     		add	r7, sp, #0
+  46              		.cfi_def_cfa_register 7
+   9:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c ****   ETH_GPIO_Config();
+  47              		.loc 1 9 0
+  48 0004 FFF7FEFF 		bl	ETH_GPIO_Config
+  10:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c ****   ETH_NVIC_Config();
+  49              		.loc 1 10 0
+  50 0008 FFF7FEFF 		bl	ETH_NVIC_Config
+  11:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c ****   ETH_MACDMA_Config();
+  51              		.loc 1 11 0
+  52 000c FFF7FEFF 		bl	ETH_MACDMA_Config
+  12:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c ****   ETH_WaitLink();
+  53              		.loc 1 12 0
+  54 0010 FFF7FEFF 		bl	ETH_WaitLink
+  13:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c ****   return EthInitStatus;
+  55              		.loc 1 13 0
+  56 0014 014B     		ldr	r3, .L3
+  57 0016 1B68     		ldr	r3, [r3]
+  14:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** }
+  58              		.loc 1 14 0
+  59 0018 1846     		mov	r0, r3
+  60 001a 80BD     		pop	{r7, pc}
+  61              	.L4:
+  62              		.align	2
+  63              	.L3:
+  64 001c 00000000 		.word	EthInitStatus
+  65              		.cfi_endproc
+  66              	.LFE29:
+  68              		.section	.text.ETH_GPIO_Config,"ax",%progbits
+  69              		.align	2
+  70              		.global	ETH_GPIO_Config
+  71              		.thumb
+  72              		.thumb_func
+  74              	ETH_GPIO_Config:
+  75              	.LFB30:
+  15:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  16:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** void ETH_GPIO_Config(void)
+  17:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** {
+  76              		.loc 1 17 0
+  77              		.cfi_startproc
+  78              		@ args = 0, pretend = 0, frame = 8
+  79              		@ frame_needed = 1, uses_anonymous_args = 0
+  80 0000 80B5     		push	{r7, lr}
+  81              		.cfi_def_cfa_offset 8
+  82              		.cfi_offset 7, -8
+  83              		.cfi_offset 14, -4
+  84 0002 82B0     		sub	sp, sp, #8
+  85              		.cfi_def_cfa_offset 16
+  86 0004 00AF     		add	r7, sp, #0
+  87              		.cfi_def_cfa_register 7
+  18:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC | RCC_AP
+  88              		.loc 1 18 0
+  89 0006 1D20     		movs	r0, #29
+  90 0008 0121     		movs	r1, #1
+  91 000a FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  19:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  20:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitTypeDef GPIO_InitStructure;
+  21:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13;
+  92              		.loc 1 21 0
+  93 000e 4FF46053 		mov	r3, #14336
+  94 0012 BB80     		strh	r3, [r7, #4]	@ movhi
+  22:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  95              		.loc 1 22 0
+  96 0014 0323     		movs	r3, #3
+  97 0016 BB71     		strb	r3, [r7, #6]
+  23:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+  98              		.loc 1 23 0
+  99 0018 1823     		movs	r3, #24
+ 100 001a FB71     		strb	r3, [r7, #7]
+  24:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_Init(GPIOB, &GPIO_InitStructure);
+ 101              		.loc 1 24 0
+ 102 001c 3B1D     		adds	r3, r7, #4
+ 103 001e 2D48     		ldr	r0, .L6
+ 104 0020 1946     		mov	r1, r3
+ 105 0022 FFF7FEFF 		bl	GPIO_Init
+  25:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  26:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+ 106              		.loc 1 26 0
+ 107 0026 0423     		movs	r3, #4
+ 108 0028 BB80     		strh	r3, [r7, #4]	@ movhi
+  27:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 109              		.loc 1 27 0
+ 110 002a 0323     		movs	r3, #3
+ 111 002c BB71     		strb	r3, [r7, #6]
+  28:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+ 112              		.loc 1 28 0
+ 113 002e 1823     		movs	r3, #24
+ 114 0030 FB71     		strb	r3, [r7, #7]
+  29:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_Init(GPIOA, &GPIO_InitStructure);
+ 115              		.loc 1 29 0
+ 116 0032 3B1D     		adds	r3, r7, #4
+ 117 0034 2848     		ldr	r0, .L6+4
+ 118 0036 1946     		mov	r1, r3
+ 119 0038 FFF7FEFF 		bl	GPIO_Init
+  30:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  31:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+ 120              		.loc 1 31 0
+ 121 003c 0223     		movs	r3, #2
+ 122 003e BB80     		strh	r3, [r7, #4]	@ movhi
+  32:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 123              		.loc 1 32 0
+ 124 0040 0323     		movs	r3, #3
+ 125 0042 BB71     		strb	r3, [r7, #6]
+  33:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+ 126              		.loc 1 33 0
+ 127 0044 1823     		movs	r3, #24
+ 128 0046 FB71     		strb	r3, [r7, #7]
+  34:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_Init(GPIOC, &GPIO_InitStructure);
+ 129              		.loc 1 34 0
+ 130 0048 3B1D     		adds	r3, r7, #4
+ 131 004a 2448     		ldr	r0, .L6+8
+ 132 004c 1946     		mov	r1, r3
+ 133 004e FFF7FEFF 		bl	GPIO_Init
+  35:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  36:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14;
+ 134              		.loc 1 36 0
+ 135 0052 4FF48043 		mov	r3, #16384
+ 136 0056 BB80     		strh	r3, [r7, #4]	@ movhi
+  37:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 137              		.loc 1 37 0
+ 138 0058 0323     		movs	r3, #3
+ 139 005a BB71     		strb	r3, [r7, #6]
+  38:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+ 140              		.loc 1 38 0
+ 141 005c 1023     		movs	r3, #16
+ 142 005e FB71     		strb	r3, [r7, #7]
+  39:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_Init(GPIOB, &GPIO_InitStructure);
+ 143              		.loc 1 39 0
+ 144 0060 3B1D     		adds	r3, r7, #4
+ 145 0062 1C48     		ldr	r0, .L6
+ 146 0064 1946     		mov	r1, r3
+ 147 0066 FFF7FEFF 		bl	GPIO_Init
+  40:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  41:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_7;
+ 148              		.loc 1 41 0
+ 149 006a 8223     		movs	r3, #130
+ 150 006c BB80     		strh	r3, [r7, #4]	@ movhi
+  42:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 151              		.loc 1 42 0
+ 152 006e 0323     		movs	r3, #3
+ 153 0070 BB71     		strb	r3, [r7, #6]
+  43:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+ 154              		.loc 1 43 0
+ 155 0072 0423     		movs	r3, #4
+ 156 0074 FB71     		strb	r3, [r7, #7]
+  44:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_Init(GPIOA, &GPIO_InitStructure);
+ 157              		.loc 1 44 0
+ 158 0076 3B1D     		adds	r3, r7, #4
+ 159 0078 1748     		ldr	r0, .L6+4
+ 160 007a 1946     		mov	r1, r3
+ 161 007c FFF7FEFF 		bl	GPIO_Init
+  45:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  46:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5;
+ 162              		.loc 1 46 0
+ 163 0080 3023     		movs	r3, #48
+ 164 0082 BB80     		strh	r3, [r7, #4]	@ movhi
+  47:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 165              		.loc 1 47 0
+ 166 0084 0323     		movs	r3, #3
+ 167 0086 BB71     		strb	r3, [r7, #6]
+  48:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+ 168              		.loc 1 48 0
+ 169 0088 0423     		movs	r3, #4
+ 170 008a FB71     		strb	r3, [r7, #7]
+  49:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_Init(GPIOC, &GPIO_InitStructure);
+ 171              		.loc 1 49 0
+ 172 008c 3B1D     		adds	r3, r7, #4
+ 173 008e 1348     		ldr	r0, .L6+8
+ 174 0090 1946     		mov	r1, r3
+ 175 0092 FFF7FEFF 		bl	GPIO_Init
+  50:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  51:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14;
+ 176              		.loc 1 51 0
+ 177 0096 4FF48043 		mov	r3, #16384
+ 178 009a BB80     		strh	r3, [r7, #4]	@ movhi
+  52:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 179              		.loc 1 52 0
+ 180 009c 0323     		movs	r3, #3
+ 181 009e BB71     		strb	r3, [r7, #6]
+  53:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+ 182              		.loc 1 53 0
+ 183 00a0 1023     		movs	r3, #16
+ 184 00a2 FB71     		strb	r3, [r7, #7]
+  54:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_Init(GPIOB, &GPIO_InitStructure);
+ 185              		.loc 1 54 0
+ 186 00a4 3B1D     		adds	r3, r7, #4
+ 187 00a6 0B48     		ldr	r0, .L6
+ 188 00a8 1946     		mov	r1, r3
+ 189 00aa FFF7FEFF 		bl	GPIO_Init
+  55:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  56:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_ResetBits(GPIOB, GPIO_Pin_14);
+ 190              		.loc 1 56 0
+ 191 00ae 0948     		ldr	r0, .L6
+ 192 00b0 4FF48041 		mov	r1, #16384
+ 193 00b4 FFF7FEFF 		bl	GPIO_ResetBits
+  57:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	delay_ms(100);
+ 194              		.loc 1 57 0
+ 195 00b8 6420     		movs	r0, #100
+ 196 00ba FFF7FEFF 		bl	delay_ms
+  58:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_SetBits(GPIOB, GPIO_Pin_14);
+ 197              		.loc 1 58 0
+ 198 00be 0548     		ldr	r0, .L6
+ 199 00c0 4FF48041 		mov	r1, #16384
+ 200 00c4 FFF7FEFF 		bl	GPIO_SetBits
+  59:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	delay_ms(100);
+ 201              		.loc 1 59 0
+ 202 00c8 6420     		movs	r0, #100
+ 203 00ca FFF7FEFF 		bl	delay_ms
+  60:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** }
+ 204              		.loc 1 60 0
+ 205 00ce 0837     		adds	r7, r7, #8
+ 206              		.cfi_def_cfa_offset 8
+ 207 00d0 BD46     		mov	sp, r7
+ 208              		.cfi_def_cfa_register 13
+ 209              		@ sp needed
+ 210 00d2 80BD     		pop	{r7, pc}
+ 211              	.L7:
+ 212              		.align	2
+ 213              	.L6:
+ 214 00d4 000C0140 		.word	1073810432
+ 215 00d8 00080140 		.word	1073809408
+ 216 00dc 00100140 		.word	1073811456
+ 217              		.cfi_endproc
+ 218              	.LFE30:
+ 220              		.section	.text.ETH_MACDMA_Config,"ax",%progbits
+ 221              		.align	2
+ 222              		.global	ETH_MACDMA_Config
+ 223              		.thumb
+ 224              		.thumb_func
+ 226              	ETH_MACDMA_Config:
+ 227              	.LFB31:
+  61:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  62:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** void ETH_MACDMA_Config(void)
+  63:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** {
+ 228              		.loc 1 63 0
+ 229              		.cfi_startproc
+ 230              		@ args = 0, pretend = 0, frame = 192
+ 231              		@ frame_needed = 1, uses_anonymous_args = 0
+ 232 0000 80B5     		push	{r7, lr}
+ 233              		.cfi_def_cfa_offset 8
+ 234              		.cfi_offset 7, -8
+ 235              		.cfi_offset 14, -4
+ 236 0002 B0B0     		sub	sp, sp, #192
+ 237              		.cfi_def_cfa_offset 200
+ 238 0004 00AF     		add	r7, sp, #0
+ 239              		.cfi_def_cfa_register 7
+  64:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitTypeDef ETH_InitStructure;
+  65:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_ETH_MAC | RCC_AHBPeriph_ETH_MAC_Tx | RCC_AHBPeriph_ETH_MAC_Rx,
+ 240              		.loc 1 65 0
+ 241 0006 4FF4E030 		mov	r0, #114688
+ 242 000a 0121     		movs	r1, #1
+ 243 000c FFF7FEFF 		bl	RCC_AHBPeriphClockCmd
+  66:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  67:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	GPIO_ETH_MediaInterfaceConfig(GPIO_ETH_MediaInterface_RMII);
+ 244              		.loc 1 67 0
+ 245 0010 0120     		movs	r0, #1
+ 246 0012 FFF7FEFF 		bl	GPIO_ETH_MediaInterfaceConfig
+  68:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  69:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_DeInit();                                                 /* Reset ETHERNET on AHB Bus */
+ 247              		.loc 1 69 0
+ 248 0016 FFF7FEFF 		bl	ETH_DeInit
+  70:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_SoftwareReset();                                          /* Software reset */
+ 249              		.loc 1 70 0
+ 250 001a FFF7FEFF 		bl	ETH_SoftwareReset
+  71:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	while (ETH_GetSoftwareResetStatus() == SET);                  /* Wait for software reset */
+ 251              		.loc 1 71 0
+ 252 001e 00BF     		nop
+ 253              	.L9:
+ 254              		.loc 1 71 0 is_stmt 0 discriminator 1
+ 255 0020 FFF7FEFF 		bl	ETH_GetSoftwareResetStatus
+ 256 0024 0346     		mov	r3, r0
+ 257 0026 012B     		cmp	r3, #1
+ 258 0028 FAD0     		beq	.L9
+  72:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  73:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	/* ETHERNET Configuration ------------------------------------------------------*/
+  74:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_StructInit(&ETH_InitStructure);
+ 259              		.loc 1 74 0 is_stmt 1
+ 260 002a 3B1D     		adds	r3, r7, #4
+ 261 002c 1846     		mov	r0, r3
+ 262 002e FFF7FEFF 		bl	ETH_StructInit
+  75:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  76:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	/* Fill ETH_InitStructure parameters */
+  77:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	/*------------------------   MAC   -----------------------------------*/
+  78:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_AutoNegotiation = ETH_AutoNegotiation_Enable;
+ 263              		.loc 1 78 0
+ 264 0032 0123     		movs	r3, #1
+ 265 0034 7B60     		str	r3, [r7, #4]
+  79:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_LoopbackMode = ETH_LoopbackMode_Disable;
+ 266              		.loc 1 79 0
+ 267 0036 0023     		movs	r3, #0
+ 268 0038 3B62     		str	r3, [r7, #32]
+  80:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_RetryTransmission = ETH_RetryTransmission_Disable;
+ 269              		.loc 1 80 0
+ 270 003a 4FF40073 		mov	r3, #512
+ 271 003e FB62     		str	r3, [r7, #44]
+  81:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_AutomaticPadCRCStrip = ETH_AutomaticPadCRCStrip_Disable;
+ 272              		.loc 1 81 0
+ 273 0040 0023     		movs	r3, #0
+ 274 0042 3B63     		str	r3, [r7, #48]
+  82:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_ReceiveAll = ETH_ReceiveAll_Disable;
+ 275              		.loc 1 82 0
+ 276 0044 0023     		movs	r3, #0
+ 277 0046 FB63     		str	r3, [r7, #60]
+  83:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_BroadcastFramesReception = ETH_BroadcastFramesReception_Enable;
+ 278              		.loc 1 83 0
+ 279 0048 0023     		movs	r3, #0
+ 280 004a BB64     		str	r3, [r7, #72]
+  84:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_PromiscuousMode = ETH_PromiscuousMode_Disable;
+ 281              		.loc 1 84 0
+ 282 004c 0023     		movs	r3, #0
+ 283 004e 3B65     		str	r3, [r7, #80]
+  85:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_MulticastFramesFilter = ETH_MulticastFramesFilter_Perfect;
+ 284              		.loc 1 85 0
+ 285 0050 0023     		movs	r3, #0
+ 286 0052 7B65     		str	r3, [r7, #84]
+  86:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_UnicastFramesFilter = ETH_UnicastFramesFilter_Perfect;
+ 287              		.loc 1 86 0
+ 288 0054 0023     		movs	r3, #0
+ 289 0056 BB65     		str	r3, [r7, #88]
+  87:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	#ifdef CHECKSUM_BY_HARDWARE
+  88:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_ChecksumOffload = ETH_ChecksumOffload_Enable;
+  89:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	#endif
+  90:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  91:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	/*------------------------   DMA   -----------------------------------*/
+  92:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+  93:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	/* When we use the Checksum offload feature, we need to enable the Store and Forward mode:
+  94:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	the store and forward guarantee that a whole frame is stored in the FIFO, so the MAC can insert/ve
+  95:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	if the checksum is OK the DMA can handle the frame otherwise the frame is dropped */
+  96:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_DropTCPIPChecksumErrorFrame = ETH_DropTCPIPChecksumErrorFrame_Enable;
+ 290              		.loc 1 96 0
+ 291 0058 0023     		movs	r3, #0
+ 292 005a C7F88430 		str	r3, [r7, #132]
+  97:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_ReceiveStoreForward = ETH_ReceiveStoreForward_Enable;
+ 293              		.loc 1 97 0
+ 294 005e 4FF00073 		mov	r3, #33554432
+ 295 0062 C7F88830 		str	r3, [r7, #136]
+  98:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_TransmitStoreForward = ETH_TransmitStoreForward_Enable;
+ 296              		.loc 1 98 0
+ 297 0066 4FF40013 		mov	r3, #2097152
+ 298 006a C7F89030 		str	r3, [r7, #144]
+  99:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 100:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_ForwardErrorFrames = ETH_ForwardErrorFrames_Disable;
+ 299              		.loc 1 100 0
+ 300 006e 0023     		movs	r3, #0
+ 301 0070 C7F89830 		str	r3, [r7, #152]
+ 101:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_ForwardUndersizedGoodFrames = ETH_ForwardUndersizedGoodFrames_Disable;
+ 302              		.loc 1 101 0
+ 303 0074 0023     		movs	r3, #0
+ 304 0076 C7F89C30 		str	r3, [r7, #156]
+ 102:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_SecondFrameOperate = ETH_SecondFrameOperate_Enable;
+ 305              		.loc 1 102 0
+ 306 007a 0423     		movs	r3, #4
+ 307 007c C7F8A430 		str	r3, [r7, #164]
+ 103:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_AddressAlignedBeats = ETH_AddressAlignedBeats_Enable;
+ 308              		.loc 1 103 0
+ 309 0080 4FF00073 		mov	r3, #33554432
+ 310 0084 C7F8A830 		str	r3, [r7, #168]
+ 104:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_FixedBurst = ETH_FixedBurst_Enable;
+ 311              		.loc 1 104 0
+ 312 0088 4FF48033 		mov	r3, #65536
+ 313 008c C7F8AC30 		str	r3, [r7, #172]
+ 105:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_RxDMABurstLength = ETH_RxDMABurstLength_32Beat;
+ 314              		.loc 1 105 0
+ 315 0090 4FF48003 		mov	r3, #4194304
+ 316 0094 C7F8B030 		str	r3, [r7, #176]
+ 106:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_TxDMABurstLength = ETH_TxDMABurstLength_32Beat;
+ 317              		.loc 1 106 0
+ 318 0098 4FF40053 		mov	r3, #8192
+ 319 009c C7F8B430 		str	r3, [r7, #180]
+ 107:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStructure.ETH_DMAArbitration = ETH_DMAArbitration_RoundRobin_RxTx_2_1;
+ 320              		.loc 1 107 0
+ 321 00a0 4FF48043 		mov	r3, #16384
+ 322 00a4 C7F8BC30 		str	r3, [r7, #188]
+ 108:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 109:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	EthInitStatus = ETH_Init(&ETH_InitStructure, PHY_ADDRESS);
+ 323              		.loc 1 109 0
+ 324 00a8 3B1D     		adds	r3, r7, #4
+ 325 00aa 1846     		mov	r0, r3
+ 326 00ac 0021     		movs	r1, #0
+ 327 00ae FFF7FEFF 		bl	ETH_Init
+ 328 00b2 0246     		mov	r2, r0
+ 329 00b4 044B     		ldr	r3, .L10
+ 330 00b6 1A60     		str	r2, [r3]
+ 110:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 111:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_DMAITConfig(ETH_DMA_IT_NIS | ETH_DMA_IT_R, ENABLE);
+ 331              		.loc 1 111 0
+ 332 00b8 0448     		ldr	r0, .L10+4
+ 333 00ba 0121     		movs	r1, #1
+ 334 00bc FFF7FEFF 		bl	ETH_DMAITConfig
+ 112:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** }
+ 335              		.loc 1 112 0
+ 336 00c0 C037     		adds	r7, r7, #192
+ 337              		.cfi_def_cfa_offset 8
+ 338 00c2 BD46     		mov	sp, r7
+ 339              		.cfi_def_cfa_register 13
+ 340              		@ sp needed
+ 341 00c4 80BD     		pop	{r7, pc}
+ 342              	.L11:
+ 343 00c6 00BF     		.align	2
+ 344              	.L10:
+ 345 00c8 00000000 		.word	EthInitStatus
+ 346 00cc 40000100 		.word	65600
+ 347              		.cfi_endproc
+ 348              	.LFE31:
+ 350              		.section	.text.ETH_NVIC_Config,"ax",%progbits
+ 351              		.align	2
+ 352              		.global	ETH_NVIC_Config
+ 353              		.thumb
+ 354              		.thumb_func
+ 356              	ETH_NVIC_Config:
+ 357              	.LFB32:
+ 113:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 114:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** void ETH_NVIC_Config(void)
+ 115:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** {
+ 358              		.loc 1 115 0
+ 359              		.cfi_startproc
+ 360              		@ args = 0, pretend = 0, frame = 8
+ 361              		@ frame_needed = 1, uses_anonymous_args = 0
+ 362 0000 80B5     		push	{r7, lr}
+ 363              		.cfi_def_cfa_offset 8
+ 364              		.cfi_offset 7, -8
+ 365              		.cfi_offset 14, -4
+ 366 0002 82B0     		sub	sp, sp, #8
+ 367              		.cfi_def_cfa_offset 16
+ 368 0004 00AF     		add	r7, sp, #0
+ 369              		.cfi_def_cfa_register 7
+ 116:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c ****   NVIC_InitTypeDef   NVIC_InitStructure;
+ 117:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 118:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c ****   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+ 370              		.loc 1 118 0
+ 371 0006 4FF4A060 		mov	r0, #1280
+ 372 000a FFF7FEFF 		bl	NVIC_PriorityGroupConfig
+ 119:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c ****   
+ 120:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c ****   NVIC_InitStructure.NVIC_IRQChannel = ETH_IRQn;
+ 373              		.loc 1 120 0
+ 374 000e 3D23     		movs	r3, #61
+ 375 0010 3B71     		strb	r3, [r7, #4]
+ 121:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c ****   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
+ 376              		.loc 1 121 0
+ 377 0012 0223     		movs	r3, #2
+ 378 0014 7B71     		strb	r3, [r7, #5]
+ 122:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c ****   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+ 379              		.loc 1 122 0
+ 380 0016 0023     		movs	r3, #0
+ 381 0018 BB71     		strb	r3, [r7, #6]
+ 123:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c ****   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+ 382              		.loc 1 123 0
+ 383 001a 0123     		movs	r3, #1
+ 384 001c FB71     		strb	r3, [r7, #7]
+ 124:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c ****   NVIC_Init(&NVIC_InitStructure);    
+ 385              		.loc 1 124 0
+ 386 001e 3B1D     		adds	r3, r7, #4
+ 387 0020 1846     		mov	r0, r3
+ 388 0022 FFF7FEFF 		bl	NVIC_Init
+ 125:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** }
+ 389              		.loc 1 125 0
+ 390 0026 0837     		adds	r7, r7, #8
+ 391              		.cfi_def_cfa_offset 8
+ 392 0028 BD46     		mov	sp, r7
+ 393              		.cfi_def_cfa_register 13
+ 394              		@ sp needed
+ 395 002a 80BD     		pop	{r7, pc}
+ 396              		.cfi_endproc
+ 397              	.LFE32:
+ 399              		.section	.text.ETH_WaitLink,"ax",%progbits
+ 400              		.align	2
+ 401              		.global	ETH_WaitLink
+ 402              		.thumb
+ 403              		.thumb_func
+ 405              	ETH_WaitLink:
+ 406              	.LFB33:
+ 126:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 127:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** u8_t ETH_WaitLink(void)
+ 128:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** {
+ 407              		.loc 1 128 0
+ 408              		.cfi_startproc
+ 409              		@ args = 0, pretend = 0, frame = 200
+ 410              		@ frame_needed = 1, uses_anonymous_args = 0
+ 411 0000 80B5     		push	{r7, lr}
+ 412              		.cfi_def_cfa_offset 8
+ 413              		.cfi_offset 7, -8
+ 414              		.cfi_offset 14, -4
+ 415 0002 B2B0     		sub	sp, sp, #200
+ 416              		.cfi_def_cfa_offset 208
+ 417 0004 00AF     		add	r7, sp, #0
+ 418              		.cfi_def_cfa_register 7
+ 129:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	unsigned int timeout = 0;
+ 419              		.loc 1 129 0
+ 420 0006 0023     		movs	r3, #0
+ 421 0008 C7F8C430 		str	r3, [r7, #196]
+ 130:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	unsigned int RegValue = 0;
+ 422              		.loc 1 130 0
+ 423 000c 0023     		movs	r3, #0
+ 424 000e C7F8C030 		str	r3, [r7, #192]
+ 131:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	unsigned int tmp = 0;
+ 425              		.loc 1 131 0
+ 426 0012 0023     		movs	r3, #0
+ 427 0014 C7F8BC30 		str	r3, [r7, #188]
+ 132:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitTypeDef ETH_InitStruct;
+ 133:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStruct.ETH_AutoNegotiation = ETH_AutoNegotiation_Enable;
+ 428              		.loc 1 133 0
+ 429 0018 0123     		movs	r3, #1
+ 430 001a 3B60     		str	r3, [r7]
+ 134:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStruct.ETH_Mode  = ETH_Mode_HalfDuplex;
+ 431              		.loc 1 134 0
+ 432 001c 0023     		movs	r3, #0
+ 433 001e 3B62     		str	r3, [r7, #32]
+ 135:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH_InitStruct.ETH_Speed = ETH_Speed_10M;
+ 434              		.loc 1 135 0
+ 435 0020 0023     		movs	r3, #0
+ 436 0022 7B61     		str	r3, [r7, #20]
+ 136:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	if(ETH_InitStruct.ETH_AutoNegotiation != ETH_AutoNegotiation_Disable)
+ 437              		.loc 1 136 0
+ 438 0024 3B68     		ldr	r3, [r7]
+ 439 0026 002B     		cmp	r3, #0
+ 440 0028 64D0     		beq	.L14
+ 441              	.L16:
+ 137:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	{
+ 138:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 		do
+ 139:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 		{
+ 140:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 			timeout++;
+ 442              		.loc 1 140 0 discriminator 2
+ 443 002a D7F8C430 		ldr	r3, [r7, #196]
+ 444 002e 0133     		adds	r3, r3, #1
+ 445 0030 C7F8C430 		str	r3, [r7, #196]
+ 141:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 		} while ((!(ETH_ReadPHYRegister(PHY_ADDRESS, PHY_BSR) & PHY_Linked_Status)) && (timeout < PHY_REA
+ 446              		.loc 1 141 0 discriminator 2
+ 447 0034 0020     		movs	r0, #0
+ 448 0036 0121     		movs	r1, #1
+ 449 0038 FFF7FEFF 		bl	ETH_ReadPHYRegister
+ 450 003c 0346     		mov	r3, r0
+ 451 003e 03F00403 		and	r3, r3, #4
+ 452 0042 002B     		cmp	r3, #0
+ 453 0044 04D1     		bne	.L15
+ 454              		.loc 1 141 0 is_stmt 0 discriminator 1
+ 455 0046 D7F8C430 		ldr	r3, [r7, #196]
+ 456 004a 3F4A     		ldr	r2, .L29
+ 457 004c 9342     		cmp	r3, r2
+ 458 004e ECD9     		bls	.L16
+ 459              	.L15:
+ 142:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 143:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	if(timeout == PHY_READ_TO)
+ 460              		.loc 1 143 0 is_stmt 1
+ 461 0050 D7F8C430 		ldr	r3, [r7, #196]
+ 462 0054 3D4A     		ldr	r2, .L29+4
+ 463 0056 9342     		cmp	r3, r2
+ 464 0058 01D1     		bne	.L17
+ 144:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 		return ETH_ERROR;
+ 465              		.loc 1 144 0
+ 466 005a 0023     		movs	r3, #0
+ 467 005c 70E0     		b	.L28
+ 468              	.L17:
+ 145:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 146:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	timeout = 0;
+ 469              		.loc 1 146 0
+ 470 005e 0023     		movs	r3, #0
+ 471 0060 C7F8C430 		str	r3, [r7, #196]
+ 147:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 148:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	if(!(ETH_WritePHYRegister(PHY_ADDRESS, PHY_BCR, PHY_AutoNegotiation)))
+ 472              		.loc 1 148 0
+ 473 0064 0020     		movs	r0, #0
+ 474 0066 0021     		movs	r1, #0
+ 475 0068 4FF48052 		mov	r2, #4096
+ 476 006c FFF7FEFF 		bl	ETH_WritePHYRegister
+ 477 0070 0346     		mov	r3, r0
+ 478 0072 002B     		cmp	r3, #0
+ 479 0074 01D1     		bne	.L19
+ 149:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 		return 0;
+ 480              		.loc 1 149 0
+ 481 0076 0023     		movs	r3, #0
+ 482 0078 62E0     		b	.L28
+ 483              	.L19:
+ 150:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 151:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	do
+ 152:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	{
+ 153:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 		timeout++;
+ 484              		.loc 1 153 0 discriminator 2
+ 485 007a D7F8C430 		ldr	r3, [r7, #196]
+ 486 007e 0133     		adds	r3, r3, #1
+ 487 0080 C7F8C430 		str	r3, [r7, #196]
+ 154:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	} while ((!(ETH_ReadPHYRegister(PHY_ADDRESS, PHY_BSR) & PHY_AutoNego_Complete)) && (timeout < PHY_
+ 488              		.loc 1 154 0 discriminator 2
+ 489 0084 0020     		movs	r0, #0
+ 490 0086 0121     		movs	r1, #1
+ 491 0088 FFF7FEFF 		bl	ETH_ReadPHYRegister
+ 492 008c 0346     		mov	r3, r0
+ 493 008e 03F02003 		and	r3, r3, #32
+ 494 0092 002B     		cmp	r3, #0
+ 495 0094 04D1     		bne	.L20
+ 496              		.loc 1 154 0 is_stmt 0 discriminator 1
+ 497 0096 D7F8C430 		ldr	r3, [r7, #196]
+ 498 009a 2B4A     		ldr	r2, .L29
+ 499 009c 9342     		cmp	r3, r2
+ 500 009e ECD9     		bls	.L19
+ 501              	.L20:
+ 155:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 156:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	if(timeout == PHY_READ_TO)
+ 502              		.loc 1 156 0 is_stmt 1
+ 503 00a0 D7F8C430 		ldr	r3, [r7, #196]
+ 504 00a4 294A     		ldr	r2, .L29+4
+ 505 00a6 9342     		cmp	r3, r2
+ 506 00a8 01D1     		bne	.L21
+ 157:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 		return ETH_ERROR;
+ 507              		.loc 1 157 0
+ 508 00aa 0023     		movs	r3, #0
+ 509 00ac 48E0     		b	.L28
+ 510              	.L21:
+ 158:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 159:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	timeout = 0;
+ 511              		.loc 1 159 0
+ 512 00ae 0023     		movs	r3, #0
+ 513 00b0 C7F8C430 		str	r3, [r7, #196]
+ 160:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 161:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	RegValue = ETH_ReadPHYRegister(PHY_ADDRESS, PHY_SR);
+ 514              		.loc 1 161 0
+ 515 00b4 0020     		movs	r0, #0
+ 516 00b6 1F21     		movs	r1, #31
+ 517 00b8 FFF7FEFF 		bl	ETH_ReadPHYRegister
+ 518 00bc 0346     		mov	r3, r0
+ 519 00be C7F8C030 		str	r3, [r7, #192]
+ 162:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 163:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	if(RegValue & PHY_Duplex_Status)
+ 520              		.loc 1 163 0
+ 521 00c2 D7F8C030 		ldr	r3, [r7, #192]
+ 522 00c6 03F01003 		and	r3, r3, #16
+ 523 00ca 002B     		cmp	r3, #0
+ 524 00cc 03D0     		beq	.L22
+ 164:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 		ETH_InitStruct.ETH_Mode = ETH_Mode_FullDuplex;
+ 525              		.loc 1 164 0
+ 526 00ce 4FF40063 		mov	r3, #2048
+ 527 00d2 3B62     		str	r3, [r7, #32]
+ 528 00d4 01E0     		b	.L23
+ 529              	.L22:
+ 165:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	else
+ 166:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 		ETH_InitStruct.ETH_Mode = ETH_Mode_HalfDuplex;
+ 530              		.loc 1 166 0
+ 531 00d6 0023     		movs	r3, #0
+ 532 00d8 3B62     		str	r3, [r7, #32]
+ 533              	.L23:
+ 167:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 168:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	if(RegValue & PHY_Speed_Status)
+ 534              		.loc 1 168 0
+ 535 00da D7F8C030 		ldr	r3, [r7, #192]
+ 536 00de 03F00403 		and	r3, r3, #4
+ 537 00e2 002B     		cmp	r3, #0
+ 538 00e4 02D0     		beq	.L24
+ 169:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 		ETH_InitStruct.ETH_Speed = ETH_Speed_10M;
+ 539              		.loc 1 169 0
+ 540 00e6 0023     		movs	r3, #0
+ 541 00e8 7B61     		str	r3, [r7, #20]
+ 542 00ea 18E0     		b	.L26
+ 543              	.L24:
+ 170:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	else
+ 171:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 		ETH_InitStruct.ETH_Speed = ETH_Speed_100M;
+ 544              		.loc 1 171 0
+ 545 00ec 4FF48043 		mov	r3, #16384
+ 546 00f0 7B61     		str	r3, [r7, #20]
+ 547 00f2 14E0     		b	.L26
+ 548              	.L14:
+ 172:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 
+ 173:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	}
+ 174:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	else
+ 175:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	{
+ 176:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 		if(!ETH_WritePHYRegister(PHY_ADDRESS, PHY_BCR, ((ETH_InitStruct.ETH_Mode >> 3)|(ETH_InitStruct.ET
+ 549              		.loc 1 176 0
+ 550 00f4 3B6A     		ldr	r3, [r7, #32]
+ 551 00f6 DB08     		lsrs	r3, r3, #3
+ 552 00f8 9AB2     		uxth	r2, r3
+ 553 00fa 7B69     		ldr	r3, [r7, #20]
+ 554 00fc 5B08     		lsrs	r3, r3, #1
+ 555 00fe 9BB2     		uxth	r3, r3
+ 556 0100 1343     		orrs	r3, r3, r2
+ 557 0102 9BB2     		uxth	r3, r3
+ 558 0104 0020     		movs	r0, #0
+ 559 0106 0021     		movs	r1, #0
+ 560 0108 1A46     		mov	r2, r3
+ 561 010a FFF7FEFF 		bl	ETH_WritePHYRegister
+ 562 010e 0346     		mov	r3, r0
+ 563 0110 002B     		cmp	r3, #0
+ 564 0112 01D1     		bne	.L27
+ 177:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 			return ETH_ERROR;
+ 565              		.loc 1 177 0
+ 566 0114 0023     		movs	r3, #0
+ 567 0116 13E0     		b	.L28
+ 568              	.L27:
+ 178:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 		delay_ms(100);
+ 569              		.loc 1 178 0
+ 570 0118 6420     		movs	r0, #100
+ 571 011a FFF7FEFF 		bl	delay_ms
+ 572              	.L26:
+ 179:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	}
+ 180:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	tmp = ETH->MACCR;
+ 573              		.loc 1 180 0
+ 574 011e 0C4B     		ldr	r3, .L29+8
+ 575 0120 1B68     		ldr	r3, [r3]
+ 576 0122 C7F8BC30 		str	r3, [r7, #188]
+ 181:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	tmp |= (ETH_InitStruct.ETH_Speed | ETH_InitStruct.ETH_Mode);
+ 577              		.loc 1 181 0
+ 578 0126 7A69     		ldr	r2, [r7, #20]
+ 579 0128 3B6A     		ldr	r3, [r7, #32]
+ 580 012a 1343     		orrs	r3, r3, r2
+ 581 012c D7F8BC20 		ldr	r2, [r7, #188]
+ 582 0130 1343     		orrs	r3, r3, r2
+ 583 0132 C7F8BC30 		str	r3, [r7, #188]
+ 182:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	ETH->MACCR = tmp;
+ 584              		.loc 1 182 0
+ 585 0136 064A     		ldr	r2, .L29+8
+ 586 0138 D7F8BC30 		ldr	r3, [r7, #188]
+ 587 013c 1360     		str	r3, [r2]
+ 183:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** 	return ETH_SUCCESS;
+ 588              		.loc 1 183 0
+ 589 013e 0123     		movs	r3, #1
+ 590              	.L28:
+ 184:../STM32F107_BSP_Driver/src/stm32f107_eth_bsp.c **** }
+ 591              		.loc 1 184 0 discriminator 1
+ 592 0140 1846     		mov	r0, r3
+ 593 0142 C837     		adds	r7, r7, #200
+ 594              		.cfi_def_cfa_offset 8
+ 595 0144 BD46     		mov	sp, r7
+ 596              		.cfi_def_cfa_register 13
+ 597              		@ sp needed
+ 598 0146 80BD     		pop	{r7, pc}
+ 599              	.L30:
+ 600              		.align	2
+ 601              	.L29:
+ 602 0148 FEFF0400 		.word	327678
+ 603 014c FFFF0400 		.word	327679
+ 604 0150 00800240 		.word	1073905664
+ 605              		.cfi_endproc
+ 606              	.LFE33:
+ 608              		.text
+ 609              	.Letext0:
+ 610              		.file 2 "f:\\eclipse\\gcc\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 611              		.file 3 "f:\\eclipse\\gcc\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 612              		.file 4 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\cmsis/stm32f10x.h"
+ 613              		.file 5 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\inc/stm32f10x_gpio.h"
+ 614              		.file 6 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\inc/misc.h"
+ 615              		.file 7 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\lwip-1.4.1\\port/arch/cc.h"
+ 616              		.file 8 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\STM32_ETH_Driver\\inc/stm32_eth.h"
+ 617              		.file 9 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\inc/stm32f107.h"
+ 618              		.file 10 "F:\\ARM\\STM32 Eclipse Firmware\\STM32F107_Template\\cmsis/core_cm3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 stm32f107_eth_bsp.c
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:19     .bss:00000000 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:20     .bss:00000000 UID
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:26     .bss:00000004 EthInitStatus
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:29     .text.ETH_BSP_Config:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:34     .text.ETH_BSP_Config:00000000 ETH_BSP_Config
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:74     .text.ETH_GPIO_Config:00000000 ETH_GPIO_Config
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:356    .text.ETH_NVIC_Config:00000000 ETH_NVIC_Config
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:226    .text.ETH_MACDMA_Config:00000000 ETH_MACDMA_Config
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:405    .text.ETH_WaitLink:00000000 ETH_WaitLink
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:64     .text.ETH_BSP_Config:0000001c $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:69     .text.ETH_GPIO_Config:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:214    .text.ETH_GPIO_Config:000000d4 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:221    .text.ETH_MACDMA_Config:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:345    .text.ETH_MACDMA_Config:000000c8 $d
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:351    .text.ETH_NVIC_Config:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:400    .text.ETH_WaitLink:00000000 $t
+C:\Users\MISAKA~1.MIS\AppData\Local\Temp\cc6rK9cg.s:602    .text.ETH_WaitLink:00000148 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.2d80f1b5ce3c69d13e258577ddf29668
+                           .group:00000000 wm4.stm32f10x.h.51.6e18fa0f6016a7ea66d7cfe7c3be3cd1
+                           .group:00000000 wm4.core_cm3.h.25.d35e9a9b04ec4aaebae9bf79fff061f9
+                           .group:00000000 wm4.features.h.22.2e382148a0560adabf236cddd4e880f4
+                           .group:00000000 wm4._default_types.h.15.933e8edd27a65e0b69af4a865eb623d2
+                           .group:00000000 wm4._intsup.h.10.35a45952db64d30146faa63a55c20c1c
+                           .group:00000000 wm4._stdint.h.10.f76354baea1c7088202064e6f3d4f5e3
+                           .group:00000000 wm4.stdint.h.23.373a9d32a9e4c2e88fd347156532d281
+                           .group:00000000 wm4.core_cm3.h.113.b286929a54d33b4c8909a7132437b244
+                           .group:00000000 wm4.stm32f10x.h.522.34c9721dbd76a587b38991fd58e2fdab
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.stm32f10x_bkp.h.25.4622919f1e30efdad5eb44e12edd5513
+                           .group:00000000 wm4.stm32f10x_flash.h.25.4be61fcb02863962a1e006449d310650
+                           .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
+                           .group:00000000 wm4.stm32f10x_pwr.h.25.37ef75009f751ef5fe27910e0bf00a62
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.cb32a32bef653f9e9414120b411eb1bf
+                           .group:00000000 wm4.stm32f10x_tim.h.25.21c6ec062f1e74898cb96a57da276fec
+                           .group:00000000 wm4.misc.h.25.068e106f368fa5369a681ef57c106f4b
+                           .group:00000000 wm4.cpu.h.33.0ec64ad8cd52614da6479c7936fa3efa
+                           .group:00000000 wm4.cc.h.49.217a0c46a6dd8448cb36cccbf00f897f
+                           .group:00000000 wm4.stm32_eth.h.24.7a0b21bef5d3edb1ede8055003395f4a
+                           .group:00000000 wm4.stm32f107_eth_bsp.h.44.721cbeebe3eeee62e2cad2377389aca6
+
+UNDEFINED SYMBOLS
+RCC_APB2PeriphClockCmd
+GPIO_Init
+GPIO_ResetBits
+delay_ms
+GPIO_SetBits
+RCC_AHBPeriphClockCmd
+GPIO_ETH_MediaInterfaceConfig
+ETH_DeInit
+ETH_SoftwareReset
+ETH_GetSoftwareResetStatus
+ETH_StructInit
+ETH_Init
+ETH_DMAITConfig
+NVIC_PriorityGroupConfig
+NVIC_Init
+ETH_ReadPHYRegister
+ETH_WritePHYRegister
